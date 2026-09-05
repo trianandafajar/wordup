@@ -1,0 +1,42 @@
+/* Hide error message text under field wrapper */
+.wordup-login-card .fi-fo-field-wrp-error-message {
+    display: none !important;
+}
+.fi-simple-main {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    /* Tailwind ring-1 ring-gray-950/5 in CSS form */
+    --tw-ring-shadow: 0 0 #0000 !important;
+    --tw-ring-offset-shadow: 0 0 #0000 !important;
+}
+
+.wordup-login-card {
+    width: 100%;
+    max-width: 24rem;
+    border-radius: 1rem;
+    background-color: #ffffff;
+    padding: 2rem;
+    box-shadow: 0 4px 6px -1px rgb(16 24 40 / 0.1), 0 2px 4px -2px rgb(16 24 40 / 0.1);
+}
+
+.wordup-login-card .fi-fo-field:not(:last-child) {
+    margin-bottom: 1rem;
+}
+
+.wordup-login-card button[type='submit'],
+.wordup-login-card .fi-btn {
+    margin-top: 1.25rem;
+    width: 100% !important;
+    background-color: #4caf50 !important;
+    border-color: #4caf50 !important;
+    color: #ffffff !important;
+}
+
+.wordup-login-card button[type='submit']:hover,
+.wordup-login-card .fi-btn:hover {
+    background-color: #43a047 !important;
+    border-color: #43a047 !important;
+}
