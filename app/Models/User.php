@@ -2,32 +2,60 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'xp_total', 'current_streak', 'longest_streak', 'last_activity_date'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, HasRoles, Notifiable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
+    /** @return array<string, string> */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'last_activity_date' => 'date',
         ];
+    }
+
+    public function onboarding(): HasOne
+    {
+        return $this->hasOne(UserOnboarding::class);
+    }
+
+    public function streakLogs(): HasMany
+    {
+        return $this->hasMany(StreakLog::class);
+    }
+
+    public function courseProgress(): HasMany
+    {
+        return $this->hasMany(UserCourseProgress::class);
+    }
+
+    public function lessonProgress(): HasMany
+    {
+        return $this->hasMany(UserLessonProgress::class);
+    }
+
+    public function lessonAttempts(): HasMany
+    {
+        return $this->hasMany(LessonAttempt::class);
+    }
+
+    public function answers(): HasMany
+    {
+        return $this->hasMany(UserAnswer::class);
     }
 }
