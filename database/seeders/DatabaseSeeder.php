@@ -23,8 +23,8 @@ class DatabaseSeeder extends Seeder
 
     public function run(): void
     {
-        $user = User::query()->firstOrCreate(['email' => 'maya@example.com'], [
-            'name' => 'Maya',
+        $user = User::query()->firstOrCreate(['email' => 'user@example.com'], [
+            'name' => 'User',
             'password' => 'password',
             'xp_total' => 340,
             'current_streak' => 4,
