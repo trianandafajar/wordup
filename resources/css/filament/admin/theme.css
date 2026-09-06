@@ -130,23 +130,82 @@
 
 /* ===== Sidebar collapse styles ===== */
 .sidebar {
-    transition: width 0.3s ease-in-out;
+    transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
 }
 
+/* Hover expand saat collapsed: overlay di atas content */
+.sidebar-hover-collapsed.sidebar-hover {
+    width: 290px !important;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+    box-shadow: 0 8px 20px rgba(16, 24, 40, 0.12);
+}
+
+.sidebar-hover-collapsed.sidebar-hover .menu-item-text,
+.sidebar-hover-collapsed.sidebar-hover .menu-group-title,
+.sidebar-hover-collapsed.sidebar-hover .menu-item-arrow {
+    display: inline !important;
+    opacity: 1;
+}
+
+.sidebar-hover-collapsed.sidebar-hover .menu-group-icon {
+    display: none !important;
+}
+
+/* Collapsed state: menu item seimbang/proporsional */
+.sidebar-hover-collapsed .menu-item {
+    justify-content: center;
+    gap: 0;
+    padding: 0.5rem;
+    overflow: hidden;
+    width: 100%;
+}
+
+.sidebar-hover-collapsed .menu-item>.menu-item-icon-active,
+.sidebar-hover-collapsed .menu-item>.menu-item-icon-inactive,
+.sidebar-hover-collapsed .menu-item>svg {
+    min-width: 24px;
+}
+
+.sidebar-hover-collapsed .menu-item-text {
+    display: none;
+}
+
+.sidebar-hover-collapsed .menu-group-title {
+    display: none;
+}
+
+/* Saat hover expand, kembalikan proporsi menu item normal */
+.sidebar-hover-collapsed.sidebar-hover .menu-item {
+    justify-content: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+}
+
+.sidebar-hover-collapsed.sidebar-hover .menu-item-text {
+    display: inline !important;
+}
+
+.sidebar-hover-collapsed.sidebar-hover .menu-group-title {
+    display: block !important;
+}
+
+/* Sidebar logo saat collapsed */
+.sidebar-hover-collapsed .sidebar-header {
+    justify-content: center;
+}
+
+.sidebar-hover-collapsed.sidebar-hover .sidebar-header {
+    justify-content: space-between;
+}
+
+/* Default hover (non-collapsed companion rules) */
 .sidebar:hover .menu-item-text {
     display: inline !important;
 }
 
 .sidebar:hover .menu-group-title {
     display: block !important;
-}
-
-.sidebar:hover .logo {
-    display: block !important;
-}
-
-.sidebar:hover .logo-icon {
-    display: none !important;
 }
 
 /* ===== Brand helper utilities ===== */
