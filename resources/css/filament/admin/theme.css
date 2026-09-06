@@ -201,6 +201,39 @@
     .sidebar-hover-collapsed.sidebar-hover .sidebar-header {
         justify-content: space-between;
     }
+
+    /* Kembalikan gap sidebar-nav saat hover-expand */
+    .sidebar-hover-collapsed.sidebar-hover .sidebar-nav {
+        gap: 12px;
+    }
+
+    /* Sembunyikan group title SEPENUHNYA saat collapsed agar jarak icon rata */
+    .sidebar-hover-collapsed .menu-group-header {
+        display: none;
+        margin-bottom: 0;
+    }
+
+    /* Hapus margin bawah ul saat collapsed ikut serta merapikan jarak */
+    .sidebar-hover-collapsed ul {
+        margin-bottom: 0;
+        gap: 12px;
+    }
+
+    /* Samakan gap antar group & item saat collapsed (16px) */
+    .sidebar-hover-collapsed .sidebar-nav {
+        gap: 12px;
+    }
+
+    /* Saat hover-expand, kembalikan title & margin */
+    .sidebar-hover-collapsed.sidebar-hover .menu-group-header {
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    .sidebar-hover-collapsed.sidebar-hover ul {
+        margin-bottom: 12px;
+        gap: 12px;
+    }
 }
 
 /* Default hover (non-collapsed companion rules) */

@@ -16,13 +16,14 @@
     </div>
 
     <div class="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-        <nav class="sidebar-nav flex flex-1 flex-col gap-4 pb-6">
+        <nav class="sidebar-nav flex flex-1 flex-col gap-6 pb-6">
             <div>
-                <h3 class="mb-2 text-xs uppercase leading-[20px] text-gray-400">
-                    <span class="menu-group-title" :class="sidebarToggle && isDesktop ? 'lg:hidden' : ''">MENU</span>
+                <h3 class="menu-group-header mb-2 text-xs uppercase leading-[20px] text-gray-400"
+                    :class="sidebarToggle && isDesktop ? 'lg:hidden' : ''">
+                    <span class="menu-group-title">MENU</span>
                 </h3>
 
-                <ul class="mb-6 flex flex-col gap-1.5">
+                <ul class="flex flex-col gap-1.5">
                     <li>
                         <a href="{{ filament()->getUrl() }}"
                             class="menu-item group {{ request()->routeIs('filament.admin.pages.dashboard') ? 'menu-item-active' : 'menu-item-inactive' }}">
@@ -41,10 +42,11 @@
             </div>
 
             <div>
-                <h3 class="mb-2 text-xs uppercase leading-[20px] text-gray-400">
-                    <span class="menu-group-title" :class="sidebarToggle && isDesktop ? 'lg:hidden' : ''">Content</span>
+                <h3 class="menu-group-header mb-2 text-xs uppercase leading-[20px] text-gray-400"
+                    :class="sidebarToggle && isDesktop ? 'lg:hidden' : ''">
+                    <span class="menu-group-title">Content</span>
                 </h3>
-                <ul class="mb-6 flex flex-col gap-1.5">
+                <ul class="flex flex-col gap-1.5">
                     <li>
                         <a href="{{ \App\Filament\Resources\CourseResource::getUrl('index') }}"
                             class="menu-item group {{ request()->routeIs('filament.admin.resources.courses.*') ? 'menu-item-active' : 'menu-item-inactive' }}">
@@ -105,10 +107,11 @@
             </div>
 
             <div>
-                <h3 class="mb-2 text-xs uppercase leading-[20px] text-gray-400">
-                    <span class="menu-group-title" :class="sidebarToggle && isDesktop ? 'lg:hidden' : ''">User</span>
+                <h3 class="menu-group-header mb-2 text-xs uppercase leading-[20px] text-gray-400"
+                    :class="sidebarToggle && isDesktop ? 'lg:hidden' : ''">
+                    <span class="menu-group-title">User</span>
                 </h3>
-                <ul class="mb-6 flex flex-col gap-1.5">
+                <ul class="flex flex-col gap-1.5">
                     <li>
                         <a href="{{ \App\Filament\Resources\UserResource::getUrl('index') }}"
                             class="menu-item group {{ request()->routeIs('filament.admin.resources.users.*') ? 'menu-item-active' : 'menu-item-inactive' }}">
