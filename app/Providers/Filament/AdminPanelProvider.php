@@ -29,7 +29,7 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->renderHook(
                 PanelsRenderHook::HEAD_START,
-                fn (): string => '<link rel="stylesheet" href="'.Vite::asset('resources/css/filament/admin/theme.css').'">',
+                fn(): string => '<link rel="stylesheet" href="' . Vite::asset('resources/css/app.css') . '"><link rel="stylesheet" href="' . Vite::asset('resources/css/filament/admin/theme.css') . '">',
             )
             ->default()
             ->id('admin')
@@ -61,7 +61,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                RoleMiddleware::class.':admin',
+                RoleMiddleware::class . ':admin',
             ]);
     }
 }
