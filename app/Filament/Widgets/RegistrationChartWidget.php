@@ -14,7 +14,7 @@ class RegistrationChartWidget extends ChartWidget
 
     protected static ?string $maxHeight = '300px';
 
-    protected int|string|array $columnSpan = 7;
+    protected int|string|array $columnSpan = 6;
 
     protected function getOptions(): array
     {

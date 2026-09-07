@@ -14,7 +14,7 @@ class LessonProgressChartWidget extends ChartWidget
 
     protected static ?string $maxHeight = '300px';
 
-    protected int|string|array $columnSpan = 5;
+    protected int|string|array $columnSpan = 6;
 
     protected function getOptions(): array
     {
@@ -43,6 +43,6 @@ class LessonProgressChartWidget extends ChartWidget
 
     protected function getType(): string
     {
-        return 'pie';
+        return 'bar';
     }
 }
