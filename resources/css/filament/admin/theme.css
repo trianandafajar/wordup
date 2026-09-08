@@ -1,5 +1,5 @@
-/* Hide Filament page-level header (breadcrumbs/title bar) - custom topbar handles this */
-.fi-header {
+/* Hide Filament page-level breadcrumbs - custom topbar handles this */
+.fi-header .fi-breadcrumbs {
     display: none !important;
 }
 
@@ -85,17 +85,8 @@
     color: var(--color-brand-500);
 }
 
-.dark .menu-item-active {
-    background-color: rgb(76 175 80 / 0.12);
-    color: var(--color-brand-400);
-}
-
 .menu-item-inactive {
     color: #475467;
-}
-
-.dark .menu-item-inactive {
-    color: #d0d5dd;
 }
 
 .menu-item-inactive:hover {
@@ -103,25 +94,12 @@
     color: #475467;
 }
 
-.dark .menu-item-inactive:hover {
-    background-color: rgb(255 255 255 / 0.05);
-    color: #d0d5dd;
-}
-
 .menu-item-icon-active {
     fill: var(--color-brand-500);
 }
 
-.dark .menu-item-icon-active {
-    fill: var(--color-brand-400);
-}
-
 .menu-item-icon-inactive {
     fill: #667085;
-}
-
-.dark .menu-item-icon-inactive {
-    fill: #98a2b3;
 }
 
 .menu-item-text {

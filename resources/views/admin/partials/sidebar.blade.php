@@ -3,14 +3,14 @@
         sidebarHover ? 'sidebar-hover' : '',
     ]" @mouseenter="if (sidebarToggle && isDesktop) sidebarHover = true" @mouseleave="sidebarHover = false"
     @resize.window="isDesktop = window.innerWidth >= 1280"
-    class="sidebar fixed left-0 top-0 z-999999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 duration-300 ease-linear dark:border-gray-800 dark:bg-gray-900 lg:translate-x-0"
+    class="sidebar fixed left-0 top-0 z-999999 flex h-screen w-[290px] flex-col overflow-y-hidden border-r border-gray-200 bg-white px-5 duration-300 ease-linear lg:translate-x-0"
     @click.outside="if (window.innerWidth < 1280) sidebarToggle = false">
     <!-- SIDEBAR HEADER -->
     <div :class="sidebarToggle && isDesktop ? 'justify-center' : 'justify-between'"
         class="sidebar-header flex items-center gap-2 pb-7 pt-8">
         <a href="{{ filament()->getUrl() }}" class="flex items-center gap-2">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 w-auto" />
-            <span class="menu-item-text text-xl font-bold text-brand-600 dark:text-brand-400"
+            <span class="menu-item-text text-xl font-bold text-brand-600"
                 :class="sidebarToggle && isDesktop ? 'hidden' : 'inline'">WordUp</span>
         </a>
     </div>

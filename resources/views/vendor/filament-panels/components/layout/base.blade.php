@@ -4,9 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    dir="{{ __('filament-panels::layout.direction') ?? 'ltr' }}" @class([ 'fi min-h-screen' , 'dark'=>
-filament()->hasDarkModeForced(),
-])
+    dir="{{ __('filament-panels::layout.direction') ?? 'ltr' }}" class="fi min-h-screen"
 >
 
 <head>
@@ -86,7 +84,7 @@ filament()->hasDarkModeForced(),
     ->class([
     'fi-body',
     'fi-panel-'.filament()->getId(),
-    'min-h-screen bg-gray-50 font-normal text-gray-950 antialiased dark:bg-gray-900 dark:text-white',
+    'min-h-screen bg-gray-100 font-normal text-gray-950 antialiased',
     ]) }}
     x-data="{ sidebarToggle: false, menuToggle: false, dropdownOpen: false, mobileNavOpen: false }"
     >
@@ -94,7 +92,7 @@ filament()->hasDarkModeForced(),
     $livewire?->getRenderHookScopes()) }}
 
     @if(filament()->auth()->check())
-    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div class="min-h-screen bg-gray-100">
         @include('admin.partials.sidebar')
 
         <div :class="sidebarToggle ? 'lg:pl-[90px]' : 'lg:pl-[290px]'"
