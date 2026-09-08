@@ -25,7 +25,11 @@
         </div>
         <div class="flex-1">
             <p class="font-bold text-gray-900">{{ $currentUser->name }}</p>
-            <p class="text-xs {{ $currentUserLeague['color'] }}">{{ number_format($currentUser->xp_total) }} XP</p>
+            <p class="text-xs {{ $currentUserLeague['color'] }} flex items-center gap-1">
+                {{ number_format($currentUser->league_week_xp > 0 ? $currentUser->league_week_xp :
+                $currentUser->xp_total) }} XP
+                <span class="bg-emerald-100 text-emerald-700 text-[10px] px-1.5 py-0.5 rounded">Mingguan</span>
+            </p>
         </div>
         <span
             class="text-xs font-bold {{ $currentUserLeague['bg'] }} {{ $currentUserLeague['color'] }} px-3 py-1 rounded-full border border-current">Kamu</span>
@@ -45,7 +49,8 @@
             </div>
             <div class="flex-1 min-w-0">
                 <p class="font-semibold text-gray-800">{{ $user['name'] }}</p>
-                <p class="text-xs text-gray-500">{{ number_format($user['xp']) }} XP</p>
+                <p class="text-xs text-gray-500">{{ number_format($user['xp']) }} XP <span
+                        class="bg-emerald-100 text-emerald-700 text-[10px] px-1.5 py-0.5 rounded">Mingguan</span></p>
             </div>
         </div>
         @empty
