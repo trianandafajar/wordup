@@ -28,11 +28,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $user = User::query()->firstOrCreate(['email' => 'user@example.com'], [
-            'name' => 'User',
+            'name' => 'Budi Saputra',
             'password' => 'password',
             'xp_total' => 340,
             'current_streak' => 4,
             'longest_streak' => 9,
+            'lives' => 5,
             'last_activity_date' => CarbonImmutable::today(),
         ]);
 
@@ -51,9 +52,30 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $unitData = [
-            ['title' => 'Everyday essentials', 'lessons' => ['Meet and greet', 'Talk about yourself', 'Ask simple questions']],
-            ['title' => 'Daily conversations', 'lessons' => ['At the coffee shop', 'Make a plan', 'Keep the conversation going']],
-            ['title' => 'Build your confidence', 'lessons' => ['Tell a short story', 'Share your opinion']],
+            [
+                'title' => 'Greetings & Introductions',
+                'lessons' => [
+                    ['title' => 'Meet and greet', 'type' => 'reading'],
+                    ['title' => 'Talk about yourself', 'type' => 'listening'],
+                    ['title' => 'Ask simple questions', 'type' => 'speaking'],
+                    ['title' => 'Daily Phrases', 'type' => 'quiz'],
+                ],
+            ],
+            [
+                'title' => 'Daily conversations',
+                'lessons' => [
+                    ['title' => 'At the coffee shop', 'type' => 'reading'],
+                    ['title' => 'Make a plan', 'type' => 'listening'],
+                    ['title' => 'Keep the conversation going', 'type' => 'speaking'],
+                ],
+            ],
+            [
+                'title' => 'Build your confidence',
+                'lessons' => [
+                    ['title' => 'Tell a short story', 'type' => 'reading'],
+                    ['title' => 'Share your opinion', 'type' => 'quiz'],
+                ],
+            ],
         ];
 
         $lessons = collect();
@@ -63,34 +85,77 @@ class DatabaseSeeder extends Seeder
                 'order' => $unitOrder + 1,
             ], ['title' => $unitItem['title']]);
 
-            foreach ($unitItem['lessons'] as $lessonOrder => $title) {
+            foreach ($unitItem['lessons'] as $lessonOrder => $lessonInfo) {
                 $lesson = Lesson::query()->firstOrCreate([
                     'unit_id' => $unit->id,
                     'order' => $lessonOrder + 1,
-                ], ['title' => $title, 'xp_reward' => 20]);
+                ], [
+                    'title' => $lessonInfo['title'],
+                    'type' => $lessonInfo['type'],
+                    'xp_reward' => 20,
+                ]);
                 $lessons->push($lesson);
             }
         }
 
-        $firstLesson = $lessons->first();
-        if ($firstLesson) {
-            $question = Question::query()->firstOrCreate([
-                'lesson_id' => $firstLesson->id,
-                'order' => 1,
-            ], [
-                'type' => QuestionTypeEnum::MultipleChoice->value,
-                'difficulty_level' => QuestionDifficultyEnum::Beginner->value,
-                'question_text' => 'How do you say “Halo” in English?',
-            ]);
+        // Add questions for each lesson
+        $sampleQuestions = [
+            [
+                'text' => 'How do you say "Halo" in English?',
+                'options' => [
+                    ['text' => 'Hello', 'correct' => true],
+                    ['text' => 'Good night', 'correct' => false],
+                    ['text' => 'Goodbye', 'correct' => false],
+                    ['text' => 'Thank you', 'correct' => false],
+                ],
+            ],
+            [
+                'text' => 'What is the correct response to "How are you?"',
+                'options' => [
+                    ['text' => 'I am fine, thank you', 'correct' => true],
+                    ['text' => 'My name is John', 'correct' => false],
+                    ['text' => 'Yes, please', 'correct' => false],
+                    ['text' => 'Good morning', 'correct' => false],
+                ],
+            ],
+            [
+                'text' => 'Which word means "Terima kasih"?',
+                'options' => [
+                    ['text' => 'Thank you', 'correct' => true],
+                    ['text' => 'Please', 'correct' => false],
+                    ['text' => 'Sorry', 'correct' => false],
+                    ['text' => 'You are welcome', 'correct' => false],
+                ],
+            ],
+            [
+                'text' => 'How do you ask someone\'s name?',
+                'options' => [
+                    ['text' => 'What is your name?', 'correct' => true],
+                    ['text' => 'Where do you live?', 'correct' => false],
+                    ['text' => 'How old are you?', 'correct' => false],
+                    ['text' => 'Nice to meet you', 'correct' => false],
+                ],
+            ],
+        ];
 
-            QuestionOption::query()->firstOrCreate([
-                'question_id' => $question->id,
-                'option_text' => 'Hello',
-            ], ['is_correct' => true]);
-            QuestionOption::query()->firstOrCreate([
-                'question_id' => $question->id,
-                'option_text' => 'Good night',
-            ], ['is_correct' => false]);
+        foreach ($lessons as $lesson) {
+            foreach ($sampleQuestions as $qOrder => $qData) {
+                $question = Question::query()->firstOrCreate([
+                    'lesson_id' => $lesson->id,
+                    'order' => $qOrder + 1,
+                ], [
+                    'type' => QuestionTypeEnum::MultipleChoice->value,
+                    'difficulty_level' => QuestionDifficultyEnum::Beginner->value,
+                    'question_text' => $qData['text'],
+                ]);
+
+                foreach ($qData['options'] as $opt) {
+                    QuestionOption::query()->firstOrCreate([
+                        'question_id' => $question->id,
+                        'option_text' => $opt['text'],
+                    ], ['is_correct' => $opt['correct']]);
+                }
+            }
         }
 
         UserCourseProgress::query()->updateOrCreate(

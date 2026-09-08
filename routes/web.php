@@ -3,6 +3,11 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\OnboardingController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\LessonController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SkillTreeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -18,22 +23,9 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
-Route::get('/', function () {
-    return view('livewire.user.home');
-})->name('user.home')->middleware('auth');
-
-Route::get('/learn', function () {
-    return view('livewire.user.skill-tree');
-})->name('user.learn')->middleware('auth');
-
-Route::get('/lesson/practice', function () {
-    return view('livewire.user.lesson-practice');
-})->name('user.lesson.practice')->middleware('auth');
-
-Route::get('/leaderboard', function () {
-    return view('livewire.user.leaderboard');
-})->name('user.leaderboard')->middleware('auth');
-
-Route::get('/profile', function () {
-    return view('livewire.user.profile');
-})->name('user.profile')->middleware('auth');
+Route::get('/', [HomeController::class, 'index'])->name('user.home')->middleware('auth');
+Route::get('/learn', [SkillTreeController::class, 'index'])->name('user.learn')->middleware('auth');
+Route::get('/lesson/{lesson}', [LessonController::class, 'show'])->name('user.lesson.practice')->middleware('auth');
+Route::post('/lesson/{lesson}/submit', [LessonController::class, 'submit'])->name('user.lesson.submit')->middleware('auth');
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('user.leaderboard')->middleware('auth');
+Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile')->middleware('auth');
