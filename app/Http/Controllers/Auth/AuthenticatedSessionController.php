@@ -34,6 +34,17 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
+        // Block admin role from logging into the user area
+        if ($user->hasRole('admin')) {
+            Auth::guard('web')->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            throw ValidationException::withMessages([
+                'email' => 'Akun admin tidak bisa login di sini. Gunakan /admin/login.',
+            ]);
+        }
+
         $onboarding = $user->onboarding;
 
         if (! $onboarding || ! $onboarding->completed_at) {
