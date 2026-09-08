@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\LessonProgressStatusEnum;
 use App\Models\Course;
+use App\Models\UserCourseProgress;
+use App\Models\UserLessonProgress;
 use Illuminate\Support\Facades\Auth;
 
 class SkillTreeController extends Controller
@@ -18,6 +21,25 @@ class SkillTreeController extends Controller
             abort(404, 'Belum ada course yang tersedia');
         }
 
+        // Ensure user has course progress created
+        UserCourseProgress::firstOrCreate(
+            ['user_id' => $user->id, 'course_id' => $course->id],
+            [
+                'completed_lessons' => 0,
+                'total_lessons' => $course->units->flatMap->lessons->count(),
+                'progress_percent' => 0,
+                'started_at' => now(),
+            ]
+        );
+
+        // Ensure user has lesson progress created for every lesson
+        foreach ($course->units->flatMap->lessons as $lesson) {
+            UserLessonProgress::firstOrCreate(
+                ['user_id' => $user->id, 'lesson_id' => $lesson->id],
+                ['status' => LessonProgressStatusEnum::NotStarted]
+            );
+        }
+
         // Load units with lessons and user progress
         $units = $course->units()->with(['lessons' => function ($q) use ($user) {
             $q->with(['progress' => function ($p) use ($user) {
@@ -30,20 +52,18 @@ class SkillTreeController extends Controller
 
         $previousCompleted = true;
         foreach ($allLessons as $lesson) {
-            $progress = $lesson->progress->first();
+            $rawStatus = $lesson->progress->first()?->status;
 
-            if ($progress) {
-                $lesson->user_status = $progress->status;
+            if ($rawStatus === LessonProgressStatusEnum::Completed) {
+                $lesson->user_status = 'completed';
+                $previousCompleted = true;
+            } elseif ($rawStatus === LessonProgressStatusEnum::InProgress) {
+                $lesson->user_status = 'available';
+                $previousCompleted = false;
             } else {
-                if ($previousCompleted) {
-                    $lesson->user_status = 'available';
-                } else {
-                    $lesson->user_status = 'locked';
-                }
+                $lesson->user_status = $previousCompleted ? 'available' : 'locked';
+                $previousCompleted = false;
             }
-
-            // Next lesson is locked unless current is completed
-            $previousCompleted = ($progress?->status === 'completed');
         }
 
         // Group lessons back by unit

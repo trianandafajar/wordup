@@ -59,5 +59,7 @@
         @include('livewire.user.partials.bottom-nav', ['active' => $activeMenu])
     @endif
 
+    @stack('scripts')
+
 </body>
 </html>

@@ -19,14 +19,16 @@ class LessonController extends Controller
         $user = Auth::user();
         $lesson = Lesson::with('questions.options', 'unit')->findOrFail($lessonId);
 
-        // Check if user has access to this lesson
-        $courseProgress = UserCourseProgress::where('user_id', $user->id)
-            ->where('course_id', $lesson->unit->course_id)
-            ->first();
-
-        if (! $courseProgress) {
-            return redirect()->route('user.home')->with('error', 'Anda belum terdaftar di course ini');
-        }
+        // Ensure user has course progress created
+        $courseProgress = UserCourseProgress::firstOrCreate(
+            ['user_id' => $user->id, 'course_id' => $lesson->unit->course_id],
+            [
+                'completed_lessons' => 0,
+                'total_lessons' => $lesson->unit->course->units->flatMap->lessons->count(),
+                'progress_percent' => 0,
+                'started_at' => now(),
+            ]
+        );
 
         // Get user progress for this lesson
         $progress = UserLessonProgress::where('user_id', $user->id)
@@ -144,20 +146,21 @@ class LessonController extends Controller
             );
         }
 
+        // Load existing progress (for best_score accumulation)
+        $progress = UserLessonProgress::where('user_id', $user->id)
+            ->where('lesson_id', $lesson->id)
+            ->first();
+
         // Update lesson progress
         UserLessonProgress::updateOrCreate(
             ['user_id' => $user->id, 'lesson_id' => $lesson->id],
             [
                 'status' => $passed ? LessonProgressStatusEnum::Completed : LessonProgressStatusEnum::InProgress,
                 'best_score' => max($progress?->best_score ?? 0, $finalScore),
-                'attempts_count' => DB::raw('attempts_count + 1'),
+                'attempts_count' => ($progress?->attempts_count ?? 0) + 1,
                 'completed_at' => $passed ? now() : null,
             ]
         );
-
-        $progress = UserLessonProgress::where('user_id', $user->id)
-            ->where('lesson_id', $lesson->id)
-            ->first();
 
         // Award XP only when passing
         $xpEarned = 0;
