@@ -25,7 +25,7 @@ class LessonController extends Controller
                 ->with('error', 'Nyawa habis! Tunggu sampai nyawa terisi kembali.');
         }
 
-        $lesson = Lesson::with('questions.options', 'unit')->findOrFail($lessonId);
+        $lesson = Lesson::with('questions.options', 'questions.answer', 'unit')->findOrFail($lessonId);
 
         // Ensure user has course progress created
         $courseProgress = UserCourseProgress::firstOrCreate(
@@ -85,24 +85,31 @@ class LessonController extends Controller
     public function submit(Request $request, $lessonId)
     {
         $user = Auth::user();
-        $lesson = Lesson::with('questions.options', 'unit.lessons')->findOrFail($lessonId);
+        $lesson = Lesson::with('questions.options', 'questions.answer', 'unit.lessons')->findOrFail($lessonId);
 
         $request->validate([
             'answers' => 'required|array',
-            'answers.*' => 'integer',
         ]);
 
         $totalQuestions = $lesson->questions->count();
         $correctCount = 0;
         $answeredQuestions = collect();
 
-        foreach ($request->answers as $questionId => $selectedOptionId) {
+        foreach ($request->answers as $questionId => $answerGiven) {
             $question = $lesson->questions->firstWhere('id', (int) $questionId);
             if (! $question) {
                 continue;
             }
 
-            $isCorrect = $question->options->contains(fn ($option) => $option->id === (int) $selectedOptionId && $option->is_correct);
+            if ($question->type === 'fill_in_the_blank' || ($question->options->count() <= 0 && $question->answer)) {
+                // Compare text answer (case-insensitive, trimmed)
+                $correct = strtolower(trim((string) $question->answer?->correct_text));
+                $given = strtolower(trim((string) $answerGiven));
+                $isCorrect = $given !== '' && $given === $correct;
+            } else {
+                // Multiple choice / listening: match option id
+                $isCorrect = $question->options->contains(fn($option) => $option->id === (int) $answerGiven && $option->is_correct);
+            }
 
             if ($isCorrect) {
                 $correctCount++;
@@ -110,7 +117,7 @@ class LessonController extends Controller
 
             $answeredQuestions->push([
                 'question' => $question,
-                'selected_option_id' => (int) $selectedOptionId,
+                'answer_given' => (string) $answerGiven,
                 'is_correct' => $isCorrect,
             ]);
         }
@@ -147,7 +154,7 @@ class LessonController extends Controller
                     'question_id' => $answer['question']->id,
                 ],
                 [
-                    'answer_given' => $answer['selected_option_id'],
+                    'answer_given' => $answer['answer_given'],
                     'is_correct' => $answer['is_correct'],
                     'answered_at' => now(),
                 ]
@@ -189,7 +196,7 @@ class LessonController extends Controller
 
             $user->streakLogs()->updateOrCreate(
                 ['activity_date' => $today],
-                ['xp_earned_that_day' => DB::raw('xp_earned_that_day + '.$xpEarned)]
+                ['xp_earned_that_day' => DB::raw('xp_earned_that_day + ' . $xpEarned)]
             );
 
             $user->save();

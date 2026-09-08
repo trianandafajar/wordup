@@ -8,6 +8,7 @@ use App\Enums\QuestionTypeEnum;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Question;
+use App\Models\QuestionAnswer;
 use App\Models\QuestionOption;
 use App\Models\Unit;
 use App\Models\User;
@@ -101,6 +102,7 @@ class DatabaseSeeder extends Seeder
         // Add questions for each lesson
         $sampleQuestions = [
             [
+                'type' => QuestionTypeEnum::MultipleChoice->value,
                 'text' => 'How do you say "Halo" in English?',
                 'options' => [
                     ['text' => 'Hello', 'correct' => true],
@@ -110,6 +112,7 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
+                'type' => QuestionTypeEnum::MultipleChoice->value,
                 'text' => 'What is the correct response to "How are you?"',
                 'options' => [
                     ['text' => 'I am fine, thank you', 'correct' => true],
@@ -119,15 +122,13 @@ class DatabaseSeeder extends Seeder
                 ],
             ],
             [
-                'text' => 'Which word means "Terima kasih"?',
-                'options' => [
-                    ['text' => 'Thank you', 'correct' => true],
-                    ['text' => 'Please', 'correct' => false],
-                    ['text' => 'Sorry', 'correct' => false],
-                    ['text' => 'You are welcome', 'correct' => false],
-                ],
+                'type' => QuestionTypeEnum::FillInTheBlank->value,
+                'text' => 'Lengkapi terjemahan: "Selamat pagi" = Good ____',
+                'answer' => 'morning',
+                'options' => [],
             ],
             [
+                'type' => QuestionTypeEnum::MultipleChoice->value,
                 'text' => 'How do you ask someone\'s name?',
                 'options' => [
                     ['text' => 'What is your name?', 'correct' => true],
@@ -144,16 +145,24 @@ class DatabaseSeeder extends Seeder
                     'lesson_id' => $lesson->id,
                     'order' => $qOrder + 1,
                 ], [
-                    'type' => QuestionTypeEnum::MultipleChoice->value,
+                    'type' => $qData['type'],
                     'difficulty_level' => QuestionDifficultyEnum::Beginner->value,
                     'question_text' => $qData['text'],
                 ]);
 
-                foreach ($qData['options'] as $opt) {
-                    QuestionOption::query()->firstOrCreate([
+                if ($qData['type'] === QuestionTypeEnum::FillInTheBlank->value && isset($qData['answer'])) {
+                    QuestionAnswer::query()->firstOrCreate([
                         'question_id' => $question->id,
-                        'option_text' => $opt['text'],
-                    ], ['is_correct' => $opt['correct']]);
+                    ], [
+                        'correct_text' => $qData['answer'],
+                    ]);
+                } else {
+                    foreach ($qData['options'] as $opt) {
+                        QuestionOption::query()->firstOrCreate([
+                            'question_id' => $question->id,
+                            'option_text' => $opt['text'],
+                        ], ['is_correct' => $opt['correct']]);
+                    }
                 }
             }
         }

@@ -60,6 +60,17 @@
             </div>
 
             <!-- Options -->
+            @if ($question->type === 'fill_in_the_blank')
+            <div class="space-y-3 mb-8">
+                <div>
+                    <label class="block text-sm font-medium text-gray-600 mb-2">Ketik jawabanmu:</label>
+                    <input type="text" name="answers[{{ $question->id }}]" placeholder="Tulis jawaban..."
+                        class="fill-input w-full p-4 bg-white border-2 border-gray-200 rounded-2xl text-left font-medium text-gray-800 focus:outline-none focus:border-brand-500 focus:bg-brand-50 transition-colors"
+                        data-correct="{{ $question->answer?->correct_text ?? '' }}" required>
+                </div>
+                <p class="text-xs text-gray-400 italic">Tulis jawaban dengan benar (tidak peka huruf besar/kecil)</p>
+            </div>
+            @else
             <div class="space-y-3 mb-8">
                 @foreach ($question->options as $option)
                 <label class="block cursor-pointer">
@@ -72,6 +83,7 @@
                 </label>
                 @endforeach
             </div>
+            @endif
         </div>
         @endforeach
 
@@ -191,7 +203,8 @@
         function updateNav() {
             const currentStep = steps[current];
             const selectedRadio = currentStep.querySelector('input[type="radio"]:checked');
-            const hasAnswer = !!selectedRadio;
+            const textInput = currentStep.querySelector('input.fill-input');
+            const hasAnswer = !!selectedRadio || (textInput && textInput.value.trim() !== '');
 
             prevBtn.classList.toggle('hidden', current === 0);
 
@@ -227,8 +240,17 @@
             if (this.disabled) return;
             const currentStep = steps[current];
             const selectedRadio = currentStep.querySelector('input[type="radio"]:checked');
-            if (!selectedRadio) return;
-            answered[current] = selectedRadio.value;
+            const textInput = currentStep.querySelector('input.fill-input');
+            let answerValue = null;
+
+            if (selectedRadio) {
+                answerValue = selectedRadio.value;
+            } else if (textInput && textInput.value.trim() !== '') {
+                answerValue = textInput.value.trim();
+            } else {
+                return;
+            }
+            answered[current] = answerValue;
             goTo(current + 1);
         });
 
@@ -239,16 +261,15 @@
         // Per-question feedback
         steps.forEach(function (step, stepIndex) {
             const radios = step.querySelectorAll('input[type="radio"]');
+            const textInput = step.querySelector('input.fill-input');
+            
             radios.forEach(function (radio) {
                 radio.addEventListener('change', function () {
                     const isCorrect = radio.dataset.isCorrect === 'true';
                     const optionDiv = radio.closest('label').querySelector('div');
                     const allDivs = step.querySelectorAll('div[data-option-id]');
 
-                    // Reset all options
-                    allDivs.forEach(function (div) {
-                        div.classList.remove('border-brand-500', 'bg-brand-50', 'border-red-500', 'bg-red-50', 'opacity-50');
-                    });
+                    allDivs.forEach(div => div.classList.remove('border-brand-500', 'bg-brand-50', 'border-red-500', 'bg-red-50', 'opacity-50'));
 
                     if (isCorrect) {
                         optionDiv.classList.add('border-brand-500', 'bg-brand-50');
@@ -256,8 +277,7 @@
                         optionDiv.classList.add('border-red-500', 'bg-red-50', 'opacity-70');
                     }
 
-                    // Highlight correct answer
-                    allDivs.forEach(function (div) {
+                    allDivs.forEach(div => {
                         const optRadio = step.querySelector('input[value="' + div.dataset.optionId + '"]');
                         if (optRadio && optRadio.dataset.isCorrect === 'true') {
                             div.classList.remove('opacity-70');
@@ -269,6 +289,12 @@
                     updateNav();
                 });
             });
+
+            if (textInput) {
+                textInput.addEventListener('input', function () {
+                    updateNav();
+                });
+            }
         });
 
         updateProgress();
