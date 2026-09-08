@@ -66,6 +66,15 @@ class SkillTreeController extends Controller
             }
         }
 
+        // If no lives left, only completed lessons are accessible
+        if ($user->lives <= 0) {
+            foreach ($allLessons as $lesson) {
+                if ($lesson->user_status !== 'completed') {
+                    $lesson->user_status = 'locked';
+                }
+            }
+        }
+
         // Group lessons back by unit
         $unitsWithStatus = $units->map(function ($unit) {
             return [
@@ -87,6 +96,7 @@ class SkillTreeController extends Controller
         return view('livewire.user.skill-tree', [
             'course' => $course,
             'units' => $unitsWithStatus,
+            'lives' => $user->lives,
         ]);
     }
 }
