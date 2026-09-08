@@ -2,9 +2,15 @@
 
 @section('content')
 @foreach ($units as $unitData)
+@php
+$allCompleted = $unitData['lessons']->every('status', 'completed');
+$hasAvailable = $unitData['lessons']->firstWhere('status', 'available') !== null;
+$unitColor = $allCompleted ? 'bg-brand-500' : ($hasAvailable ? 'bg-amber-500' : 'bg-gray-300 text-gray-600');
+$unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600';
+@endphp
 <div class="w-full max-w-lg mb-4">
     <div
-        class="rounded-2xl {{ $unitData['lessons']->every('status', 'completed') ? 'bg-brand-500' : 'bg-gray-300 text-gray-600' }} text-white p-4 shadow-md flex items-center justify-between gap-4 mb-8">
+        class="rounded-2xl {{ $unitColor }} {{ $unitTextColor }} p-4 shadow-md flex items-center justify-between gap-4 mb-8">
         <div>
             <span class="text-xs font-bold uppercase tracking-wider opacity-80">Unit {{ $loop->iteration }}</span>
             <h3 class="text-lg font-bold leading-snug">{{ $unitData['unit']->title }}</h3>
