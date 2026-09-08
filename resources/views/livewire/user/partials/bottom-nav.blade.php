@@ -35,14 +35,4 @@
         </svg>
         <span class="text-[10px] font-semibold">Profile</span>
     </a>
-
-    <form action="{{ route('logout') }}" method="POST">
-        @csrf
-        <button type="submit" class="flex flex-col items-center gap-0.5 py-1 text-gray-400 transition-colors">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M17 7L12 12L7 7M17 7H7M17 7V17C17 19.2091 15.2091 21 13 21H7C4.79086 21 3 19.2091 3 17V7" />
-            </svg>
-            <span class="text-[10px] font-semibold">Logout</span>
-        </button>
-    </form>
 </nav>

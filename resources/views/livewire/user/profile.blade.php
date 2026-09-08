@@ -127,7 +127,7 @@
     </div>
 
     <!-- Activity Timeline -->
-    <div class="bg-white rounded-3xl border border-gray-200 p-6">
+    <div class="bg-white rounded-3xl border border-gray-200 p-6 mb-6">
         <h2 class="font-bold text-gray-900 text-sm mb-4">Aktivitas Terbaru</h2>
         <div class="space-y-2 text-xs text-gray-500">
             @forelse ($recentActivities as $activity)
@@ -143,6 +143,18 @@
             @endforelse
         </div>
     </div>
+
+    <!-- Logout -->
+    <form action="{{ route('logout') }}" method="POST">
+        @csrf
+        <button type="submit"
+            class="w-full py-3 rounded-xl bg-red-50 border border-red-200 text-red-600 font-semibold text-sm hover:bg-red-100 transition-colors flex items-center justify-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 7L12 12L7 7M17 7H7M17 7V17C17 19.2091 15.2091 21 13 21H7C4.79086 21 3 19.2091 3 17V7" />
+            </svg>
+            Logout
+        </button>
+    </form>
 
 </div>
 @endsection
