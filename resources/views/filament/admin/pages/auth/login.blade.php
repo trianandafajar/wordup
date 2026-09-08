@@ -5,8 +5,8 @@
         </div>
 
         <div class="mb-6 text-center">
-            <h1 class="text-2xl font-bold text-gray-800">Sign In</h1>
-            <p class="mt-1 text-sm text-gray-500">Welcome back to WordUp!</p>
+            <h1 class="text-2xl font-bold text-[#1a2231]">Masuk</h1>
+            <p class="mt-1 text-sm text-[#1a2231]/60">Selamat datang kembali di WordUp!</p>
         </div>
 
         <x-filament-panels::form id="form" wire:submit="authenticate">
