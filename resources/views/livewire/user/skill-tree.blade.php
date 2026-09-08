@@ -32,7 +32,7 @@ $unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600'
 </div>
 
 <!-- Path Zigzag Lessons -->
-<div class="flex flex-col items-center gap-0 w-full mb-8" style="padding-bottom: 2rem;">
+<div class="flex flex-col items-center gap-0 w-full mb-8 relative" style="padding-bottom: 2rem;">
     @foreach ($unitData['lessons'] as $index => $lesson)
     @php
     $isFirst = $index === 0;
@@ -48,7 +48,7 @@ $unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600'
     @endphp
 
     <!-- Lesson Node -->
-    <div class="{{ $mlClass }} mb-0">
+    <div class="{{ $mlClass }} mb-0" data-node="{{ $lesson['id'] }}" data-done="{{ $isCompleted ? '1' : '0' }}">
         <button @if (!$isLocked) onclick="window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'"
             @else disabled @endif
             class="relative group focus:outline-none w-14 h-14 lg:w-16 lg:h-16 rounded-full border-4 transition-all duration-300 flex items-center justify-center shrink-0 z-10 hover:scale-105 {{ $isLocked ? 'bg-gray-200 border-gray-300 opacity-60 cursor-not-allowed' : 'bg-brand-500 border-brand-400 shadow-lg shadow-brand-500/30' }}">
@@ -129,11 +129,60 @@ $unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600'
         </button>
     </div>
 
-    <!-- Path connector -->
+    <!-- Path connector: vertical gap preserved, line drawn by JS -->
     @if (!$isLast)
-    <div class="h-10 w-0.5 {{ $isCompleted ? 'bg-brand-500' : 'bg-gray-200' }}"></div>
+    <div class="h-10 w-full"></div>
     @endif
     @endforeach
+
+    <!-- SVG overlay for connectors -->
+    <svg class="lesson-path absolute inset-0 w-full h-full pointer-events-none" width="100%" height="100%"></svg>
 </div>
 @endforeach
 @endsection
+
+@push('scripts')
+<script>
+    function drawLessonPaths() {
+        document.querySelectorAll('.lesson-path').forEach(function (svg) {
+            while (svg.firstChild) { svg.removeChild(svg.firstChild); }
+            svg.removeAttribute('viewBox');
+        });
+
+        document.querySelectorAll('.lesson-path').forEach(function (svg) {
+            const container = svg.parentElement;
+            const nodes = container.querySelectorAll('[data-node]');
+            const svgRect = svg.getBoundingClientRect();
+
+            if (nodes.length < 2 || svgRect.width === 0) return;
+
+            const ns = 'http://www.w3.org/2000/svg';
+            svg.setAttribute('viewBox', `0 0 ${svgRect.width} ${svgRect.height}`);
+
+            for (let i = 0; i < nodes.length - 1; i++) {
+                const a = nodes[i].getBoundingClientRect();
+                const b = nodes[i + 1].getBoundingClientRect();
+
+                const x1 = a.left + a.width / 2 - svgRect.left;
+                const y1 = a.bottom - svgRect.top;
+                const x2 = b.left + b.width / 2 - svgRect.left;
+                const y2 = b.top - svgRect.top;
+
+                const midY = (y1 + y2) / 2;
+                const color = nodes[i].dataset.done === '1' ? '#4caf50' : '#d1d5db';
+
+                const path = document.createElementNS(ns, 'path');
+                path.setAttribute('d', `M ${x1.toFixed(1)} ${y1.toFixed(1)} C ${x1.toFixed(1)} ${midY.toFixed(1)}, ${x2.toFixed(1)} ${midY.toFixed(1)}, ${x2.toFixed(1)} ${y2.toFixed(1)}`);
+                path.setAttribute('stroke', color);
+                path.setAttribute('stroke-width', '6');
+                path.setAttribute('fill', 'none');
+                path.setAttribute('stroke-linecap', 'round');
+                svg.appendChild(path);
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', drawLessonPaths);
+    window.addEventListener('resize', drawLessonPaths);
+</script>
+@endpush
