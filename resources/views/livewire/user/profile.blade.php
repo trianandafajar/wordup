@@ -18,8 +18,11 @@
                     class="w-20 h-20 rounded-full object-cover border-2 border-gray-200">
                 @else
                 <div
-                    class="w-20 h-20 bg-gradient-to-br from-brand-500 to-brand-600 rounded-full flex items-center justify-center text-3xl font-bold text-white">
-                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                    class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 border-2 border-gray-200">
+                    <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.866 0-7 1.79-7 4v2h14v-2c0-2.21-3.134-4-7-4z" />
+                    </svg>
                 </div>
                 @endif
             </div>
