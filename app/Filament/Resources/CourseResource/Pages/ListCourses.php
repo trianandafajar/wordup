@@ -16,4 +16,9 @@ class ListCourses extends ListRecords
             Actions\CreateAction::make(),
         ];
     }
+
+    public function getSubheading(): string
+    {
+        return 'Kelola Kursus';
+    }
 }
