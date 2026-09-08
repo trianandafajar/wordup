@@ -52,11 +52,13 @@
 
                     <!-- Options -->
                     <div class="space-y-3 mb-8">
-                        @foreach ($question->options->shuffle() as $option)
+                        @foreach ($question->options as $option)
                             <label class="block cursor-pointer">
                                 <input type="radio" name="answers[{{ $question->id }}]" value="{{ $option->id }}"
-                                    class="peer sr-only" required>
-                                <div class="w-full p-4 bg-white border-2 border-gray-200 rounded-2xl text-left font-medium text-gray-800 transition-colors peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:text-brand-700 hover:border-brand-500">
+                                    class="peer sr-only" required
+                                    data-is-correct="{{ $option->is_correct ? 'true' : 'false' }}">
+                                <div class="w-full p-4 bg-white border-2 border-gray-200 rounded-2xl text-left font-medium text-gray-800 transition-colors hover:border-brand-500 hover:bg-brand-50"
+                                     data-option-id="{{ $option->id }}">
                                     {{ $option->option_text }}
                                 </div>
                             </label>
@@ -66,7 +68,7 @@
             @endforeach
 
             <!-- Navigation -->
-            <div class="lesson-nav flex items-center gap-3" data-step-nav="0">
+            <div class="lesson-nav flex items-center gap-3">
                 <button type="button" class="lesson-prev hidden py-4 px-4 bg-gray-100 text-gray-600 font-bold text-sm rounded-2xl hover:bg-gray-200 transition-colors">
                     Kembali
                 </button>
@@ -88,6 +90,7 @@
         const nav = document.querySelector('.lesson-nav');
         const total = steps.length;
         let current = 0;
+        const answered = {};
 
         const progressBar = document.querySelector('.lesson-progress');
         const counter = document.querySelector('.lesson-counter');
@@ -101,31 +104,36 @@
         }
 
         function updateProgress() {
-            const pct = ((current + 1) / total) * 100;
+            const answeredCount = Object.keys(answered).length;
+            const pct = total > 0 ? ((current + 1) / total) * 100 : 0;
             progressBar.style.width = pct + '%';
             counter.textContent = (current + 1) + '/' + total;
         }
 
         function updateNav() {
-            prevBtn.classList.toggle('hidden', current === 0);
-
             const currentStep = steps[current];
-            const hasAnswer = currentStep.querySelector('input[type="radio"]:checked');
+            const selectedRadio = currentStep.querySelector('input[type="radio"]:checked');
+            const hasAnswer = !!selectedRadio;
+
+            prevBtn.classList.toggle('hidden', current === 0);
 
             if (current === total - 1) {
                 nextBtn.classList.add('hidden');
                 submitBtn.classList.remove('hidden');
-                submitBtn.classList.toggle('cursor-not-allowed', !hasAnswer);
                 submitBtn.disabled = !hasAnswer;
+                submitBtn.classList.toggle('cursor-not-allowed', !hasAnswer);
             } else {
                 nextBtn.classList.remove('hidden');
                 submitBtn.classList.add('hidden');
-                nextBtn.classList.toggle('cursor-not-allowed', !hasAnswer);
-                nextBtn.classList.toggle('bg-brand-500', !!hasAnswer);
-                nextBtn.classList.toggle('text-white', !!hasAnswer);
-                nextBtn.classList.toggle('bg-gray-200', !hasAnswer);
-                nextBtn.classList.toggle('text-gray-400', !hasAnswer);
                 nextBtn.disabled = !hasAnswer;
+                nextBtn.classList.toggle('cursor-not-allowed', !hasAnswer);
+                if (hasAnswer) {
+                    nextBtn.classList.remove('bg-gray-200', 'text-gray-400');
+                    nextBtn.classList.add('bg-brand-500', 'text-white');
+                } else {
+                    nextBtn.classList.remove('bg-brand-500', 'text-white');
+                    nextBtn.classList.add('bg-gray-200', 'text-gray-400');
+                }
             }
         }
 
@@ -139,6 +147,10 @@
 
         nextBtn.addEventListener('click', function () {
             if (this.disabled) return;
+            const currentStep = steps[current];
+            const selectedRadio = currentStep.querySelector('input[type="radio"]:checked');
+            if (!selectedRadio) return;
+            answered[current] = selectedRadio.value;
             goTo(current + 1);
         });
 
@@ -146,9 +158,38 @@
             goTo(current - 1);
         });
 
-        steps.forEach(function (step) {
-            step.querySelectorAll('input[type="radio"]').forEach(function (radio) {
-                radio.addEventListener('change', updateNav);
+        // Per-question feedback
+        steps.forEach(function (step, stepIndex) {
+            const radios = step.querySelectorAll('input[type="radio"]');
+            radios.forEach(function (radio) {
+                radio.addEventListener('change', function () {
+                    const isCorrect = radio.dataset.isCorrect === 'true';
+                    const optionDiv = radio.closest('label').querySelector('div');
+                    const allDivs = step.querySelectorAll('div[data-option-id]');
+
+                    // Reset all options
+                    allDivs.forEach(function (div) {
+                        div.classList.remove('border-brand-500', 'bg-brand-50', 'border-red-500', 'bg-red-50', 'opacity-50');
+                    });
+
+                    if (isCorrect) {
+                        optionDiv.classList.add('border-brand-500', 'bg-brand-50');
+                    } else {
+                        optionDiv.classList.add('border-red-500', 'bg-red-50', 'opacity-70');
+                    }
+
+                    // Highlight correct answer
+                    allDivs.forEach(function (div) {
+                        const optRadio = step.querySelector('input[value="' + div.dataset.optionId + '"]');
+                        if (optRadio && optRadio.dataset.isCorrect === 'true') {
+                            div.classList.remove('opacity-70');
+                            div.classList.add('border-brand-500', 'bg-brand-50', 'opacity-100');
+                        }
+                    });
+
+                    answered[stepIndex] = radio.value;
+                    updateNav();
+                });
             });
         });
 

@@ -205,10 +205,25 @@ class LessonController extends Controller
             }
         }
 
-        return redirect()->route('user.learn')
-            ->with($passed ? 'success' : 'error',
-                $passed
-                    ? "Bagus! Score: {$finalScore}%. +{$xpEarned} XP!"
-                    : "Skor Anda {$finalScore}%. Perlu minimal 80% untuk lulus. Coba lagi!");
+        // Store results in session
+        session(['lesson_result' => [
+            'score' => $finalScore,
+            'xp_earned' => $xpEarned,
+            'passed' => $passed,
+        ]]);
+
+        return redirect()->route('user.lesson.result', $lesson->id);
+    }
+
+    public function result($lessonId)
+    {
+        $result = session('lesson_result');
+        if (! $result) {
+            return redirect()->route('user.learn');
+        }
+
+        return view('livewire.user.lesson-result', [
+            'result' => $result,
+        ]);
     }
 }
