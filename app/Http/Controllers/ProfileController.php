@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\BadgeService;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
@@ -9,6 +10,9 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
+
+        $badgeService = new BadgeService;
+        $badges = $badgeService->getBadges($user);
 
         // Get some achievements counts
         $completedLessonsCount = $user->lessonProgress()->where('status', 'completed')->count();
@@ -28,6 +32,7 @@ class ProfileController extends Controller
             'totalXp' => $totalXp,
             'currentStreak' => $currentStreak,
             'recentActivities' => $recentActivities,
+            'badges' => $badges,
         ]);
     }
 }
