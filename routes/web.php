@@ -37,3 +37,4 @@ Route::post('/lesson/{lesson}/submit', [LessonController::class, 'submit'])->nam
 Route::get('/lesson/{lesson}/result', [LessonController::class, 'result'])->name('user.lesson.result')->middleware(['auth', 'onboarding']);
 Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('user.leaderboard')->middleware(['auth', 'onboarding']);
 Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile')->middleware(['auth', 'onboarding']);
+Route::put('/profile', [ProfileController::class, 'update'])->name('user.profile.update')->middleware(['auth', 'onboarding']);
