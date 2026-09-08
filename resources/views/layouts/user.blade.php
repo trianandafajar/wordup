@@ -12,18 +12,12 @@
     <title>{{ $pageTitle }} - WordUp</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="h-full bg-gray-100 font-sans text-gray-900 antialiased flex flex-col justify-between">
+<body class="h-full bg-[#ecfdf3] font-sans text-gray-900 antialiased flex flex-col justify-between">
 
-    <!-- Desktop Sidebar -->
-    @include('livewire.user.partials.desktop-nav', ['active' => $activeMenu])
-
-    <!-- Top Gamification Bar (Adjusted for sidebar) -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:px-8 lg:pl-72">
-        <div class="lg:hidden flex items-center gap-3">
+    <!-- Top Gamification Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4">
+        <div class="flex items-center gap-3">
             <span class="text-xl font-extrabold text-brand-500 tracking-wider">WordUp</span>
-        </div>
-        <div class="hidden lg:flex items-center gap-3">
-            <span class="text-lg font-bold text-gray-800">{{ $pageTitle }}</span>
         </div>
 
         <div class="flex items-center gap-4 sm:gap-6">
@@ -54,7 +48,7 @@
     </header>
 
     <!-- Main Content Area -->
-    <main class="flex-1 overflow-y-auto pt-20 lg:pl-64 {{ $showBottomNav ? 'pb-24 lg:pb-12' : 'pb-8' }}">
+    <main class="flex-1 overflow-y-auto pt-20 {{ $showBottomNav ? 'pb-24' : 'pb-8' }}">
         <div class="flex flex-col items-center w-full max-w-xl mx-auto px-4 py-6">
             @yield('content')
         </div>
