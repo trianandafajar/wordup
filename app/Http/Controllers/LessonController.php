@@ -183,6 +183,10 @@ class LessonController extends Controller
         if ($passed) {
             $xpEarned = $lesson->xp_reward;
 
+            // Streak bonus (+10 XP when consecutive streak >= 2)
+            $bonusXp = ($user->current_streak >= 2) ? 10 : 0;
+            $xpEarned += $bonusXp;
+
             // Streak logic (fix Carbon vs String comparison bug)
             $today = now()->toDateString();
             $lastActivity = $user->last_activity_date?->toDateString();
@@ -243,7 +247,24 @@ class LessonController extends Controller
         session(['lesson_result' => [
             'score' => $finalScore,
             'xp_earned' => $xpEarned,
+            'bonus_xp' => $bonusXp ?? 0,
             'passed' => $passed,
+            'questions' => $answeredQuestions->map(function ($answer) {
+                $question = $answer['question'];
+                $correctText = match (true) {
+                    $question->type === 'fill_in_the_blank' || ($question->options->count() <= 0 && $question->answer) => $question->answer?->correct_text,
+                    default => $question->options->firstWhere('is_correct', true)?->option_text,
+                };
+
+                return [
+                    'text' => $question->question_text,
+                    'type' => $question->type,
+                    'answer_given' => $answer['answer_given'],
+                    'correct_text' => $correctText,
+                    'is_correct' => $answer['is_correct'],
+                    'lesson_id' => $question->lesson_id,
+                ];
+            })->values(),
         ]]);
 
         return redirect()->route('user.lesson.result', $lesson->id);
