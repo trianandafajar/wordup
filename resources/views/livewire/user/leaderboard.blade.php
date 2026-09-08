@@ -33,10 +33,11 @@
 
     <!-- Leaderboard -->
     <div class="bg-white rounded-3xl border border-gray-200 divide-y divide-gray-100 overflow-hidden shadow-sm">
-        @foreach (($usersByLeague[$currentUserLeague['key']] ?? collect()) as $i => $user)
+        @forelse ($leagueUsers as $i => $user)
         <div
             class="flex items-center gap-4 p-4 {{ $user['id'] === $currentUser->id ? 'bg-brand-50' : 'hover:bg-gray-50' }} transition-colors">
-            <span class="text-sm font-bold {{ $i < 3 ? 'text-amber-500' : 'text-gray-400' }} w-8 text-center">{{ $i + 1
+            <span class="text-sm font-bold {{ $i < 3 ? 'text-amber-500' : 'text-gray-400' }} w-8 text-center">{{
+                $user['rank']
                 }}</span>
             <div
                 class="w-10 h-10 rounded-full {{ $currentUserLeague['bg'] }} {{ $currentUserLeague['color'] }} flex items-center justify-center font-bold shadow-sm text-sm">
@@ -47,7 +48,9 @@
                 <p class="text-xs text-gray-500">{{ number_format($user['xp']) }} XP</p>
             </div>
         </div>
-        @endforeach
+        @empty
+        <p class="text-center text-gray-400 py-6">Belum ada user lain di league ini</p>
+        @endforelse
     </div>
 
     <!-- Promotion Info -->

@@ -8,6 +8,7 @@ use App\Models\Lesson;
 use App\Models\UserAnswer;
 use App\Models\UserCourseProgress;
 use App\Models\UserLessonProgress;
+use App\Services\LeagueService;
 use App\Services\LifeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -127,19 +128,19 @@ class LessonController extends Controller
         // Only award XP if score >= 80
         $passed = $finalScore >= 80;
 
-        // Create or reuse attempt
-        $attempt = $user->lessonAttempts()
+        // Create a new attempt each time (increment attempt_number)
+        $previousAttemptNumber = $user->lessonAttempts()
             ->where('lesson_id', $lesson->id)
-            ->where('attempt_number', 1)
-            ->first();
+            ->max('attempt_number');
 
-        if (! $attempt) {
-            $attempt = $user->lessonAttempts()->create([
-                'lesson_id' => $lesson->id,
-                'attempt_number' => 1,
-                'status' => AttemptStatusEnum::InProgress,
-            ]);
-        }
+        $attemptNumber = ($previousAttemptNumber ?? 0) + 1;
+
+        $attempt = $user->lessonAttempts()->create([
+            'lesson_id' => $lesson->id,
+            'attempt_number' => $attemptNumber,
+            'status' => AttemptStatusEnum::InProgress,
+            'started_at' => now(),
+        ]);
 
         $attempt->update([
             'score' => $finalScore,
@@ -182,17 +183,32 @@ class LessonController extends Controller
         if ($passed) {
             $xpEarned = $lesson->xp_reward;
 
-            // Streak bonus
+            // Streak logic (fix Carbon vs String comparison bug)
             $today = now()->toDateString();
-            $lastActivity = $user->last_activity_date;
+            $lastActivity = $user->last_activity_date?->toDateString();
 
             $user->xp_total += $xpEarned;
+            $user->league_week_xp += $xpEarned;
 
             if ($lastActivity !== $today) {
-                $user->current_streak += 1;
+                // Check if last activity was yesterday
+                $yesterday = now()->subDay()->toDateString();
+                if ($lastActivity === $yesterday) {
+                    $user->current_streak += 1;
+                } elseif (! $lastActivity) {
+                    $user->current_streak = 1;
+                } else {
+                    // Gap > 1 day, reset streak to 1
+                    $user->current_streak = 1;
+                }
             }
             $user->longest_streak = max($user->longest_streak, $user->current_streak);
             $user->last_activity_date = $today;
+
+            // Ensure user has league assigned
+            if (! $user->league) {
+                $user->league = (new LeagueService)->getLeagueForXp($user->xp_total)['key'];
+            }
 
             $user->streakLogs()->updateOrCreate(
                 ['activity_date' => $today],

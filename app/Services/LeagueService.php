@@ -25,13 +25,39 @@ class LeagueService
         return self::LEAGUES[$current] + ['key' => $current];
     }
 
+    public function getLeagueByKey(?string $key): array
+    {
+        $key = $key ?? 'bronze';
+        if (! array_key_exists($key, self::LEAGUES)) {
+            $key = 'bronze';
+        }
+
+        return self::LEAGUES[$key] + ['key' => $key];
+    }
+
     public function getLeagueForUser(User $user): array
     {
-        return $this->getLeagueForXp($user->xp_total);
+        return $this->getLeagueByKey($user->league);
     }
 
     public function getPromotionZone(int $totalInLeague): int
     {
-        return max(1, intval(ceil($totalInLeague * 0.2))); // top 20% get promoted
+        return max(1, intval(ceil($totalInLeague * 0.2)));
+    }
+
+    public function nextLeagueKey(string $key): ?string
+    {
+        $keys = array_keys(self::LEAGUES);
+        $idx = array_search($key, $keys, true);
+
+        return ($idx === false || $idx === count($keys) - 1) ? null : $keys[$idx + 1];
+    }
+
+    public function previousLeagueKey(string $key): ?string
+    {
+        $keys = array_keys(self::LEAGUES);
+        $idx = array_search($key, $keys, true);
+
+        return ($idx === false || $idx === 0) ? null : $keys[$idx - 1];
     }
 }

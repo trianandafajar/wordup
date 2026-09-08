@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['name', 'email', 'password', 'xp_total', 'current_streak', 'longest_streak', 'last_activity_date', 'lives', 'last_life_refill_at', 'avatar'])]
+#[Fillable(['name', 'email', 'password', 'xp_total', 'current_streak', 'longest_streak', 'last_activity_date', 'lives', 'last_life_refill_at', 'avatar', 'league', 'league_week_xp', 'league_week_started_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -27,6 +27,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'last_activity_date' => 'date',
             'last_life_refill_at' => 'datetime',
+            'league_week_started_at' => 'datetime',
         ];
     }
 

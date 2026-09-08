@@ -13,40 +13,39 @@ class LeaderboardController extends Controller
         $currentUser = Auth::user();
         $leagueService = new LeagueService;
 
+        // Ensure current user has a league assigned
+        if (! $currentUser->league) {
+            $currentUser->league = $leagueService->getLeagueForXp($currentUser->xp_total)['key'];
+            $currentUser->save();
+        }
+
         $currentUserLeague = $leagueService->getLeagueForUser($currentUser);
 
-        // All users with their league
-        $allUsers = User::orderByDesc('xp_total')->get()->map(function ($user, $index) use ($leagueService) {
-            $league = $leagueService->getLeagueForUser($user);
+        // Users in the same league, ranked by weekly XP
+        $leagueUsers = User::where('league', $currentUserLeague['key'])
+            ->orderByDesc('league_week_xp')
+            ->orderByDesc('xp_total')
+            ->get()
+            ->map(function ($user, $index) {
+                return [
+                    'rank' => $index + 1,
+                    'name' => $user->name,
+                    'xp' => $user->league_week_xp > 0 ? $user->league_week_xp : $user->xp_total,
+                    'total_xp' => $user->xp_total,
+                    'id' => $user->id,
+                ];
+            });
 
-            return [
-                'rank' => $index + 1,
-                'name' => $user->name,
-                'xp' => $user->xp_total,
-                'id' => $user->id,
-                'league' => $league,
-            ];
-        });
-
-        // Group by league
-        $usersByLeague = $allUsers->groupBy('league.key');
-
-        // Current user rank globally
-        $currentUserRank = $allUsers->where('xp', '>', $currentUser->xp_total)->count() + 1;
-
-        // Current user rank within their league
-        $leagueUsers = $usersByLeague[$currentUserLeague['key']] ?? collect();
-        $currentUserLeagueRank = $leagueUsers->where('xp', '>', $currentUser->xp_total)->count() + 1;
-
-        // Promotion zone
         $totalInLeague = $leagueUsers->count();
         $promotionCount = $leagueService->getPromotionZone($totalInLeague);
 
+        $currentUserRecord = $leagueUsers->firstWhere('id', $currentUser->id);
+        $currentUserLeagueRank = $currentUserRecord['rank'] ?? 1;
+
         return view('livewire.user.leaderboard', [
-            'usersByLeague' => $usersByLeague,
+            'leagueUsers' => $leagueUsers,
             'currentUser' => $currentUser,
             'currentUserLeague' => $currentUserLeague,
-            'currentUserRank' => $currentUserRank,
             'currentUserLeagueRank' => $currentUserLeagueRank,
             'promotionCount' => $promotionCount,
             'totalInLeague' => $totalInLeague,
