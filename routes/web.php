@@ -30,10 +30,10 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
-Route::get('/', [HomeController::class, 'index'])->name('user.home')->middleware('auth');
-Route::get('/learn', [SkillTreeController::class, 'index'])->name('user.learn')->middleware('auth');
-Route::get('/lesson/{lesson}', [LessonController::class, 'show'])->name('user.lesson.practice')->middleware('auth');
-Route::post('/lesson/{lesson}/submit', [LessonController::class, 'submit'])->name('user.lesson.submit')->middleware('auth');
-Route::get('/lesson/{lesson}/result', [LessonController::class, 'result'])->name('user.lesson.result')->middleware('auth');
-Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('user.leaderboard')->middleware('auth');
-Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile')->middleware('auth');
+Route::get('/', [HomeController::class, 'index'])->name('user.home')->middleware(['auth', 'onboarding']);
+Route::get('/learn', [SkillTreeController::class, 'index'])->name('user.learn')->middleware(['auth', 'onboarding']);
+Route::get('/lesson/{lesson}', [LessonController::class, 'show'])->name('user.lesson.practice')->middleware(['auth', 'onboarding']);
+Route::post('/lesson/{lesson}/submit', [LessonController::class, 'submit'])->name('user.lesson.submit')->middleware(['auth', 'onboarding']);
+Route::get('/lesson/{lesson}/result', [LessonController::class, 'result'])->name('user.lesson.result')->middleware(['auth', 'onboarding']);
+Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('user.leaderboard')->middleware(['auth', 'onboarding']);
+Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile')->middleware(['auth', 'onboarding']);
