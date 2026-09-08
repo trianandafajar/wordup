@@ -8,6 +8,7 @@ use App\Models\Lesson;
 use App\Models\UserAnswer;
 use App\Models\UserCourseProgress;
 use App\Models\UserLessonProgress;
+use App\Services\LifeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,13 @@ class LessonController extends Controller
     public function show($lessonId)
     {
         $user = Auth::user();
+
+        // Redirect to home if user has no lives left
+        if ($user->lives <= 0) {
+            return redirect()->route('user.home')
+                ->with('error', 'Nyawa habis! Tunggu sampai nyawa terisi kembali.');
+        }
+
         $lesson = Lesson::with('questions.options', 'unit')->findOrFail($lessonId);
 
         // Ensure user has course progress created
@@ -203,6 +211,9 @@ class LessonController extends Controller
                     : 0;
                 $courseProgress->save();
             }
+        } else {
+            // Deduct life on failure
+            app(LifeService::class)->loseLife($user);
         }
 
         // Store results in session
