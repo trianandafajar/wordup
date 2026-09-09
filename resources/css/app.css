@@ -23,6 +23,10 @@
     --color-gray-dark: #1a2231;
 }
 
+[x-cloak] {
+    display: none !important;
+}
+
 /* ===== Gamification UI ===== */
 
 /* Pulse animation for available lesson node */
