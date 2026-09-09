@@ -13,8 +13,7 @@ class ListCourses extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make()
-                ->modal(),
+            Actions\CreateAction::make(),
         ];
     }
 

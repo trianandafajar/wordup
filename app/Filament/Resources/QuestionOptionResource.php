@@ -79,8 +79,8 @@ class QuestionOptionResource extends Resource
     {
         return [
             'index' => Pages\ListQuestionOptions::route('/'),
-            'create' => Pages\CreateQuestionOption::route('/create'),
-            'edit' => Pages\EditQuestionOption::route('/{record}/edit'),
+            // 'create' => Pages\CreateQuestionOption::route('/create'),
+            // 'edit' => Pages\EditQuestionOption::route('/{record}/edit'),
         ];
     }
 }
