@@ -2,7 +2,7 @@
 
 @section('content')
 @php
-    use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage;
 @endphp
 <div class="w-full max-w-lgF">
 
@@ -76,10 +76,10 @@
             @else
             <div class="space-y-3 mb-8">
                 @foreach ($question->options as $option)
-                <label class="block cursor-pointer">
+                <label class="block cursor-pointer option-label">
                     <input type="radio" name="answers[{{ $question->id }}]" value="{{ $option->id }}"
                         class="peer sr-only" required data-is-correct="{{ $option->is_correct ? 'true' : 'false' }}">
-                    <div class="w-full p-4 bg-white border-2 border-gray-200 rounded-2xl text-left font-medium text-gray-800 transition-colors hover:border-brand-500 hover:bg-brand-50"
+                    <div class="w-full p-4 bg-white border-2 border-gray-200 rounded-2xl text-left font-medium text-gray-800 transition-colors hover:border-brand-500 hover:bg-brand-50 peer-checked:border-brand-500 peer-checked:bg-brand-50 peer-checked:shadow-md"
                         data-option-id="{{ $option->id }}">
                         {{ $option->option_text }}
                     </div>
