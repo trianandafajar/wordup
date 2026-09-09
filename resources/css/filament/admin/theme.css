@@ -14,6 +14,20 @@
     z-index: 9999999 !important;
 }
 
+.fi-fo-toggle {
+    overflow: hidden;
+    align-items: center;
+}
+
+.fi-fo-toggle>span {
+    transform: translateX(0) !important;
+    translate: none !important;
+}
+
+.fi-fo-toggle>span[class*='translate-x-5'] {
+    transform: translateX(1.25rem) !important;
+}
+
 /* Hide error message text under field wrapper */
 .wordup-login-card .fi-fo-field-wrp-error-message {
     display: none !important;
