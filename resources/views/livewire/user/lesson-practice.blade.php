@@ -33,8 +33,28 @@ use Illuminate\Support\Facades\Storage;
 
     <form method="POST" action="{{ route('user.lesson.submit', $lesson->id) }}" id="lessonForm">
         @csrf
+
+        @if ($lesson->explanation)
+        <!-- Explanation Step (Materi) -->
+        <div class="lesson-step" data-step="0" data-type="explanation">
+            <div class="bg-white rounded-3xl border-2 border-brand-200 p-6 mb-8 shadow-sm">
+                <div class="flex items-center gap-2 mb-4">
+                    <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-bold rounded-full">MATERI
+                        LESSON</span>
+                </div>
+                <div class="prose prose-sm max-w-none text-gray-800 space-y-3">
+                    {!! $lesson->explanation !!}
+                </div>
+            </div>
+        </div>
+        @endif
+
         @foreach ($questions as $index => $question)
-        <div class="lesson-step {{ $index > 0 ? 'hidden' : '' }}" data-step="{{ $index }}">
+        @php
+        $stepIndex = $lesson->explanation ? $index + 1 : $index;
+        @endphp
+        <div class="lesson-step {{ $lesson->explanation || $index > 0 ? 'hidden' : '' }}" data-step="{{ $stepIndex }}"
+            data-type="question">
             <!-- Question Card -->
             <div class="bg-white rounded-3xl border-2 border-gray-200 p-6 mb-8">
                 <div class="text-center mb-6">
@@ -205,28 +225,44 @@ use Illuminate\Support\Facades\Storage;
 
         function updateNav() {
             const currentStep = steps[current];
-            const selectedRadio = currentStep.querySelector('input[type="radio"]:checked');
-            const textInput = currentStep.querySelector('input.fill-input');
-            const hasAnswer = !!selectedRadio || (textInput && textInput.value.trim() !== '');
+            const isExplanation = currentStep.dataset.type === 'explanation';
+            let hasAnswer = true;
+
+            if (!isExplanation) {
+                const selectedRadio = currentStep.querySelector('input[type="radio"]:checked');
+                const textInput = currentStep.querySelector('input.fill-input');
+                hasAnswer = !!selectedRadio || (textInput && textInput.value.trim() !== '');
+            }
 
             prevBtn.classList.toggle('hidden', current === 0);
 
             if (current === total - 1) {
-                nextBtn.classList.add('hidden');
-                submitBtn.classList.remove('hidden');
-                submitBtn.disabled = !hasAnswer;
-                submitBtn.classList.toggle('cursor-not-allowed', !hasAnswer);
+                if (isExplanation) {
+                    nextBtn.classList.add('hidden');
+                    submitBtn.classList.add('hidden');
+                } else {
+                    nextBtn.classList.add('hidden');
+                    submitBtn.classList.remove('hidden');
+                    submitBtn.disabled = !hasAnswer;
+                    submitBtn.classList.toggle('cursor-not-allowed', !hasAnswer);
+                }
             } else {
                 nextBtn.classList.remove('hidden');
                 submitBtn.classList.add('hidden');
-                nextBtn.disabled = !hasAnswer;
-                nextBtn.classList.toggle('cursor-not-allowed', !hasAnswer);
-                if (hasAnswer) {
-                    nextBtn.classList.remove('bg-gray-200', 'text-gray-400');
+                if (isExplanation) {
+                    nextBtn.disabled = false;
+                    nextBtn.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
                     nextBtn.classList.add('bg-brand-500', 'text-white');
                 } else {
-                    nextBtn.classList.remove('bg-brand-500', 'text-white');
-                    nextBtn.classList.add('bg-gray-200', 'text-gray-400');
+                    nextBtn.disabled = !hasAnswer;
+                    nextBtn.classList.toggle('cursor-not-allowed', !hasAnswer);
+                    if (hasAnswer) {
+                        nextBtn.classList.remove('bg-gray-200', 'text-gray-400');
+                        nextBtn.classList.add('bg-brand-500', 'text-white');
+                    } else {
+                        nextBtn.classList.remove('bg-brand-500', 'text-white');
+                        nextBtn.classList.add('bg-gray-200', 'text-gray-400');
+                    }
                 }
             }
         }
@@ -242,18 +278,22 @@ use Illuminate\Support\Facades\Storage;
         nextBtn.addEventListener('click', function () {
             if (this.disabled) return;
             const currentStep = steps[current];
-            const selectedRadio = currentStep.querySelector('input[type="radio"]:checked');
-            const textInput = currentStep.querySelector('input.fill-input');
-            let answerValue = null;
+            const isExplanation = currentStep.dataset.type === 'explanation';
 
-            if (selectedRadio) {
-                answerValue = selectedRadio.value;
-            } else if (textInput && textInput.value.trim() !== '') {
-                answerValue = textInput.value.trim();
-            } else {
-                return;
+            if (!isExplanation) {
+                const selectedRadio = currentStep.querySelector('input[type="radio"]:checked');
+                const textInput = currentStep.querySelector('input.fill-input');
+                let answerValue = null;
+
+                if (selectedRadio) {
+                    answerValue = selectedRadio.value;
+                } else if (textInput && textInput.value.trim() !== '') {
+                    answerValue = textInput.value.trim();
+                } else {
+                    return;
+                }
+                answered[current] = answerValue;
             }
-            answered[current] = answerValue;
             goTo(current + 1);
         });
 
@@ -261,8 +301,10 @@ use Illuminate\Support\Facades\Storage;
             goTo(current - 1);
         });
 
-        // Per-question feedback
+        // Per-question feedback (skip explanation steps)
         steps.forEach(function (step, stepIndex) {
+            if (step.dataset.type === 'explanation') return;
+
             const radios = step.querySelectorAll('input[type="radio"]');
             const textInput = step.querySelector('input.fill-input');
             

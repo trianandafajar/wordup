@@ -29,6 +29,10 @@ class LessonResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\RichEditor::make('explanation')
+                    ->label('Penjelasan (Materi Sebelum Soal)')
+                    ->columnSpanFull()
+                    ->nullable(),
                 Forms\Components\TextInput::make('order')
                     ->required()
                     ->numeric(),
