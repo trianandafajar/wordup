@@ -3,6 +3,17 @@
     display: none !important;
 }
 
+/* ---------- Taruh modal & backdrop di atas sidebar custom (z-999999) & header (z-99999) ---------- */
+.fi-modal-close-overlay {
+    z-index: 9999998 !important;
+}
+
+/* Container modal (sibling setelah overlay) & window modal */
+.fi-modal-close-overlay+div,
+.fi-modal-window {
+    z-index: 9999999 !important;
+}
+
 /* Hide error message text under field wrapper */
 .wordup-login-card .fi-fo-field-wrp-error-message {
     display: none !important;
@@ -114,6 +125,7 @@
 /* ===== Collapse & hover expand: HANYA berjalan di desktop (>=1024px) =====
    Di mobile/tablet sidebar selalu tampil penuh. */
 @media (min-width: 1024px) {
+
     /* Hover expand saat collapsed: overlay di atas content */
     .sidebar-hover-collapsed.sidebar-hover {
         width: 290px !important;
@@ -224,16 +236,45 @@
 }
 
 /* ===== Brand helper utilities ===== */
-.bg-brand-50 { background-color: var(--color-brand-50); }
-.bg-brand-100 { background-color: var(--color-brand-100); }
-.bg-brand-500 { background-color: var(--color-brand-500); }
-.bg-brand-600 { background-color: var(--color-brand-600); }
-.text-brand-400 { color: var(--color-brand-400); }
-.text-brand-500 { color: var(--color-brand-500); }
-.text-brand-700 { color: var(--color-brand-700); }
-.border-brand-300 { border-color: var(--color-brand-300); }
-.shadow-theme-lg { box-shadow: var(--shadow-theme-lg); }
-.shadow-theme-xs { box-shadow: var(--shadow-theme-xs); }
+.bg-brand-50 {
+    background-color: var(--color-brand-50);
+}
+
+.bg-brand-100 {
+    background-color: var(--color-brand-100);
+}
+
+.bg-brand-500 {
+    background-color: var(--color-brand-500);
+}
+
+.bg-brand-600 {
+    background-color: var(--color-brand-600);
+}
+
+.text-brand-400 {
+    color: var(--color-brand-400);
+}
+
+.text-brand-500 {
+    color: var(--color-brand-500);
+}
+
+.text-brand-700 {
+    color: var(--color-brand-700);
+}
+
+.border-brand-300 {
+    border-color: var(--color-brand-300);
+}
+
+.shadow-theme-lg {
+    box-shadow: var(--shadow-theme-lg);
+}
+
+.shadow-theme-xs {
+    box-shadow: var(--shadow-theme-xs);
+}
 
 /* ===== Scrollbar ===== */
 .no-scrollbar {
