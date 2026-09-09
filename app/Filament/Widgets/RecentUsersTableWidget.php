@@ -16,7 +16,7 @@ class RecentUsersTableWidget extends TableWidget
     public function table(Table $table): Table
     {
         return $table
-            ->query(User::query()->latest()->limit(10))
+            ->query(User::query()->whereDoesntHave('roles', fn ($q) => $q->where('name', 'admin'))->latest()->limit(10))
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),

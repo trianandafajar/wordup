@@ -25,9 +25,15 @@ class LessonProgressChartWidget extends ChartWidget
 
     protected function getData(): array
     {
-        $completed = UserLessonProgress::query()->where('status', LessonProgressStatusEnum::Completed->value)->count();
-        $inProgress = UserLessonProgress::query()->where('status', LessonProgressStatusEnum::InProgress->value)->count();
-        $notStarted = UserLessonProgress::query()->where('status', LessonProgressStatusEnum::NotStarted->value)->count();
+        $completed = UserLessonProgress::query()
+            ->whereHas('user', fn ($q) => $q->whereDoesntHave('roles', fn ($r) => $r->where('name', 'admin')))
+            ->where('status', LessonProgressStatusEnum::Completed->value)->count();
+        $inProgress = UserLessonProgress::query()
+            ->whereHas('user', fn ($q) => $q->whereDoesntHave('roles', fn ($r) => $r->where('name', 'admin')))
+            ->where('status', LessonProgressStatusEnum::InProgress->value)->count();
+        $notStarted = UserLessonProgress::query()
+            ->whereHas('user', fn ($q) => $q->whereDoesntHave('roles', fn ($r) => $r->where('name', 'admin')))
+            ->where('status', LessonProgressStatusEnum::NotStarted->value)->count();
 
         return [
             'datasets' => [

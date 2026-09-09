@@ -26,6 +26,7 @@ class RegistrationChartWidget extends ChartWidget
     protected function getData(): array
     {
         $users = User::query()
+            ->whereDoesntHave('roles', fn ($q) => $q->where('name', 'admin'))
             ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
             ->where('created_at', '>=', now()->subDays(30))
             ->groupBy('date')

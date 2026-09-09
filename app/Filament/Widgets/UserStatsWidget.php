@@ -14,7 +14,7 @@ class UserStatsWidget extends StatsOverviewWidget
     protected function getStats(): array
     {
         return [
-            Stat::make('Users', User::count())
+            Stat::make('Users', User::query()->whereDoesntHave('roles', fn ($q) => $q->where('name', 'admin'))->count())
                 ->description('Total pengguna terdaftar')
                 ->descriptionIcon('heroicon-m-users')
                 ->color('success'),
