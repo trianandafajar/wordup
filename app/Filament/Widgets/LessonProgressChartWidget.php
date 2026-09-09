@@ -14,7 +14,11 @@ class LessonProgressChartWidget extends ChartWidget
 
     protected static ?string $maxHeight = '300px';
 
-    protected int|string|array $columnSpan = 6;
+    protected int|string|array $columnSpan = [
+        'default' => 12,
+        'md' => 6,
+        'lg' => 6,
+    ];
 
     protected function getOptions(): array
     {

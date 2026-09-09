@@ -9,7 +9,11 @@ use Filament\Widgets\TableWidget;
 
 class RecentUsersTableWidget extends TableWidget
 {
-    protected int|string|array $columnSpan = 'full';
+    protected int|string|array $columnSpan = [
+        'default' => 12,
+        'md' => 12,
+        'lg' => 12,
+    ];
 
     protected static ?string $heading = 'Recent Users';
 

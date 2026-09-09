@@ -8,16 +8,28 @@ class Dashboard extends BaseDashboard
 {
     public function getColumns(): int|string|array
     {
-        return 12;
+        return [
+            'default' => 1,
+            'md' => 2,
+            'lg' => 12,
+        ];
     }
 
     public function getHeaderWidgetsColumns(): int|string|array
     {
-        return 12;
+        return [
+            'default' => 1,
+            'md' => 2,
+            'lg' => 12,
+        ];
     }
 
     public function getFooterWidgetsColumns(): int|string|array
     {
-        return 12;
+        return [
+            'default' => 1,
+            'md' => 2,
+            'lg' => 12,
+        ];
     }
 }

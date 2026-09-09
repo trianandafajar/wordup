@@ -11,6 +11,12 @@ use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class UserStatsWidget extends StatsOverviewWidget
 {
+    protected int|string|array $columnSpan = [
+        'default' => 12,
+        'md' => 12,
+        'lg' => 12,
+    ];
+
     protected function getStats(): array
     {
         return [
