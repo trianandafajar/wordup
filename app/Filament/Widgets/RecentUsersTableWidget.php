@@ -27,11 +27,13 @@ class RecentUsersTableWidget extends TableWidget
                     ->label('XP Total'),
                 Tables\Columns\TextColumn::make('current_streak')
                     ->sortable()
-                    ->label('Streak'),
+                    ->label('Streak')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime('d M Y')
                     ->sortable()
-                    ->label('Joined'),
+                    ->label('Joined')
+                    ->toggleable(isToggledHiddenByDefault: true),
             ]);
     }
 }

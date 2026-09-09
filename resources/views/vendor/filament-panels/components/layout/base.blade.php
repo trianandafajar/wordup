@@ -4,8 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
-    dir="{{ __('filament-panels::layout.direction') ?? 'ltr' }}" class="fi min-h-screen"
->
+    dir="{{ __('filament-panels::layout.direction') ?? 'ltr' }}" class="fi min-h-screen">
 
 <head>
     {{ \Filament\Support\Facades\FilamentView::renderHook(\Filament\View\PanelsRenderHook::HEAD_START, scopes:
@@ -95,12 +94,19 @@
     <div class="min-h-screen bg-gray-100">
         @include('admin.partials.sidebar')
 
+        <!-- Mobile sidebar backdrop -->
+        <div x-show="sidebarToggle" x-transition:enter="transition-opacity ease-linear duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" @click="sidebarToggle = false"
+            class="fixed inset-0 z-50 bg-black/50 lg:hidden" x-cloak></div>
+
         <div :class="sidebarToggle ? 'lg:pl-[90px]' : 'lg:pl-[290px]'"
             class="flex min-h-screen flex-col transition-[padding] duration-300 ease-linear">
             @include('admin.partials.header')
 
             <main class="flex-1">
-                <div class="p-4 md:p-6" x-cloak>
+                <div class="p-4 md:p-6 overflow-x-auto" x-cloak>
                     {{ $slot }}
                 </div>
             </main>
