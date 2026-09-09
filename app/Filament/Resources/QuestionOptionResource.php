@@ -40,6 +40,9 @@ class QuestionOptionResource extends Resource
                 Tables\Columns\TextColumn::make('question.id')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('option_text')
+                    ->limit(40)
+                    ->label('Option'),
                 Tables\Columns\IconColumn::make('is_correct')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')

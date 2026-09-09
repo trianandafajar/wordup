@@ -36,6 +36,10 @@ class LessonResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(10),
+                Forms\Components\Select::make('type')
+                    ->options(['reading' => 'Reading', 'listening' => 'Listening'])
+                    ->required()
+                    ->default('reading'),
             ]);
     }
 
@@ -48,6 +52,7 @@ class LessonResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('order')
                     ->numeric()
                     ->sortable(),

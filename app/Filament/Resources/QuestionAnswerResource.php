@@ -38,6 +38,9 @@ class QuestionAnswerResource extends Resource
                 Tables\Columns\TextColumn::make('question.id')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('correct_text')
+                    ->limit(40)
+                    ->label('Correct Answer'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

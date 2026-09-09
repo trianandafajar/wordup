@@ -38,6 +38,10 @@ class UserResource extends Resource
                     ->required()
                     ->numeric()
                     ->default(0),
+                Forms\Components\TextInput::make('lives')
+                    ->required()
+                    ->numeric()
+                    ->default(5),
                 Forms\Components\TextInput::make('longest_streak')
                     ->required()
                     ->numeric()
@@ -66,6 +70,9 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('xp_total')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('lives')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('current_streak')
