@@ -51,11 +51,15 @@ class QuestionAnswerResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->modal(),
+                Tables\Actions\DeleteAction::make()
+                    ->modal(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->modal(),
                 ]),
             ]);
     }
