@@ -6,8 +6,8 @@
     <!-- Hero: Lanjutkan belajar -->
     <div
         class="bg-gradient-to-br from-brand-500 to-brand-600 text-white rounded-3xl p-6 shadow-lg shadow-brand-500/30 overflow-hidden relative">
-        <div class="absolute -right-8 -top-8 w-40 h-40 bg-white/10 rounded-full"></div>
-        <div class="absolute -left-10 -bottom-12 w-48 h-48 bg-white/5 rounded-full"></div>
+        <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full"></div>
+        <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-white/5 rounded-full"></div>
         <div class="relative">
             <p class="text-sm opacity-90 flex items-center gap-1.5">
                 Streak aktif:
