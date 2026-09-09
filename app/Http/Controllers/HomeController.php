@@ -27,23 +27,49 @@ class HomeController extends Controller
         $totalLessons = $courseProgress?->total_lessons ?? 1;
         $progressPercent = $courseProgress?->progress_percent ?? 0;
 
-        // Unit progress for display
+        // Unit progress for display (calculated sequentially across all units)
         $units = [];
         if ($courseProgress) {
-            $units = $courseProgress->course->units()->with(['lessons' => function ($q) use ($user) {
+            $allUnits = $courseProgress->course->units()->with(['lessons' => function ($q) use ($user) {
                 $q->with(['progress' => function ($p) use ($user) {
                     $p->where('user_id', $user->id);
-                }]);
-            }])->get()->map(function ($unit) {
-                $completedInUnit = $unit->lessons->filter(function ($lesson) {
-                    return $lesson->progress->first()?->status === 'completed';
-                })->count();
+                }])->orderBy('order');
+            }])->orderBy('order')->get();
+
+            $previousCompleted = true;
+
+            $units = $allUnits->map(function ($unit) use (&$previousCompleted) {
+                $lessons = $unit->lessons->sortBy('order')->values();
+                $completedInUnit = 0;
+                $hasAvailable = false;
+
+                foreach ($lessons as $lesson) {
+                    $rawStatus = $lesson->progress->first()?->status;
+                    $statusValue = $rawStatus instanceof \BackedEnum ? $rawStatus->value : $rawStatus;
+
+                    if ($statusValue === 'completed') {
+                        $completedInUnit++;
+                        $previousCompleted = true;
+                    } elseif ($statusValue === 'in_progress') {
+                        $hasAvailable = true;
+                        $previousCompleted = false;
+                    } else {
+                        if ($previousCompleted) {
+                            $hasAvailable = true;
+                        }
+                        $previousCompleted = false;
+                    }
+                }
+
+                $allDone = $lessons->count() > 0 && $completedInUnit === $lessons->count();
 
                 return [
                     'title' => $unit->title,
-                    'total' => $unit->lessons->count(),
+                    'total' => $lessons->count(),
                     'completed' => $completedInUnit,
-                    'status' => $completedInUnit === $unit->lessons->count() ? 'Selesai' : ($completedInUnit > 0 ? 'Sedang berjalan' : 'Terkunci'),
+                    'status' => $allDone
+                        ? 'Selesai'
+                        : (($completedInUnit > 0 || $hasAvailable) ? 'Sedang berjalan' : 'Terkunci'),
                 ];
             });
         }
