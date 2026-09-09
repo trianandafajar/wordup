@@ -51,7 +51,7 @@ $unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600'
     <div class="{{ $mlClass }} mb-0" data-node="{{ $lesson['id'] }}" data-done="{{ $isCompleted ? '1' : '0' }}">
         <button @if (!$isLocked) onclick="window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'"
             @else disabled @endif
-            class="relative group focus:outline-none w-14 h-14 lg:w-16 lg:h-16 rounded-full border-4 transition-all duration-300 flex items-center justify-center shrink-0 z-10 hover:scale-105 {{ $isLocked ? 'bg-gray-200 border-gray-300 opacity-60 cursor-not-allowed' : 'bg-brand-500 border-brand-400 shadow-lg shadow-brand-500/30' }}">
+            class="relative group focus:outline-none w-14 h-14 lg:w-16 lg:h-16 rounded-full border-4 transition-all duration-300 flex items-center justify-center shrink-0 z-10 {{ $isLocked ? 'bg-gray-200 border-gray-300 opacity-60 cursor-not-allowed' : ($isAvailable ? 'bg-brand-500 border-brand-400 shadow-lg shadow-brand-500/30 cursor-pointer hover:scale-105' : 'bg-brand-500 border-brand-600 shadow-lg shadow-brand-500/30 cursor-default') }}">
             @if ($isLocked)
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                 class="text-gray-400 fill-current">

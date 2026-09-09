@@ -99,7 +99,7 @@
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
             x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100"
             x-transition:leave-end="opacity-0" @click="sidebarToggle = false"
-            class="fixed inset-0 z-50 bg-black/50 lg:hidden" x-cloak></div>
+            class="fixed inset-0 z-50 bg-black/50 cursor-pointer lg:hidden" x-cloak></div>
 
         <div :class="sidebarToggle ? 'lg:pl-[90px]' : 'lg:pl-[290px]'"
             class="flex min-h-screen flex-col transition-[padding] duration-300 ease-linear">

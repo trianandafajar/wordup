@@ -130,7 +130,7 @@ use Illuminate\Support\Facades\Storage;
 
 <!-- Audio Player Modal -->
 <div class="audio-modal hidden fixed inset-0 z-50 flex items-center justify-center px-6">
-    <div class="absolute inset-0 bg-black/50" onclick="closeAudioModal()"></div>
+    <div class="absolute inset-0 bg-black/50 cursor-pointer" onclick="closeAudioModal()"></div>
     <div class="relative bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl">
         <button type="button" onclick="closeAudioModal()"
             class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
@@ -245,6 +245,7 @@ use Illuminate\Support\Facades\Storage;
                     submitBtn.classList.remove('hidden');
                     submitBtn.disabled = !hasAnswer;
                     submitBtn.classList.toggle('cursor-not-allowed', !hasAnswer);
+                    submitBtn.classList.toggle('cursor-pointer', hasAnswer);
                 }
             } else {
                 nextBtn.classList.remove('hidden');
@@ -252,10 +253,11 @@ use Illuminate\Support\Facades\Storage;
                 if (isExplanation) {
                     nextBtn.disabled = false;
                     nextBtn.classList.remove('bg-gray-200', 'text-gray-400', 'cursor-not-allowed');
-                    nextBtn.classList.add('bg-brand-500', 'text-white');
+                    nextBtn.classList.add('bg-brand-500', 'text-white', 'cursor-pointer');
                 } else {
                     nextBtn.disabled = !hasAnswer;
                     nextBtn.classList.toggle('cursor-not-allowed', !hasAnswer);
+                    nextBtn.classList.toggle('cursor-pointer', hasAnswer);
                     if (hasAnswer) {
                         nextBtn.classList.remove('bg-gray-200', 'text-gray-400');
                         nextBtn.classList.add('bg-brand-500', 'text-white');
