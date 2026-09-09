@@ -1,6 +1,9 @@
 @extends('layouts.user', ['pageTitle' => 'Lesson Practice', 'showBottomNav' => false])
 
 @section('content')
+@php
+    use Illuminate\Support\Facades\Storage;
+@endphp
 <div class="w-full max-w-lgF">
 
     <!-- Progress Bar -->
@@ -37,7 +40,7 @@
                 <div class="text-center mb-6">
                     @if ($question->audio_url || $lesson->type === 'listening' || $question->type === 'listening')
                     <button type="button"
-                        onclick="playAudio('{{ $question->audio_url ? asset($question->audio_url) : '' }}', '{{ addslashes($question->question_text) }}')"
+                        onclick="playAudio('{{ $question->audio_url ? Storage::url($question->audio_url) : '' }}', '{{ addslashes($question->question_text) }}')"
                         class="w-20 h-20 mx-auto bg-brand-500 text-white rounded-full flex items-center justify-center shadow-lg shadow-brand-500/30 hover:bg-brand-600 transition-colors cursor-pointer group active:scale-95">
                         <svg width="36" height="32" viewBox="0 0 24 24" fill="currentColor"
                             class="ml-1 group-hover:scale-110 transition-transform">

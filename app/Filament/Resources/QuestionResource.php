@@ -41,9 +41,14 @@ class QuestionResource extends Resource
                 Forms\Components\Textarea::make('question_text')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('audio_url')
-                    ->url()
-                    ->maxLength(2048),
+                Forms\Components\FileUpload::make('audio_url')
+                    ->label('Audio')
+                    ->directory('questions/audio')
+                    ->acceptedFileTypes(['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/ogg'])
+                    ->maxSize(10240)
+                    ->preserveFilenames(false)
+                    ->visibility('public')
+                    ->storeFileNamesIn('audio_url'),
                 Forms\Components\TextInput::make('order')
                     ->required()
                     ->numeric(),
