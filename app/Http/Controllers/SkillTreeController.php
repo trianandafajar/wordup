@@ -47,8 +47,10 @@ class SkillTreeController extends Controller
             }])->orderBy('order');
         }])->orderBy('order')->get();
 
-        // Flatten all lessons to determine unlock status
-        $allLessons = $units->flatMap->lessons->sortBy('order')->values();
+        // Flatten all lessons to determine unlock status (preserve unit order then lesson order)
+        $allLessons = $units->flatMap(function ($unit) {
+            return $unit->lessons->values();
+        })->values();
 
         $previousCompleted = true;
         foreach ($allLessons as $lesson) {
