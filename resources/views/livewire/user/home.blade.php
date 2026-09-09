@@ -13,7 +13,11 @@
                 Streak aktif:
                 <span class="bg-white/20 px-2.5 py-0.5 rounded-full font-bold inline-flex items-center gap-1">
                     {{ $user->current_streak }} hari
-                    <x-heroicon-s-fire class="w-4 h-4" />
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-4">
+                        <path fill-rule="evenodd"
+                            d="M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248ZM15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718Z"
+                            clip-rule="evenodd" />
+                    </svg>
                 </span>
             </p>
             <h1 class="text-2xl font-extrabold mt-3">Lanjutkan Belajarmu!</h1>
@@ -22,7 +26,7 @@
             <div class="mt-5 flex items-center gap-3">
                 <a href="{{ route('user.learn') }}"
                     class="inline-flex items-center gap-2 bg-white text-brand-600 font-bold px-6 py-3 rounded-2xl hover:bg-brand-50 transition-colors shadow-md">
-                    <x-heroicon-s-arrow-up class="w-5 h-5" /> Lanjut Belajar
+                    Lanjut Belajar
                 </a>
                 @if ($progressPercent > 0)
                 <div class="flex-1">
@@ -44,21 +48,33 @@
     <div class="grid grid-cols-3 gap-3 mt-6">
         <div class="bg-white rounded-2xl p-4 border border-gray-200 text-center">
             <div class="text-orange-500 font-extrabold text-xl">
-                <x-heroicon-s-fire class="w-6 h-6 inline" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 inline">
+                    <path fill-rule="evenodd"
+                        d="M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248ZM15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718Z"
+                        clip-rule="evenodd" />
+                </svg>
             </div>
             <p class="text-lg font-bold text-gray-900 mt-1">{{ $user->current_streak }}</p>
             <p class="text-xs text-gray-500">Streak</p>
         </div>
         <div class="bg-white rounded-2xl p-4 border border-gray-200 text-center">
             <div class="text-amber-500 font-extrabold text-xl">
-                <x-heroicon-s-sparkles class="w-6 h-6 inline" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 inline">
+                    <path fill-rule="evenodd"
+                        d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z"
+                        clip-rule="evenodd" />
+                </svg>
+
             </div>
             <p class="text-lg font-bold text-gray-900 mt-1">{{ number_format($user->xp_total) }}</p>
             <p class="text-xs text-gray-500">XP</p>
         </div>
         <div class="bg-white rounded-2xl p-4 border border-gray-200 text-center">
             <div class="text-rose-500 font-extrabold text-xl">
-                <x-heroicon-s-heart class="w-6 h-6 inline" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6 inline">
+                    <path
+                        d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+                </svg>
             </div>
             <p class="text-lg font-bold text-gray-900 mt-1">{{ $user->lives }}</p>
             <p class="text-xs text-gray-500">Lives</p>

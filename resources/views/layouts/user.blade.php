@@ -1,50 +1,62 @@
 @props([
-    'pageTitle' => 'WordUp',
-    'showBottomNav' => true,
-    'activeMenu' => 'learn',
+'pageTitle' => 'WordUp',
+'showBottomNav' => true,
+'activeMenu' => 'learn',
 ])
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $pageTitle }} - WordUp</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="h-full bg-[#ecfdf3] font-sans text-gray-900 antialiased flex flex-col justify-between">
 
     <!-- Top Gamification Bar -->
-    <header class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4">
-        <div class="flex items-center gap-3">
-            <span class="text-xl font-extrabold text-brand-500 tracking-wider">WordUp</span>
+    <header
+        class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4">
+        <div :class="sidebarToggle && isDesktop ? 'justify-center' : 'justify-between'"
+            class="sidebar-header flex items-center gap-2 pb-7 pt-8">
+            <a href="/" class="flex items-center gap-2">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10 w-auto" />
+                <span class="menu-item-text text-xl font-bold text-brand-600"">WordUp</span>
+            </a>
         </div>
 
-        <div class="flex items-center gap-4 sm:gap-6">
-            <!-- Streak -->
-            <div class="flex items-center gap-1.5 text-orange-500 font-bold text-sm">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.71 19C9.93 19 8.5 17.57 8.5 15.79C8.5 14.22 9.56 12.95 11.04 12.58C12.12 12.31 13.15 11.59 13.73 10.55L14.48 9.2C14.81 8.61 15.48 8.25 16.21 8.25H16.96C17.76 8.25 18.47 8.79 18.73 9.57L19.07 10.6C19.19 10.97 19.54 11.22 19.95 11.22C20.57 11.22 21 10.79 21 10.17V9.5C21 7.57 19.43 6 17.5 6H16.21C14.44 6 12.83 6.95 12.11 8.45L11.33 10.06C10.76 11.24 9.6 12.1 8.23 12.28C6.76 12.47 5.4 13.57 4.83 15.03C4.06 16.99 5.45 19.21 7.6 19.79C8.52 20.05 9.49 20 10.33 19.72L11.71 19Z"/>
-                </svg>
-                <span>5</span>
-            </div>
-            <!-- XP -->
-            <div class="flex items-center gap-1.5 text-amber-500 font-bold text-sm">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L2 7L12 12L22 7L12 2Z"/>
-                    <path d="M2 17L12 22L22 17"/>
-                    <path d="M2 12L12 17L22 12"/>
-                </svg>
-                <span>1,250</span>
-            </div>
-            <!-- Hearts -->
-            <div class="flex items-center gap-1.5 text-rose-500 font-bold text-sm">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-                <span class="lives-count" data-lives="{{ auth()->user()->lives }}" data-max="{{ \App\Services\LifeService::MAX_LIVES }}">{{ auth()->user()->lives }}</span>
-                <span class="lives-timer text-gray-400 text-xs hidden"></span>
-            </div>
+        <div class=" flex items-center gap-4 sm:gap-6">
+                    <!-- Streak -->
+                    <div class="flex items-center gap-1.5 text-orange-500 font-bold text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                            <path fill-rule="evenodd"
+                                d="M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248ZM15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>5</span>
+                    </div>
+                    <!-- XP -->
+                    <div class="flex items-center gap-1.5 text-amber-500 font-bold text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                            <path fill-rule="evenodd"
+                                d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z"
+                                clip-rule="evenodd" />
+                        </svg>
+
+                        <span>1,250</span>
+                    </div>
+                    <!-- Hearts -->
+                    <div class="flex items-center gap-1.5 text-rose-500 font-bold text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+                            <path
+                                d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+                        </svg>
+                        <span class="lives-count" data-lives="{{ auth()->user()->lives }}"
+                            data-max="{{ \App\Services\LifeService::MAX_LIVES }}">{{ auth()->user()->lives }}</span>
+                        <span class="lives-timer text-gray-400 text-xs hidden"></span>
+                    </div>
         </div>
     </header>
 
@@ -57,12 +69,13 @@
 
     <!-- Mobile Bottom Navigation Bar -->
     @if ($showBottomNav)
-        @include('livewire.user.partials.bottom-nav', ['active' => $activeMenu])
+    @include('livewire.user.partials.bottom-nav', ['active' => $activeMenu])
     @endif
 
     @stack('scripts')
 
-@include('livewire.user.partials.lives-timer')
+    @include('livewire.user.partials.lives-timer')
 
 </body>
+
 </html>
