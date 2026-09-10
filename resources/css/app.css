@@ -75,3 +75,7 @@
 .node-glow {
     box-shadow: 0 0 16px rgba(76, 175, 80, 0.4), 0 0 32px rgba(76, 175, 80, 0.2);
 }
+
+.btn-disabled-override {
+    cursor: not-allowed !important;
+}
