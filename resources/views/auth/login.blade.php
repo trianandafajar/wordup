@@ -21,22 +21,13 @@
 
     {{-- Panel Kanan: form --}}
     <div class="flex-1 flex items-center justify-center px-6 py-12 sm:px-10">
-        <div class="w-full max-w-sm space-y-8 animate-[fadeUp_0.4s_ease-out]">
+        <div class="w-full max-w-sm space-y-4 animate-[fadeUp_0.4s_ease-out]">
 
             <div class="space-y-2 lg:hidden">
                 <img src="{{ asset('images/logo.png') }}" alt="WordUp" class="h-10 w-10 object-contain" />
             </div>
 
-            <div>
-                <h2 class="font-sans text-2xl font-bold text-[#1a2231]">Masuk</h2>
-                <p class="mt-1 text-sm text-[#1a2231]/60">
-                    Belum punya akun?
-                    <a href="{{ route('register') }}" class="font-medium text-[#4caf50] hover:text-[#43a047]">
-                        Daftar sekarang
-                    </a>
-                </p>
-            </div>
-
+            <h2 class="font-sans text-2xl font-bold text-[#1a2231]">Masuk</h2>
             <form class="space-y-5" method="POST" action="{{ route('login') }}">
                 @csrf
 
@@ -77,6 +68,14 @@
                     Masuk
                 </button>
             </form>
+            <div>
+                <p class="mt-1 text-sm text-[#1a2231]/60">
+                    Belum punya akun?
+                    <a href="{{ route('register') }}" class="font-medium text-[#4caf50] hover:text-[#43a047]">
+                        Daftar sekarang
+                    </a>
+                </p>
+            </div>
         </div>
     </div>
 </div>
