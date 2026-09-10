@@ -37,11 +37,20 @@
     box-shadow: none !important;
     --tw-ring-shadow: 0 0 #0000 !important;
     --tw-ring-offset-shadow: 0 0 #0000 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 100vh;
+}
+
+.fi-simple-main>* {
+    width: 100%;
 }
 
 .wordup-login-card {
     width: 100%;
     max-width: 24rem;
+    margin: 0 auto;
     border-radius: 1rem;
     background-color: #ffffff;
     padding: 2rem;
