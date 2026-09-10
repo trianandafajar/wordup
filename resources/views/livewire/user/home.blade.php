@@ -96,67 +96,78 @@
     <h2 class="font-bold text-gray-900 text-lg mt-8 mb-4">Unit Kamu</h2>
     <div class="space-y-3">
         @foreach ($units as $i => $unit)
-        <div
-            class="bg-white rounded-3xl p-5 border border-gray-200 flex items-center gap-4 {{ $unit['status'] === 'Terkunci' ? 'opacity-60' : '' }}">
+        @php $unitSlug = 'unit-' . ($i + 1); @endphp
+        @if ($unit['status'] !== 'Terkunci')
+        <a href="{{ route('user.learn') . '#' . $unitSlug }}"
+            class="block bg-white rounded-3xl p-5 border border-gray-200 flex items-center gap-4 hover:shadow-md hover:border-gray-300 transition-all active:scale-[0.98]">
+            @else
             <div
-                class="w-14 h-14 rounded-full {{ $unit['status'] === 'Selesai' ? 'bg-brand-500' : ($unit['status'] === 'Sedang berjalan' ? 'bg-amber-500' : 'bg-gray-300') }} text-white flex items-center justify-center shrink-0 shadow-md">
-                @if ($unit['status'] === 'Selesai')
-                <x-heroicon-s-star class="w-8 h-8" />
-                @elseif ($unit['status'] === 'Sedang berjalan')
-                <x-heroicon-s-book-open class="w-8 h-8" />
-                @else
-                <x-heroicon-s-lock-closed class="w-8 h-8" /> @endif
-            </div>
-            <div class="flex-1 min-w-0">
-                <p class="text-xs font-bold uppercase text-gray-400 tracking-wide">Unit {{ $i + 1 }}</p>
-                <p class="font-bold text-gray-900 truncate">{{ $unit['title'] }}</p>
-                <p class="text-xs text-gray-500 mt-0.5">{{ $unit['status'] }}</p>
-            </div>
-            @if ($unit['status'] !== 'Terkunci')
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-gray-300 fill-current shrink-0">
-                <path d="M9.29 15.88L13.17 12L9.29 8.12L10.71 6.7L16 12L10.71 17.3L9.29 15.88Z" />
-            </svg>
-            @endif
-        </div>
-        @endforeach
+                class="bg-white rounded-3xl p-5 border border-gray-200 flex items-center gap-4 opacity-60 cursor-not-allowed">
+                @endif
+                <div
+                    class="w-14 h-14 rounded-full {{ $unit['status'] === 'Selesai' ? 'bg-brand-500' : ($unit['status'] === 'Sedang berjalan' ? 'bg-amber-500' : 'bg-gray-300 cursor-not-allowed') }} text-white flex items-center justify-center shrink-0 shadow-md">
+                    @if ($unit['status'] === 'Selesai')
+                    <x-heroicon-s-star class="w-8 h-8" />
+                    @elseif ($unit['status'] === 'Sedang berjalan')
+                    <x-heroicon-s-book-open class="w-8 h-8" />
+                    @else
+                    <x-heroicon-s-lock-closed class="w-8 h-8" />
+                    @endif
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-bold uppercase text-gray-400 tracking-wide">Unit {{ $i + 1 }}</p>
+                    <p class="font-bold text-gray-900 truncate">{{ $unit['title'] }}</p>
+                    <p class="text-xs text-gray-500 mt-0.5">{{ $unit['status'] }}</p>
+                </div>
+                @if ($unit['status'] !== 'Terkunci')
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="text-gray-300 fill-current shrink-0">
+                    <path d="M9.29 15.88L13.17 12L9.29 8.12L10.71 6.7L16 12L10.71 17.3L9.29 15.88Z" />
+                </svg>
+                @endif
+                @if ($unit['status'] !== 'Terkunci')
+        </a>
+        @else
     </div>
+    @endif
+    @endforeach
+</div>
 
-    <div class="bg-white rounded-3xl p-6 border border-gray-200 mt-6">
-        <h2 class="font-bold text-gray-900 text-lg mb-4">Goal Harian</h2>
-        <div class="space-y-3">
-            <div class="flex items-center gap-3">
-                <span
-                    class="w-6 h-6 rounded-full {{ $user->xp_total >= 100 ? 'bg-brand-500' : 'bg-gray-200' }} text-white flex items-center justify-center text-xs font-bold shrink-0">
-                    @if ($user->xp_total >= 100)
-                    <x-heroicon-s-check class="w-4 h-4" />
-                    @else 2 @endif
-                </span>
-                <div class="flex-1">
-                    <p class="text-sm font-semibold text-gray-700">Kumpulkan 100 XP</p>
-                    <div class="h-2 bg-gray-100 rounded-full mt-1 overflow-hidden">
-                        <div class="h-full bg-brand-500 rounded-full"
-                            style="width: {{ min(100, ($user->xp_total / 100) * 100) }}%"></div>
+<div class="bg-white rounded-3xl p-6 border border-gray-200 mt-6">
+    <h2 class="font-bold text-gray-900 text-lg mb-4">Goal Harian</h2>
+    <div class="space-y-3">
+        <div class="flex items-center gap-3">
+            <span
+                class="w-6 h-6 rounded-full {{ $user->xp_total >= 100 ? 'bg-brand-500' : 'bg-gray-200' }} text-white flex items-center justify-center text-xs font-bold shrink-0">
+                @if ($user->xp_total >= 100)
+                <x-heroicon-s-check class="w-4 h-4" />
+                @else 2 @endif
+            </span>
+            <div class="flex-1">
+                <p class="text-sm font-semibold text-gray-700">Kumpulkan 100 XP</p>
+                <div class="h-2 bg-gray-100 rounded-full mt-1 overflow-hidden">
+                    <div class="h-full bg-brand-500 rounded-full"
+                        style="width: {{ min(100, ($user->xp_total / 100) * 100) }}%"></div>
+                </div>
+            </div>
+            <span class="text-xs font-bold text-brand-600">{{ min($user->xp_total, 100) }}/100</span>
+        </div>
+        <div class="flex items-center gap-3">
+            <span
+                class="w-6 h-6 rounded-full {{ $completedLessons >= 3 ? 'bg-brand-500' : 'bg-gray-200' }} text-white flex items-center justify-center text-xs font-bold shrink-0">
+                @if ($completedLessons >= 3)
+                <x-heroicon-s-check class="w-4 h-4" />
+                @else {{ $completedLessons }} @endif
+            </span>
+            <div class="flex-1">
+                <p class="text-sm font-semibold text-gray-700">Selesaikan 3 pelajaran</p>
+                <div class="h-2 bg-gray-100 rounded-full mt-1 overflow-hidden">
+                    <div class="h-full bg-brand-500 rounded-full" style="width: {{ ($completedLessons / 3) * 100 }}%">
                     </div>
                 </div>
-                <span class="text-xs font-bold text-brand-600">{{ min($user->xp_total, 100) }}/100</span>
             </div>
-            <div class="flex items-center gap-3">
-                <span
-                    class="w-6 h-6 rounded-full {{ $completedLessons >= 3 ? 'bg-brand-500' : 'bg-gray-200' }} text-white flex items-center justify-center text-xs font-bold shrink-0">
-                    @if ($completedLessons >= 3)
-                    <x-heroicon-s-check class="w-4 h-4" />
-                    @else {{ $completedLessons }} @endif
-                </span>
-                <div class="flex-1">
-                    <p class="text-sm font-semibold text-gray-700">Selesaikan 3 pelajaran</p>
-                    <div class="h-2 bg-gray-100 rounded-full mt-1 overflow-hidden">
-                        <div class="h-full bg-brand-500 rounded-full"
-                            style="width: {{ ($completedLessons / 3) * 100 }}%"></div>
-                    </div>
-                </div>
-                <span class="text-xs font-bold text-brand-600">{{ $completedLessons }}/3</span>
-            </div>
+            <span class="text-xs font-bold text-brand-600">{{ $completedLessons }}/3</span>
         </div>
     </div>
+</div>
 </div>
 @endsection
