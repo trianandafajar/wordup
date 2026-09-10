@@ -25,7 +25,7 @@
 
         <div class="mt-auto" x-data="{ showLogoutModal: false }">
             <button type="button" @click="showLogoutModal = true"
-                class="flex items-center gap-4 p-3 rounded-xl font-semibold w-full text-gray-600 hover:bg-gray-100 transition-colors">
+                class="flex items-center gap-4 p-3 rounded-xl font-semibold w-full text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer">
                 <x-heroicon-o-arrow-right-on-rectangle class="w-6 h-6" /> Logout
             </button>
 
@@ -46,14 +46,14 @@
                     </div>
                     <div class="mt-6 flex gap-3">
                         <button type="button" @click="showLogoutModal = false"
-                            class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors">
+                            class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors cursor-pointer">
                             Batal
                         </button>
                         <form action="{{ route('logout') }}" method="POST" class="flex-1"
                             x-data="{ isLoggingOut: false }" @submit="isLoggingOut = true">
                             @csrf
                             <button type="submit" data-no-loading :disabled="isLoggingOut"
-                                class="flex w-full items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 disabled:cursor-wait disabled:opacity-75">
+                                class="flex w-full items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50">
                                 <svg x-show="isLoggingOut" x-cloak class="h-4 w-4 animate-spin" viewBox="0 0 24 24"
                                     fill="none" aria-hidden="true">
                                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"

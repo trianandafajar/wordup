@@ -58,7 +58,7 @@
     </main>
 
     @if ($showBottomNav)
-        @include('livewire.user.partials.bottom-nav', ['active' => $activeMenu])
+    @include('livewire.user.partials.bottom-nav', ['active' => $activeMenu])
     @endif
 
     @stack('scripts')
@@ -74,7 +74,8 @@
                     const btn = this.querySelector('button[type="submit"]:not([data-no-loading])');
                     if (btn && !btn.disabled) {
                         btn.disabled = true;
-                        btn.classList.add('opacity-60', 'cursor-wait', 'pointer-events-none');
+                        btn.classList.add('opacity-60', 'pointer-events-none');
+                        btn.style.cursor = 'not-allowed';
                         btn.innerHTML = spinnerHtml;
                     }
                 });

@@ -57,7 +57,7 @@
             </fieldset>
 
             <button type="submit"
-                class="w-full rounded-lg bg-[#4caf50] py-2.5 px-4 text-sm font-medium text-white hover:bg-[#43a047] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4caf50] transition-colors">
+                class="w-full rounded-lg bg-[#4caf50] py-2.5 px-4 text-sm font-medium text-white hover:bg-[#43a047] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4caf50] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                 Mulai belajar
             </button>
         </form>

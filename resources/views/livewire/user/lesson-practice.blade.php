@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 <div class="w-full max-w-lgF">
 
     <div class="flex items-center gap-3 mb-8">
-        <button onclick="history.back()" class="text-gray-400 hover:text-gray-600">
+        <button onclick="history.back()" class="text-gray-400 hover:text-gray-600 cursor-pointer">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="fill-current">
                 <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.42 18.59L7.83 13H20V11Z" />
             </svg>
@@ -110,7 +110,7 @@ use Illuminate\Support\Facades\Storage;
 
         <div class="lesson-nav flex items-center gap-3">
             <button type="button"
-                class="lesson-prev hidden py-4 px-4 bg-gray-100 text-gray-600 font-bold text-sm rounded-2xl hover:bg-gray-200 transition-colors">
+                class="lesson-prev hidden py-4 px-4 bg-gray-100 text-gray-600 font-bold text-sm rounded-2xl hover:bg-gray-200 transition-colors cursor-pointer">
                 Kembali
             </button>
             <button type="button"
@@ -118,7 +118,7 @@ use Illuminate\Support\Facades\Storage;
                 Berikutnya
             </button>
             <button type="submit"
-                class="lesson-submit hidden flex-1 py-4 bg-brand-500 text-white font-bold text-lg rounded-2xl hover:bg-brand-600 transition-colors">
+                class="lesson-submit hidden flex-1 py-4 bg-brand-500 text-white font-bold text-lg rounded-2xl hover:bg-brand-600 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                 Cek Jawaban
             </button>
         </div>
@@ -129,7 +129,7 @@ use Illuminate\Support\Facades\Storage;
     <div class="absolute inset-0 bg-black/50 cursor-pointer" onclick="closeAudioModal()"></div>
     <div class="relative bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl">
         <button type="button" onclick="closeAudioModal()"
-            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+            class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 cursor-pointer">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="fill-current">
                 <path
                     d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" />
