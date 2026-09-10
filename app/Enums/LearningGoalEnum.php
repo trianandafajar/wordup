@@ -2,14 +2,6 @@
 
 namespace App\Enums;
 
-/**
- * This enum represents the learning goals for language learning.
- * CASUAL: Represents a casual learning goal.
- * BEGINNER: Represents a beginner learning goal.
- * INTERMEDIATE: Represents an intermediate learning goal.
- * ADVANCED: Represents an advanced learning goal.
- * FLUENT: Represents a fluent learning goal.
- */
 enum LearningGoalEnum: string
 {
     case CASUAL = 'casual';
@@ -18,11 +10,17 @@ enum LearningGoalEnum: string
     case ADVANCED = 'advanced';
     case FLUENT = 'fluent';
 
+    /**
+     * @return array<int, string>
+     */
     public static function getAllValues(): array
     {
         return array_map(fn (self $goal) => $goal->value, self::cases());
     }
 
+    /**
+     * @return array<int, string>
+     */
     public static function getAllKeys(): array
     {
         return array_map(fn (self $goal) => $goal->name, self::cases());

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Storage;
 @endphp
 <div class="w-full max-w-lgF">
 
-    <!-- Progress Bar -->
     <div class="flex items-center gap-3 mb-8">
         <button onclick="history.back()" class="text-gray-400 hover:text-gray-600">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="fill-current">
@@ -35,7 +34,6 @@ use Illuminate\Support\Facades\Storage;
         @csrf
 
         @if ($lesson->explanation)
-        <!-- Explanation Step (Materi) -->
         <div class="lesson-step" data-step="0" data-type="explanation">
             <div class="bg-white rounded-3xl border-2 border-brand-200 p-6 mb-8 shadow-sm">
                 <div class="flex items-center gap-2 mb-4">
@@ -82,7 +80,6 @@ use Illuminate\Support\Facades\Storage;
                 </div>
             </div>
 
-            <!-- Options -->
             @if ($question->type === 'fill_in_the_blank')
             <div class="space-y-3 mb-8">
                 <div>
@@ -110,7 +107,6 @@ use Illuminate\Support\Facades\Storage;
         </div>
         @endforeach
 
-        <!-- Navigation -->
         <div class="lesson-nav flex items-center gap-3">
             <button type="button"
                 class="lesson-prev hidden py-4 px-4 bg-gray-100 text-gray-600 font-bold text-sm rounded-2xl hover:bg-gray-200 transition-colors">
@@ -128,7 +124,6 @@ use Illuminate\Support\Facades\Storage;
     </form>
 </div>
 
-<!-- Audio Player Modal -->
 <div class="audio-modal hidden fixed inset-0 z-50 flex items-center justify-center px-6">
     <div class="absolute inset-0 bg-black/50 cursor-pointer" onclick="closeAudioModal()"></div>
     <div class="relative bg-white rounded-3xl p-8 w-full max-w-sm text-center shadow-2xl">
@@ -303,13 +298,12 @@ use Illuminate\Support\Facades\Storage;
             goTo(current - 1);
         });
 
-        // Per-question feedback (skip explanation steps)
         steps.forEach(function (step, stepIndex) {
             if (step.dataset.type === 'explanation') return;
 
             const radios = step.querySelectorAll('input[type="radio"]');
             const textInput = step.querySelector('input.fill-input');
-            
+
             radios.forEach(function (radio) {
                 radio.addEventListener('change', function () {
                     const isCorrect = radio.dataset.isCorrect === 'true';

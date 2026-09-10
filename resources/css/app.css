@@ -27,9 +27,6 @@
     display: none !important;
 }
 
-/* ===== Gamification UI ===== */
-
-/* Pulse animation for available lesson node */
 @keyframes pulse-slow {
 
     0%,
@@ -48,7 +45,6 @@
     animation: pulse-slow 2s ease-in-out infinite;
 }
 
-/* Path connector animation */
 @keyframes path-flow {
     0% {
         background-position: 0 0;
@@ -59,12 +55,10 @@
     }
 }
 
-/* Safe area for iOS notch devices */
 .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Scrollbar styling for skill tree */
 .skill-tree-scroll::-webkit-scrollbar {
     width: 4px;
 }
@@ -78,7 +72,6 @@
     border-radius: 100px;
 }
 
-/* Glow effect for current node */
 .node-glow {
     box-shadow: 0 0 16px rgba(76, 175, 80, 0.4), 0 0 32px rgba(76, 175, 80, 0.2);
 }

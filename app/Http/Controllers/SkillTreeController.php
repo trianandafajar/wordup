@@ -10,18 +10,16 @@ use Illuminate\Support\Facades\Auth;
 
 class SkillTreeController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         $user = Auth::user();
 
-        // Get the active course (first active course)
         $course = Course::where('is_active', true)->first();
 
         if (! $course) {
             abort(404, 'Belum ada course yang tersedia');
         }
 
-        // Ensure user has course progress created
         UserCourseProgress::firstOrCreate(
             ['user_id' => $user->id, 'course_id' => $course->id],
             [
@@ -32,7 +30,6 @@ class SkillTreeController extends Controller
             ]
         );
 
-        // Ensure user has lesson progress created for every lesson
         foreach ($course->units->flatMap->lessons as $lesson) {
             UserLessonProgress::firstOrCreate(
                 ['user_id' => $user->id, 'lesson_id' => $lesson->id],
@@ -40,14 +37,12 @@ class SkillTreeController extends Controller
             );
         }
 
-        // Load units with lessons and user progress
         $units = $course->units()->with(['lessons' => function ($q) use ($user) {
             $q->with(['progress' => function ($p) use ($user) {
                 $p->where('user_id', $user->id);
             }])->orderBy('order');
         }])->orderBy('order')->get();
 
-        // Flatten all lessons to determine unlock status (preserve unit order then lesson order)
         $allLessons = $units->flatMap(function ($unit) {
             return $unit->lessons->values();
         })->values();
@@ -68,7 +63,6 @@ class SkillTreeController extends Controller
             }
         }
 
-        // If no lives left, only completed lessons are accessible
         if ($user->lives <= 0) {
             foreach ($allLessons as $lesson) {
                 if ($lesson->user_status !== 'completed') {
@@ -77,7 +71,6 @@ class SkillTreeController extends Controller
             }
         }
 
-        // Group lessons back by unit
         $unitsWithStatus = $units->map(function ($unit) {
             return [
                 'unit' => $unit,

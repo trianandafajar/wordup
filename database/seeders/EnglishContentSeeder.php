@@ -60,7 +60,6 @@ class EnglishContentSeeder extends Seeder
                             ['correct_text' => $questionData['answer']]
                         );
                     } else {
-                        // Clear old options to avoid duplicates
                         QuestionOption::where('question_id', $question->id)->delete();
                         foreach ($questionData['options'] as $opt) {
                             QuestionOption::query()->create([
@@ -78,7 +77,6 @@ class EnglishContentSeeder extends Seeder
     private function getUnits(): array
     {
         return [
-            // ==================== LEVEL 1: BEGINNER (A1-A2) ===================
             [
                 'title' => 'Unit 1: Foundations & Greetings',
                 'lessons' => [
@@ -194,7 +192,6 @@ class EnglishContentSeeder extends Seeder
                 ],
             ],
 
-            // ==================== LEVEL 2: INTERMEDIATE (B1-B2) ===================
             [
                 'title' => 'Unit 4: Travel & Directions',
                 'lessons' => [
@@ -271,8 +268,6 @@ class EnglishContentSeeder extends Seeder
                     ],
                 ],
             ],
-
-            // ==================== LEVEL 3: ADVANCED (C1) ===================
             [
                 'title' => 'Unit 6: Professional Emails',
                 'lessons' => [
@@ -328,7 +323,6 @@ class EnglishContentSeeder extends Seeder
                 ],
             ],
 
-            // ==================== LEVEL 4: EXPERT (C2) ===================
             [
                 'title' => 'Unit 8: Academic & Legal English',
                 'lessons' => [
@@ -359,4 +353,3 @@ class EnglishContentSeeder extends Seeder
         ];
     }
 }
-    

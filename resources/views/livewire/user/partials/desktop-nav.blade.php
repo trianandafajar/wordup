@@ -29,7 +29,6 @@
                 <x-heroicon-o-arrow-right-on-rectangle class="w-6 h-6" /> Logout
             </button>
 
-            <!-- Modal Confirm -->
             <div x-show="showLogoutModal" x-transition x-cloak
                 class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4">
                 <div @click.outside="showLogoutModal = false" x-transition

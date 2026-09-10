@@ -18,7 +18,6 @@ class BadgeService
         $longestStreak = $user->longest_streak;
         $totalLessons = $user->lessonAttempts()->count();
 
-        // Lesson completion badges
         if ($completedCount >= 1) {
             $badges[] = ['icon' => 'book-open', 'color' => 'bg-green-100 text-green-600', 'title' => 'First Lesson', 'desc' => '1 Lesson selesai'];
         }
@@ -32,7 +31,6 @@ class BadgeService
             $badges[] = ['icon' => 'book-open', 'color' => 'bg-cyan-100 text-cyan-600', 'title' => 'Scholar', 'desc' => '20 Lesson selesai'];
         }
 
-        // XP badges
         if ($totalXp >= 100) {
             $badges[] = ['icon' => 'sparkles', 'color' => 'bg-amber-100 text-amber-600', 'title' => 'Rising Star', 'desc' => '100+ XP'];
         }
@@ -46,7 +44,6 @@ class BadgeService
             $badges[] = ['icon' => 'sparkles', 'color' => 'bg-red-100 text-red-600', 'title' => 'XP Legend', 'desc' => '5.000+ XP'];
         }
 
-        // Streak badges
         if ($longestStreak >= 3) {
             $badges[] = ['icon' => 'fire', 'color' => 'bg-orange-100 text-orange-600', 'title' => 'On Fire', 'desc' => 'Streak 3 hari'];
         }
@@ -57,12 +54,10 @@ class BadgeService
             $badges[] = ['icon' => 'fire', 'color' => 'bg-rose-100 text-rose-600', 'title' => 'Unstoppable', 'desc' => 'Streak 30 hari'];
         }
 
-        // Attempt badges
         if ($totalLessons >= 10) {
             $badges[] = ['icon' => 'trophy', 'color' => 'bg-blue-100 text-blue-600', 'title' => 'Top 10', 'desc' => '10 percobaan lesson'];
         }
 
-        // Level badge (always show one)
         if ($totalXp < 500) {
             $badges[] = ['icon' => 'user', 'color' => 'bg-gray-100 text-gray-600', 'title' => 'Beginner', 'desc' => 'Level pemula'];
         } elseif ($totalXp < 2000) {

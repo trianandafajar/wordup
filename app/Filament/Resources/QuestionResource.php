@@ -107,8 +107,6 @@ class QuestionResource extends Resource
     {
         return [
             'index' => Pages\ListQuestions::route('/'),
-            // 'create' => Pages\CreateQuestion::route('/create'),
-            // 'edit' => Pages\EditQuestion::route('/{record}/edit'),
         ];
     }
 }

@@ -34,7 +34,6 @@
         </div>
     </div>
 
-    <!-- Edit Profile -->
     <div class="bg-white rounded-3xl border border-gray-200 p-6 mb-6">
         <h2 class="font-bold text-gray-900 text-sm mb-4">Edit Profil</h2>
         <form method="POST" action="{{ route('user.profile.update') }}" enctype="multipart/form-data" class="space-y-4">
@@ -76,7 +75,6 @@
         </form>
     </div>
 
-    <!-- Quick Stats -->
     <div class="grid grid-cols-3 gap-3 mb-6">
         <div class="bg-white rounded-xl p-4 border border-gray-200 text-center">
             <div class="text-orange-500 font-extrabold text-xl">
@@ -101,7 +99,6 @@
         </div>
     </div>
 
-    <!-- Badges -->
     <div class="bg-white rounded-3xl border border-gray-200 p-6 mb-6">
         <h2 class="font-bold text-gray-900 text-sm mb-4">Badge</h2>
         <div class="grid grid-cols-2 gap-3">
@@ -129,7 +126,6 @@
         </div>
     </div>
 
-    <!-- Activity Timeline -->
     <div class="bg-white rounded-3xl border border-gray-200 p-6 mb-6">
         <h2 class="font-bold text-gray-900 text-sm mb-4">Aktivitas Terbaru</h2>
         <div class="space-y-2 text-xs text-gray-500">
@@ -147,7 +143,6 @@
         </div>
     </div>
 
-    <!-- Logout -->
     <div x-data="{ showLogoutModal: false }">
         <button type="button" @click="showLogoutModal = true"
             class="w-full py-3 rounded-xl bg-red-500 border border-red-200 text-white font-semibold text-sm hover:bg-red-600 transition-colors flex items-center justify-center gap-2">
@@ -159,7 +154,6 @@
             Logout
         </button>
 
-        <!-- Modal Confirm -->
         <div x-show="showLogoutModal" x-transition x-cloak
             class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4">
             <div @click.outside="showLogoutModal = false" x-transition

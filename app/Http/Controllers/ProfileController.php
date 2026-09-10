@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         $user = Auth::user();
 

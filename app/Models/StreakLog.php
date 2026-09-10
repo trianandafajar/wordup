@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 #[Fillable(['user_id', 'activity_date', 'xp_earned_that_day'])]
 class StreakLog extends Model
 {
-    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

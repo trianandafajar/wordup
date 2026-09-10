@@ -1,6 +1,5 @@
 <header class="sticky top-0 z-99999 flex w-full border-b border-gray-200 bg-white">
     <div class="flex w-full items-center justify-between px-3 py-3 sm:px-5 sm:py-4 lg:px-6">
-        <!-- hamburger -->
         <button
             class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 text-gray-500 transition-colors hover:bg-gray-100 lg:h-11 lg:w-11"
             @click.stop="sidebarToggle = !sidebarToggle">
@@ -19,7 +18,6 @@
         </button>
 
         <div class="flex items-center gap-3">
-            <!-- user area -->
             @auth
             <div class="relative" x-data="{ userMenuOpen: false, showLogoutModal: false }"
                 @click.outside="userMenuOpen = false">
@@ -36,7 +34,6 @@
                     </svg>
                 </a>
 
-                <!-- dropdown -->
                 <div x-show="userMenuOpen" x-transition x-cloak
                     class="absolute right-0 z-99999 mt-4.25 w-64 flex flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg">
                     <div class="border-b border-gray-200 pb-3">
@@ -56,7 +53,6 @@
                         <span>Logout</span>
                     </button>
 
-                    <!-- Modal Confirm Logout -->
                     <div x-show="showLogoutModal" x-transition x-cloak
                         class="fixed inset-0 z-[999999] flex items-center justify-center bg-black/50 px-4">
                         <div @click.outside="showLogoutModal = false" x-transition

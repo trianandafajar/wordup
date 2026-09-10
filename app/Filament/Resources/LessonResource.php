@@ -100,8 +100,6 @@ class LessonResource extends Resource
     {
         return [
             'index' => Pages\ListLessons::route('/'),
-            // 'create' => Pages\CreateLesson::route('/create'),
-            // 'edit' => Pages\EditLesson::route('/{record}/edit'),
         ];
     }
 }

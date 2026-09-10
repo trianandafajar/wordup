@@ -84,8 +84,6 @@ class UnitResource extends Resource
     {
         return [
             'index' => Pages\ListUnits::route('/'),
-            // 'create' => Pages\CreateUnit::route('/create'),
-            // 'edit' => Pages\EditUnit::route('/{record}/edit'),
         ];
     }
 }

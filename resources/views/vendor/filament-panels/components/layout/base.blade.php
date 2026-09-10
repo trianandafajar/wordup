@@ -94,7 +94,6 @@
     <div class="min-h-screen bg-gray-100">
         @include('admin.partials.sidebar')
 
-        <!-- Mobile sidebar backdrop -->
         <div x-show="sidebarToggle" x-transition:enter="transition-opacity ease-linear duration-300"
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
             x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100"
@@ -135,7 +134,6 @@
 
     @stack('scripts')
 
-    <!-- Global form submit loading handler -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const spinnerHtml = '<svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Memproses...';

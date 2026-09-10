@@ -36,7 +36,6 @@
         </div>
     </div>
 
-    <!-- Detail Per Soal -->
     @if (! empty($result['questions']))
     <div class="text-left bg-white rounded-3xl border border-gray-200 p-6 mb-8">
         <h2 class="font-bold text-gray-900 text-sm mb-4 text-center">Detail Jawaban</h2>

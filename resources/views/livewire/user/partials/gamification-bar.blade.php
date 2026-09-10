@@ -8,7 +8,6 @@
     </div>
 
     <div class="flex items-center gap-4 sm:gap-6">
-        <!-- Streak -->
         <div class="flex items-center gap-1.5 text-orange-500 font-bold text-sm">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -17,7 +16,6 @@
             <span>5</span>
         </div>
 
-        <!-- XP -->
         <div class="flex items-center gap-1.5 text-amber-500 font-bold text-sm">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 2L2 7L12 12L22 7L12 2Z" />
@@ -27,7 +25,6 @@
             <span>1,250</span>
         </div>
 
-        <!-- Hearts -->
         <div class="flex items-center gap-1.5 text-rose-500 font-bold text-sm">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path

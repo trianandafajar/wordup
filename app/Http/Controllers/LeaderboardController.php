@@ -8,12 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class LeaderboardController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         $currentUser = Auth::user();
         $leagueService = new LeagueService;
 
-        // Ensure current user has a league assigned
         if (! $currentUser->league) {
             $currentUser->league = $leagueService->getLeagueForXp($currentUser->xp_total)['key'];
             $currentUser->save();
@@ -21,7 +20,6 @@ class LeaderboardController extends Controller
 
         $currentUserLeague = $leagueService->getLeagueForUser($currentUser);
 
-        // Users in the same league, ranked by weekly XP
         $leagueUsers = User::where('league', $currentUserLeague['key'])
             ->orderByDesc('league_week_xp')
             ->orderByDesc('xp_total')

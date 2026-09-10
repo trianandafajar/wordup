@@ -78,8 +78,6 @@ class QuestionAnswerResource extends Resource
     {
         return [
             'index' => Pages\ListQuestionAnswers::route('/'),
-            // 'create' => Pages\CreateQuestionAnswer::route('/create'),
-            // 'edit' => Pages\EditQuestionAnswer::route('/{record}/edit'),
         ];
     }
 }

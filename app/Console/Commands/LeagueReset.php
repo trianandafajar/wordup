@@ -16,7 +16,6 @@ class LeagueReset extends Command
     {
         $leagueService = new LeagueService;
 
-        // Assign initial league for users without one
         User::query()->whereNull('league')->each(function (User $user) use ($leagueService) {
             $league = $leagueService->getLeagueForXp($user->xp_total);
             $user->update([
@@ -43,13 +42,11 @@ class LeagueReset extends Command
                 $newLeague = $leagueKey;
 
                 if ($index < $promotionZone) {
-                    // Promoted
                     $next = $leagueService->nextLeagueKey($leagueKey);
                     if ($next) {
                         $newLeague = $next;
                     }
                 } elseif ($index >= $demotionStart) {
-                    // Demoted
                     $prev = $leagueService->previousLeagueKey($leagueKey);
                     if ($prev) {
                         $newLeague = $prev;

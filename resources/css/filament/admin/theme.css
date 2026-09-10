@@ -1,14 +1,11 @@
-/* Hide Filament page-level breadcrumbs - custom topbar handles this */
 .fi-header .fi-breadcrumbs {
     display: none !important;
 }
 
-/* ---------- Taruh modal & backdrop di atas sidebar custom (z-999999) & header (z-99999) ---------- */
 .fi-modal-close-overlay {
     z-index: 9999998 !important;
 }
 
-/* Container modal (sibling setelah overlay) & window modal */
 .fi-modal-close-overlay+div,
 .fi-modal-window {
     z-index: 9999999 !important;
@@ -28,7 +25,6 @@
     transform: translateX(1.25rem) !important;
 }
 
-/* Hide error message text under field wrapper */
 .wordup-login-card .fi-fo-field-wrp-error-message {
     display: none !important;
 }
@@ -71,7 +67,6 @@
     border-color: #43a047 !important;
 }
 
-/* ===== TailAdmin variable overrides (WordUp Green) ===== */
 :root {
     --color-brand-25: #f6fef9;
     --color-brand-50: #ecfdf3;
@@ -92,7 +87,6 @@
     --shadow-theme-lg: 0px 12px 16px -4px rgba(16, 24, 40, 0.08), 0px 4px 6px -2px rgba(16, 24, 40, 0.03);
 }
 
-/* ===== Sidebar menu ===== */
 .menu-item {
     display: flex;
     align-items: center;
@@ -131,16 +125,12 @@
     white-space: nowrap;
 }
 
-/* ===== Sidebar collapse styles ===== */
 .sidebar {
     transition: width 0.3s ease-in-out, padding 0.3s ease-in-out;
 }
 
-/* ===== Collapse & hover expand: HANYA berjalan di desktop (>=1024px) =====
-   Di mobile/tablet sidebar selalu tampil penuh. */
 @media (min-width: 1024px) {
 
-    /* Hover expand saat collapsed: overlay di atas content */
     .sidebar-hover-collapsed.sidebar-hover {
         width: 290px !important;
         padding-left: 1.25rem !important;
@@ -159,7 +149,6 @@
         display: none !important;
     }
 
-    /* Collapsed state: menu item seimbang/proporsional */
     .sidebar-hover-collapsed .menu-item {
         justify-content: center;
         gap: 0;
@@ -182,7 +171,6 @@
         display: none;
     }
 
-    /* Saat hover expand, kembalikan proporsi menu item normal */
     .sidebar-hover-collapsed.sidebar-hover .menu-item {
         justify-content: flex-start;
         gap: 0.75rem;
@@ -197,7 +185,6 @@
         display: block !important;
     }
 
-    /* Sidebar logo saat collapsed */
     .sidebar-hover-collapsed .sidebar-header {
         justify-content: center;
     }
@@ -206,29 +193,24 @@
         justify-content: space-between;
     }
 
-    /* Kembalikan gap sidebar-nav saat hover-expand */
     .sidebar-hover-collapsed.sidebar-hover .sidebar-nav {
         gap: 12px;
     }
 
-    /* Sembunyikan group title SEPENUHNYA saat collapsed agar jarak icon rata */
     .sidebar-hover-collapsed .menu-group-header {
         display: none;
         margin-bottom: 0;
     }
 
-    /* Hapus margin bawah ul saat collapsed ikut serta merapikan jarak */
     .sidebar-hover-collapsed ul {
         margin-bottom: 0;
         gap: 12px;
     }
 
-    /* Samakan gap antar group & item saat collapsed (16px) */
     .sidebar-hover-collapsed .sidebar-nav {
         gap: 12px;
     }
 
-    /* Saat hover-expand, kembalikan title & margin */
     .sidebar-hover-collapsed.sidebar-hover .menu-group-header {
         display: block;
         margin-bottom: 8px;
@@ -240,7 +222,6 @@
     }
 }
 
-/* Default hover (non-collapsed companion rules) */
 .sidebar:hover .menu-item-text {
     display: inline !important;
 }
@@ -249,7 +230,6 @@
     display: block !important;
 }
 
-/* ===== Brand helper utilities ===== */
 .bg-brand-50 {
     background-color: var(--color-brand-50);
 }
@@ -290,7 +270,6 @@
     box-shadow: var(--shadow-theme-xs);
 }
 
-/* ===== Scrollbar ===== */
 .no-scrollbar {
     scrollbar-width: none;
 }

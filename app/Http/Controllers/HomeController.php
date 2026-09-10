@@ -7,17 +7,15 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(): \Illuminate\View\View
     {
         $user = Auth::user();
 
-        // Load course progress (most recent active course)
         $courseProgress = UserCourseProgress::where('user_id', $user->id)
             ->with('course')
             ->orderByDesc('started_at')
             ->first();
 
-        // Recent streak logs
         $recentStreaks = $user->streakLogs()
             ->orderByDesc('activity_date')
             ->limit(7)
@@ -27,7 +25,6 @@ class HomeController extends Controller
         $totalLessons = $courseProgress?->total_lessons ?? 1;
         $progressPercent = $courseProgress?->progress_percent ?? 0;
 
-        // Unit progress for display (calculated sequentially across all units)
         $units = [];
         if ($courseProgress) {
             $allUnits = $courseProgress->course->units()->with(['lessons' => function ($q) use ($user) {

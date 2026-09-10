@@ -24,12 +24,33 @@ class UserSeeder extends Seeder
         }
 
         $users = [
-            ['name' => 'user', 'email' => 'user@gmail', 'role' => 'user'],
-            ['name' => 'studen', 'email' => 'studen@gmail', 'role' => 'user'],
-            ['name' => 'admin', 'email' => 'admin@gmail', 'role' => 'admin'],
+            [
+                'name' => 'user',
+                'email' => 'user@gmail.com',
+                'legacy_email' => 'user@gmail',
+                'role' => 'user',
+            ],
+            [
+                'name' => 'student',
+                'email' => 'student@gmail.com',
+                'legacy_email' => 'studen@gmail',
+                'role' => 'user',
+            ],
+            [
+                'name' => 'admin',
+                'email' => 'admin@gmail.com',
+                'legacy_email' => 'admin@gmail',
+                'role' => 'admin',
+            ],
         ];
 
         foreach ($users as $userData) {
+            if (! User::query()->where('email', $userData['email'])->exists()) {
+                User::query()
+                    ->where('email', $userData['legacy_email'])
+                    ->update(['email' => $userData['email']]);
+            }
+
             $user = User::updateOrCreate(
                 ['email' => $userData['email']],
                 [

@@ -3,7 +3,6 @@
 @section('content')
 <div class="min-h-screen flex bg-[#ecfdf3]">
 
-    {{-- Panel Kiri: konteks produk, disembunyikan di mobile --}}
     <div class="hidden lg:flex lg:w-5/12 bg-[#2e7d32] flex-col justify-between p-12 text-white">
         <img src="{{ asset('images/logo.png') }}" alt="WordUp" class="h-12 w-12 object-contain" />
 
@@ -19,7 +18,6 @@
         <p class="text-white/40 text-xs">&copy; {{ date('Y') }} WordUp</p>
     </div>
 
-    {{-- Panel Kanan: form --}}
     <div class="flex-1 flex items-center justify-center px-6 py-12 sm:px-10">
         <div class="w-full max-w-sm space-y-4 animate-[fadeUp_0.4s_ease-out]">
 

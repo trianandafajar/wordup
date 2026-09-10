@@ -23,7 +23,6 @@
         </a>
 
         <div class="flex items-center gap-3 sm:gap-4">
-            <!-- Streak -->
             <div class="flex items-center gap-1 text-orange-500 font-bold text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
                     <path fill-rule="evenodd"
@@ -32,7 +31,6 @@
                 </svg>
                 <span>{{ auth()->user()->current_streak }}</span>
             </div>
-            <!-- XP -->
             <div class="flex items-center gap-1 text-amber-500 font-bold text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
                     <path fill-rule="evenodd"
@@ -41,7 +39,6 @@
                 </svg>
                 <span>{{ number_format(auth()->user()->xp_total) }}</span>
             </div>
-            <!-- Hearts -->
             <div class="flex items-center gap-1 text-rose-500 font-bold text-sm">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
                     <path
@@ -54,23 +51,20 @@
         </div>
     </header>
 
-    <!-- Main Content Area -->
     <main class="pt-20 {{ $showBottomNav ? 'pb-24' : 'pb-8' }}">
         <div class="flex flex-col items-center w-full max-w-md mx-auto px-4 py-6">
             @yield('content')
         </div>
     </main>
 
-    <!-- Bottom Navigation Bar -->
     @if ($showBottomNav)
-    @include('livewire.user.partials.bottom-nav', ['active' => $activeMenu])
+        @include('livewire.user.partials.bottom-nav', ['active' => $activeMenu])
     @endif
 
     @stack('scripts')
 
     @include('livewire.user.partials.lives-timer')
 
-    <!-- Global form submit loading handler -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const spinnerHtml = '<svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Memproses...';

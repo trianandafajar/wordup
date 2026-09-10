@@ -2,8 +2,6 @@
 
 @section('content')
 <div class="w-full">
-
-    <!-- Hero: Lanjutkan belajar -->
     <div
         class="bg-gradient-to-br from-brand-500 to-brand-600 text-white rounded-3xl p-6 shadow-lg shadow-brand-500/30 overflow-hidden relative">
         <div class="absolute -right-6 -top-6 w-32 h-32 bg-white/10 rounded-full"></div>
@@ -44,7 +42,6 @@
         </div>
     </div>
 
-    <!-- Stat Cards -->
     <div class="grid grid-cols-3 gap-3 mt-6">
         <div class="bg-white rounded-2xl p-4 border border-gray-200 text-center">
             <div class="text-orange-500 font-extrabold text-xl">
@@ -81,7 +78,6 @@
         </div>
     </div>
 
-    <!-- Progres Kursus -->
     <div class="bg-white rounded-3xl p-6 border border-gray-200 mt-6">
         <div class="flex items-center justify-between">
             <h2 class="font-bold text-gray-900 text-lg">Progres Kursus</h2>
@@ -97,7 +93,6 @@
         </div>
     </div>
 
-    <!-- Unit Progress Cards -->
     <h2 class="font-bold text-gray-900 text-lg mt-8 mb-4">Unit Kamu</h2>
     <div class="space-y-3">
         @foreach ($units as $i => $unit)
@@ -126,7 +121,6 @@
         @endforeach
     </div>
 
-    <!-- Daily Goals -->
     <div class="bg-white rounded-3xl p-6 border border-gray-200 mt-6">
         <h2 class="font-bold text-gray-900 text-lg mb-4">Goal Harian</h2>
         <div class="space-y-3">
@@ -164,6 +158,5 @@
             </div>
         </div>
     </div>
-
 </div>
 @endsection

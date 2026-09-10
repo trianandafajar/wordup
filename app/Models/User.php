@@ -18,10 +18,8 @@ use Spatie\Permission\Traits\HasRoles;
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements FilamentUser
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, Notifiable;
 
-    /** @return array<string, string> */
     protected function casts(): array
     {
         return [

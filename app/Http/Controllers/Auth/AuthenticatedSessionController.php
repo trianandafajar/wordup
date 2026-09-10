@@ -34,7 +34,6 @@ class AuthenticatedSessionController extends Controller
 
         $user = Auth::user();
 
-        // Block admin role from logging into the user area
         if ($user->hasRole('admin')) {
             Auth::guard('web')->logout();
             $request->session()->invalidate();

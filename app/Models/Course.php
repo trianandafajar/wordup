@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['title', 'description', 'language_target', 'level', 'is_active'])]
 class Course extends Model
 {
-    /** @return array<string, string> */
     protected function casts(): array
     {
         return ['is_active' => 'boolean'];

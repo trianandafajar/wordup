@@ -10,10 +10,6 @@ class LifeService
 
     public const REFILL_INTERVAL_HOURS = 4;
 
-    /**
-     * Refill lives based on elapsed time since last refill.
-     * Returns the updated user.
-     */
     public function refillIfNeeded(User $user): User
     {
         if ($user->lives >= self::MAX_LIVES) {
@@ -24,7 +20,6 @@ class LifeService
         $lastRefill = $user->last_life_refill_at;
 
         if (! $lastRefill) {
-            // First time, fill up completely
             $user->update([
                 'lives' => self::MAX_LIVES,
                 'last_life_refill_at' => $now,
@@ -54,9 +49,6 @@ class LifeService
         $user->save();
     }
 
-    /**
-     * Seconds remaining until the next life refills.
-     */
     public function secondsUntilNextRefill(User $user): int
     {
         if ($user->lives >= self::MAX_LIVES) {

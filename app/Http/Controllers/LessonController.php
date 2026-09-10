@@ -16,11 +16,10 @@ use Illuminate\Support\Facades\DB;
 
 class LessonController extends Controller
 {
-    public function show($lessonId)
+    public function show($lessonId): \Illuminate\View\View | \Illuminate\Http\RedirectResponse
     {
         $user = Auth::user();
 
-        // Redirect to home if user has no lives left
         if ($user->lives <= 0) {
             return redirect()->route('user.home')
                 ->with('error', 'Nyawa habis! Tunggu sampai nyawa terisi kembali.');
@@ -28,7 +27,6 @@ class LessonController extends Controller
 
         $lesson = Lesson::with('questions.options', 'questions.answer', 'unit')->findOrFail($lessonId);
 
-        // Ensure user has course progress created
         $courseProgress = UserCourseProgress::firstOrCreate(
             ['user_id' => $user->id, 'course_id' => $lesson->unit->course_id],
             [
@@ -39,20 +37,17 @@ class LessonController extends Controller
             ]
         );
 
-        // Get user progress for this lesson
         $progress = UserLessonProgress::where('user_id', $user->id)
             ->where('lesson_id', $lesson->id)
             ->first();
 
         $status = $progress?->status ?? LessonProgressStatusEnum::NotStarted;
 
-        // If already completed, go back to skill tree
         if ($status === LessonProgressStatusEnum::Completed) {
             return redirect()->route('user.learn')
                 ->with('message', 'Lesson ini sudah diselesaikan');
         }
 
-        // Determine if this lesson is available: previous lesson in the unit must be completed
         $previousLesson = Lesson::where('unit_id', $lesson->unit_id)
             ->where('order', $lesson->order - 1)
             ->first();
@@ -62,7 +57,6 @@ class LessonController extends Controller
                 ->where('lesson_id', $previousLesson->id)
                 ->first();
 
-            // First lesson of the course: always available
             $isFirstLesson = Lesson::where('unit_id', $lesson->unit_id)
                 ->where('order', 1)
                 ->first()->id === $lesson->id;
@@ -83,7 +77,7 @@ class LessonController extends Controller
         ]);
     }
 
-    public function submit(Request $request, $lessonId)
+    public function submit(Request $request, $lessonId): \Illuminate\Http\RedirectResponse
     {
         $user = Auth::user();
         $lesson = Lesson::with('questions.options', 'questions.answer', 'unit.lessons')->findOrFail($lessonId);
@@ -103,12 +97,10 @@ class LessonController extends Controller
             }
 
             if ($question->type === 'fill_in_the_blank' || ($question->options->count() <= 0 && $question->answer)) {
-                // Compare text answer (case-insensitive, trimmed)
                 $correct = strtolower(trim((string) $question->answer?->correct_text));
                 $given = strtolower(trim((string) $answerGiven));
                 $isCorrect = $given !== '' && $given === $correct;
             } else {
-                // Multiple choice / listening: match option id
                 $isCorrect = $question->options->contains(fn($option) => $option->id === (int) $answerGiven && $option->is_correct);
             }
 
@@ -124,11 +116,7 @@ class LessonController extends Controller
         }
 
         $finalScore = $totalQuestions > 0 ? round(($correctCount / $totalQuestions) * 100) : 0;
-
-        // Only award XP if score >= 80
         $passed = $finalScore >= 80;
-
-        // Create a new attempt each time (increment attempt_number)
         $previousAttemptNumber = $user->lessonAttempts()
             ->where('lesson_id', $lesson->id)
             ->max('attempt_number');
@@ -162,12 +150,10 @@ class LessonController extends Controller
             );
         }
 
-        // Load existing progress (for best_score accumulation)
         $progress = UserLessonProgress::where('user_id', $user->id)
             ->where('lesson_id', $lesson->id)
             ->first();
 
-        // Update lesson progress
         UserLessonProgress::updateOrCreate(
             ['user_id' => $user->id, 'lesson_id' => $lesson->id],
             [
@@ -178,16 +164,11 @@ class LessonController extends Controller
             ]
         );
 
-        // Award XP only when passing
         $xpEarned = 0;
         if ($passed) {
             $xpEarned = $lesson->xp_reward;
-
-            // Streak bonus (+10 XP when consecutive streak >= 2)
             $bonusXp = ($user->current_streak >= 2) ? 10 : 0;
             $xpEarned += $bonusXp;
-
-            // Streak logic (fix Carbon vs String comparison bug)
             $today = now()->toDateString();
             $lastActivity = $user->last_activity_date?->toDateString();
 
@@ -195,21 +176,18 @@ class LessonController extends Controller
             $user->league_week_xp += $xpEarned;
 
             if ($lastActivity !== $today) {
-                // Check if last activity was yesterday
                 $yesterday = now()->subDay()->toDateString();
                 if ($lastActivity === $yesterday) {
                     $user->current_streak += 1;
                 } elseif (! $lastActivity) {
                     $user->current_streak = 1;
                 } else {
-                    // Gap > 1 day, reset streak to 1
                     $user->current_streak = 1;
                 }
             }
             $user->longest_streak = max($user->longest_streak, $user->current_streak);
             $user->last_activity_date = $today;
 
-            // Ensure user has league assigned
             if (! $user->league) {
                 $user->league = (new LeagueService)->getLeagueForXp($user->xp_total)['key'];
             }
@@ -221,7 +199,6 @@ class LessonController extends Controller
 
             $user->save();
 
-            // Update course progress
             $courseCompleted = UserLessonProgress::where('user_id', $user->id)
                 ->whereIn('lesson_id', $lesson->unit->lessons->pluck('id'))
                 ->where('status', LessonProgressStatusEnum::Completed)
@@ -239,11 +216,9 @@ class LessonController extends Controller
                 $courseProgress->save();
             }
         } else {
-            // Deduct life on failure
             app(LifeService::class)->loseLife($user);
         }
 
-        // Store results in session
         session(['lesson_result' => [
             'score' => $finalScore,
             'xp_earned' => $xpEarned,
@@ -270,7 +245,7 @@ class LessonController extends Controller
         return redirect()->route('user.lesson.result', $lesson->id);
     }
 
-    public function result($lessonId)
+    public function result($lessonId): \Illuminate\View\View | \Illuminate\Http\RedirectResponse
     {
         $result = session('lesson_result');
         if (! $result) {

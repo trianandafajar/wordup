@@ -2,8 +2,6 @@
 
 @section('content')
 <div class="w-full">
-
-    <!-- League Header -->
     <div class="text-center mb-8">
         <div class="inline-flex p-4 {{ $currentUserLeague['bg'] }} rounded-full {{ $currentUserLeague['color'] }} mb-3">
             <x-heroicon-s-trophy class="w-10 h-10" />
@@ -13,8 +11,6 @@
             Posisi #{{ $currentUserLeagueRank }} dari {{ $totalInLeague }} user
         </p>
     </div>
-
-    <!-- Your Position (League View) -->
     <div
         class="{{ $currentUserLeague['bg'] }} border-2 {{ $currentUserLeague['border'] }} rounded-2xl p-4 mb-8 flex items-center gap-4">
         <span class="text-lg font-bold {{ $currentUserLeague['color'] }} w-8 text-center">#{{ $currentUserLeagueRank
@@ -35,7 +31,6 @@
             class="text-xs font-bold {{ $currentUserLeague['bg'] }} {{ $currentUserLeague['color'] }} px-3 py-1 rounded-full border border-current">Kamu</span>
     </div>
 
-    <!-- Leaderboard -->
     <div class="bg-white rounded-3xl border border-gray-200 divide-y divide-gray-100 overflow-hidden shadow-sm">
         @forelse ($leagueUsers as $i => $user)
         <div
@@ -58,7 +53,6 @@
         @endforelse
     </div>
 
-    <!-- Promotion Info -->
     <div class="mt-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-center">
         <p class="text-emerald-600 font-bold text-sm">
             Top {{ $promotionCount }} akan dipromosikan ke league berikutnya!
