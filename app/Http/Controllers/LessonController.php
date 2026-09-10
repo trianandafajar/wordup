@@ -13,7 +13,6 @@ use App\Services\LifeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class LessonController extends Controller
@@ -103,7 +102,7 @@ class LessonController extends Controller
                 $given = strtolower(trim((string) $answerGiven));
                 $isCorrect = $given !== '' && $given === $correct;
             } else {
-                $isCorrect = $question->options->contains(fn ($option) => $option->id === (int) $answerGiven && $option->is_correct);
+                $isCorrect = $question->options->contains(fn($option) => $option->id === (int) $answerGiven && $option->is_correct);
             }
 
             if ($isCorrect) {
@@ -194,10 +193,16 @@ class LessonController extends Controller
                 $user->league = (new LeagueService)->getLeagueForXp($user->xp_total)['key'];
             }
 
-            $user->streakLogs()->updateOrCreate(
-                ['activity_date' => $today],
-                ['xp_earned_that_day' => DB::raw('xp_earned_that_day + '.$xpEarned)]
-            );
+            $streakLog = $user->streakLogs()->where('activity_date', $today)->first();
+            if ($streakLog) {
+                $streakLog->xp_earned_that_day += $xpEarned;
+                $streakLog->save();
+            } else {
+                $user->streakLogs()->create([
+                    'activity_date' => $today,
+                    'xp_earned_that_day' => $xpEarned,
+                ]);
+            }
 
             $user->save();
 
