@@ -42,8 +42,8 @@
                         <span class="mt-0.5 block text-xs text-gray-500">{{ auth()->user()->email
                             }}</span>
                     </div>
-                    <button type="button" @click="userMenuOpen = false; showLogoutModal = true"
-                        class="group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100">
+                    <button type="button" @click="showLogoutModal = true"
+                        class="group flex w-full items-center gap-3 rounded-lg border border-transparent bg-transparent px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-brand-500/30">
                         <svg class="fill-gray-500 group-hover:fill-gray-700" width="24" height="24" viewBox="0 0 24 24"
                             fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd"
@@ -53,9 +53,10 @@
                         <span>Logout</span>
                     </button>
 
-                    <div x-show="showLogoutModal" x-transition x-cloak
-                        class="fixed inset-0 z-[999999] flex items-center justify-center bg-black/50 px-4">
-                        <div @click.outside="showLogoutModal = false" x-transition
+                    <template x-teleport="body">
+                        <div x-show="showLogoutModal" x-transition x-cloak
+                            class="fixed inset-0 z-[10000000] flex items-center justify-center bg-slate-950/60 px-4 backdrop-blur-[2px]">
+                        <div @click.outside="showLogoutModal = false; userMenuOpen = false" x-transition
                             class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
                             <div class="text-center">
                                 <div
@@ -71,20 +72,29 @@
                                     admin.</p>
                             </div>
                             <div class="mt-6 flex gap-3">
-                                <button type="button" @click="showLogoutModal = false"
+                                <button type="button" @click="showLogoutModal = false; userMenuOpen = false"
                                     class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors">
                                     Batal
                                 </button>
-                                <form method="post" action="{{ filament()->getLogoutUrl() }}" class="flex-1">
+                                <form method="post" action="{{ filament()->getLogoutUrl() }}" class="flex-1"
+                                    x-data="{ isLoggingOut: false }" @submit="isLoggingOut = true">
                                     @csrf
-                                    <button type="submit"
-                                        class="w-full py-2.5 rounded-xl bg-red-500 text-white font-semibold text-sm hover:bg-red-600 transition-colors">
-                                        Logout
+                                    <button type="submit" data-no-loading :disabled="isLoggingOut"
+                                        class="flex w-full items-center justify-center gap-2 rounded-xl !bg-red-500 py-2.5 text-sm font-semibold !text-white transition-colors hover:!bg-red-600 disabled:cursor-wait disabled:opacity-75">
+                                        <svg x-show="isLoggingOut" x-cloak class="h-4 w-4 animate-spin" viewBox="0 0 24 24"
+                                            fill="none" aria-hidden="true">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                        </svg>
+                                        <span x-text="isLoggingOut ? 'Logging out...' : 'Logout'"></span>
                                     </button>
                                 </form>
                             </div>
                         </div>
-                    </div>
+                        </div>
+                    </template>
                 </div>
             </div>
             @endauth
