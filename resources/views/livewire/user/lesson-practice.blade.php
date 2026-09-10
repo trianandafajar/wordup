@@ -40,7 +40,8 @@ use Illuminate\Support\Facades\Storage;
                     <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-bold rounded-full">MATERI
                         LESSON</span>
                 </div>
-                <div class="prose prose-sm max-w-none text-gray-800 space-y-3">
+                <div
+                    class="prose prose-sm prose-li:my-0 prose-ul:space-y-0 leading-tight max-w-none text-gray-800 space-y-3">
                     {!! $lesson->explanation !!}
                 </div>
             </div>

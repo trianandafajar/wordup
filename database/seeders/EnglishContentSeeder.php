@@ -15,6 +15,8 @@ class EnglishContentSeeder extends Seeder
 {
     public function run(): void
     {
+        Course::query()->delete();
+
         $course = Course::query()->firstOrCreate(
             ['title' => 'Complete English Mastery'],
             [
@@ -84,7 +86,7 @@ class EnglishContentSeeder extends Seeder
                         'title' => 'Saying Hello',
                         'type' => 'reading',
                         'xp' => 20,
-                        'explanation' => '<h3>Greetings in English</h3><p>There are many ways to say hello in English depending on the time of day and formality:</p><ul><li><strong>Hello</strong> — universal, works anytime</li><li><strong>Hi</strong> — informal and friendly</li><li><strong>Good morning</strong> — before noon</li><li><strong>Good afternoon</strong> — noon to evening</li><li><strong>Good evening</strong> — after sunset</li></ul>',
+                        'explanation' => '<h3>Greetings in English</h3><p>There are many ways to say hello in English depending on the time of day and formality:</p><ul><li><strong>Hello</strong> universal, works anytime</li><li><strong>Hi</strong> informal and friendly</li><li><strong>Good morning</strong> before noon</li><li><strong>Good afternoon</strong> noon to evening</li><li><strong>Good evening</strong> after sunset</li></ul>',
                         'questions' => [
                             ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'Which greeting is the most formal?', 'options' => [['text' => 'Hey', 'correct' => false], ['text' => 'Yo', 'correct' => false], ['text' => 'Good morning', 'correct' => true], ['text' => 'Sup', 'correct' => false]]],
                             ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'When do you say "Good evening"?', 'options' => [['text' => 'Before noon', 'correct' => false], ['text' => 'After sunset', 'correct' => true], ['text' => 'At midnight', 'correct' => false], ['text' => 'In the morning', 'correct' => false]]],
@@ -106,7 +108,7 @@ class EnglishContentSeeder extends Seeder
                         'title' => 'Saying Goodbye',
                         'type' => 'reading',
                         'xp' => 20,
-                        'explanation' => '<h3>Ways to Say Goodbye</h3><ul><li><strong>Goodbye</strong> — formal</li><li><strong>Bye</strong> — informal</li><li><strong>See you later</strong> — casual</li><li><strong>Have a nice day</strong> — polite</li></ul>',
+                        'explanation' => '<h3>Ways to Say Goodbye</h3><ul><li><strong>Goodbye</strong> formal</li><li><strong>Bye</strong> informal</li><li><strong>See you later</strong> casual</li><li><strong>Have a nice day</strong> polite</li></ul>',
                         'questions' => [
                             ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'Which goodbye is the most formal?', 'options' => [['text' => 'Bye', 'correct' => false], ['text' => 'See ya', 'correct' => false], ['text' => 'Goodbye', 'correct' => true], ['text' => 'Later', 'correct' => false]]],
                             ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "See you _____!" (meaning you will meet tomorrow)', 'answer' => 'tomorrow'],
@@ -122,7 +124,7 @@ class EnglishContentSeeder extends Seeder
                         'title' => 'Morning Routine',
                         'type' => 'reading',
                         'xp' => 20,
-                        'explanation' => '<h3>Morning Activities</h3><ul><li><strong>wake up</strong> — stop sleeping</li><li><strong>take a shower</strong> — wash body</li><li><strong>brush teeth</strong> — clean teeth</li><li><strong>have breakfast</strong> — eat morning meal</li></ul>',
+                        'explanation' => '<h3>Morning Activities</h3><ul><li><strong>wake up</strong> stop sleeping</li><li><strong>take a shower</strong> wash body</li><li><strong>brush teeth</strong> clean teeth</li><li><strong>have breakfast</strong> eat morning meal</li></ul>',
                         'questions' => [
                             ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'What do you do right after you wake up?', 'options' => [['text' => 'Get up from bed', 'correct' => true], ['text' => 'Have dinner', 'correct' => false], ['text' => 'Go to sleep', 'correct' => false], ['text' => 'Watch TV', 'correct' => false]]],
                             ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "I _____ my teeth every morning."', 'answer' => 'brush'],
@@ -199,7 +201,7 @@ class EnglishContentSeeder extends Seeder
                         'title' => 'At the Airport',
                         'type' => 'reading',
                         'xp' => 30,
-                        'explanation' => '<h3>Airport Vocabulary</h3><ul><li><strong>Boarding pass</strong> — ticket to board</li><li><strong>Gate</strong> — where you board</li><li><strong>Luggage</strong> — bags</li></ul>',
+                        'explanation' => '<h3>Airport Vocabulary</h3><ul><li><strong>Boarding pass</strong> ticket to board</li><li><strong>Gate</strong> where you board</li><li><strong>Luggage</strong> bags</li></ul>',
                         'questions' => [
                             ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => 'Where do you board the plane?', 'options' => [['text' => 'Customs', 'correct' => false], ['text' => 'Check-in counter', 'correct' => false], ['text' => 'Gate', 'correct' => true], ['text' => 'Lounge', 'correct' => false]]],
                             ['type' => 'fill_in_the_blank', 'difficulty' => 'intermediate', 'text' => 'Complete: "I need to check in my _____ before the flight."', 'answer' => 'luggage'],
@@ -221,7 +223,7 @@ class EnglishContentSeeder extends Seeder
                         'title' => 'Hotel Booking',
                         'type' => 'reading',
                         'xp' => 30,
-                        'explanation' => '<h3>Hotel Stay</h3><ul><li><strong>Reservation</strong> — booking</li><li><strong>Checkout</strong> — leaving time</li><li><strong>Wake-up call</strong> — morning phone call</li></ul>',
+                        'explanation' => '<h3>Hotel Stay</h3><ul><li><strong>Reservation</strong> booking</li><li><strong>Checkout</strong> leaving time</li><li><strong>Wake-up call</strong> morning phone call</li></ul>',
                         'questions' => [
                             ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => 'When you arrive at a hotel, you say...', 'options' => [['text' => 'I have a reservation under Smith.', 'correct' => true], ['text' => 'I want to leave now.', 'correct' => false], ['text' => 'Where is the airport?', 'correct' => false], ['text' => 'Give me food.', 'correct' => false]]],
                             ['type' => 'fill_in_the_blank', 'difficulty' => 'intermediate', 'text' => 'Complete: "What time is _____?" (when you leave)', 'answer' => 'checkout'],
