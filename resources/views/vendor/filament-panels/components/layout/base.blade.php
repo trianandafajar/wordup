@@ -143,7 +143,7 @@
                     const btn = this.querySelector('button[type="submit"]:not([data-no-loading])');
                     if (btn && !btn.disabled) {
                         btn.disabled = true;
-                        btn.classList.add('opacity-60', 'btn-disabled-override', 'pointer-events-none');
+                        btn.classList.add('opacity-60', 'btn-disabled-override');
                         btn.innerHTML = spinnerHtml;
                     }
                 });
