@@ -9,7 +9,7 @@ enum ProficiencyLevelEnum: string
     case ADVANCED = 'advanced';
     case FLUENT = 'fluent';
 
-     /**
+    /**
      * @return array<int, string>
      */
     public static function getAllValues(): array

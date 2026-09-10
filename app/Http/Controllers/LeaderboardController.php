@@ -5,10 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Services\LeagueService;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class LeaderboardController extends Controller
 {
-    public function index(): \Illuminate\View\View
+    public function index(): View
     {
         $currentUser = Auth::user();
         $leagueService = new LeagueService;

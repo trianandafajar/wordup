@@ -7,10 +7,11 @@ use App\Models\Course;
 use App\Models\UserCourseProgress;
 use App\Models\UserLessonProgress;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class SkillTreeController extends Controller
 {
-    public function index(): \Illuminate\View\View
+    public function index(): View
     {
         $user = Auth::user();
 

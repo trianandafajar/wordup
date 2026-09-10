@@ -10,13 +10,15 @@ use App\Models\UserCourseProgress;
 use App\Models\UserLessonProgress;
 use App\Services\LeagueService;
 use App\Services\LifeService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
 
 class LessonController extends Controller
 {
-    public function show($lessonId): \Illuminate\View\View | \Illuminate\Http\RedirectResponse
+    public function show($lessonId): View|RedirectResponse
     {
         $user = Auth::user();
 
@@ -77,7 +79,7 @@ class LessonController extends Controller
         ]);
     }
 
-    public function submit(Request $request, $lessonId): \Illuminate\Http\RedirectResponse
+    public function submit(Request $request, $lessonId): RedirectResponse
     {
         $user = Auth::user();
         $lesson = Lesson::with('questions.options', 'questions.answer', 'unit.lessons')->findOrFail($lessonId);
@@ -101,7 +103,7 @@ class LessonController extends Controller
                 $given = strtolower(trim((string) $answerGiven));
                 $isCorrect = $given !== '' && $given === $correct;
             } else {
-                $isCorrect = $question->options->contains(fn($option) => $option->id === (int) $answerGiven && $option->is_correct);
+                $isCorrect = $question->options->contains(fn ($option) => $option->id === (int) $answerGiven && $option->is_correct);
             }
 
             if ($isCorrect) {
@@ -194,7 +196,7 @@ class LessonController extends Controller
 
             $user->streakLogs()->updateOrCreate(
                 ['activity_date' => $today],
-                ['xp_earned_that_day' => DB::raw('xp_earned_that_day + ' . $xpEarned)]
+                ['xp_earned_that_day' => DB::raw('xp_earned_that_day + '.$xpEarned)]
             );
 
             $user->save();
@@ -245,7 +247,7 @@ class LessonController extends Controller
         return redirect()->route('user.lesson.result', $lesson->id);
     }
 
-    public function result($lessonId): \Illuminate\View\View | \Illuminate\Http\RedirectResponse
+    public function result($lessonId): View|RedirectResponse
     {
         $result = session('lesson_result');
         if (! $result) {

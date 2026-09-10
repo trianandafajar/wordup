@@ -16,6 +16,10 @@ class OnboardingController extends Controller
     {
         $user = Auth::user();
 
+        if ($user->hasRole('admin')) {
+            return redirect('/admin');
+        }
+
         if ($user->onboarding && $user->onboarding->completed_at) {
             return redirect()->route('user.home');
         }
