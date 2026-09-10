@@ -1,9 +1,9 @@
 @extends('layouts.guest')
 
 @section('content')
-<div class="min-h-screen flex bg-[#ecfdf3]">
+<div class="relative flex min-h-dvh overflow-x-hidden bg-white lg:bg-brand-50">
 
-    <div class="hidden lg:flex lg:w-5/12 bg-[#2e7d32] flex-col justify-between p-12 text-white">
+    <div class="hidden lg:flex lg:w-[42%] bg-brand-800 flex-col justify-between p-12 text-white">
         <img src="{{ asset('images/logo.png') }}" alt="WordUp" class="h-12 w-12 object-contain" />
 
         <div class="space-y-6">
@@ -18,21 +18,30 @@
         <p class="text-white/40 text-xs">&copy; {{ date('Y') }} WordUp</p>
     </div>
 
-    <div class="flex-1 flex items-center justify-center px-6 py-12 sm:px-10">
-        <div class="w-full max-w-sm space-y-4 animate-[fadeUp_0.4s_ease-out]">
+    <main class="relative flex min-h-dvh flex-1 items-center justify-center px-5 py-8 sm:px-10 sm:py-12 lg:min-h-screen lg:py-16">
+        <div class="w-full max-w-sm animate-[fadeUp_0.4s_ease-out] lg:max-w-[26rem]">
 
-            <div class="space-y-2 lg:hidden">
-                <img src="{{ asset('images/logo.png') }}" alt="WordUp" class="h-10 w-10 object-contain" />
+            <div class="mb-9 text-center lg:hidden">
+                <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.5rem] bg-brand-50">
+                    <img src="{{ asset('images/logo.png') }}" alt="WordUp" class="h-[4.5rem] w-[4.5rem] object-contain" />
+                </div>
+                <p class="mt-4 text-xl font-bold tracking-tight text-gray-dark">WordUp</p>
+                <p class="mt-1 text-sm text-gray-dark/55">Belajar sedikit, tiap hari.</p>
             </div>
 
-            <h2 class="font-sans text-2xl font-bold text-[#1a2231]">Masuk</h2>
-            <form class="space-y-5" method="POST" action="{{ route('login') }}">
+            <div class="lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
+                <div class="mb-6 space-y-1.5">
+                    <h2 class="font-sans text-[1.7rem] font-bold tracking-tight text-gray-dark">Masuk</h2>
+                    <p class="text-sm leading-6 text-gray-dark/55">Senang melihatmu lagi. Lanjutkan belajarmu.</p>
+                </div>
+
+                <form class="space-y-4" method="POST" action="{{ route('login') }}">
                 @csrf
 
                 <div>
-                    <label for="email" class="block text-sm font-medium text-[#1a2231] mb-1.5">Email</label>
+                    <label for="email" class="mb-2 block text-sm font-semibold text-gray-dark">Email</label>
                     <input id="email" name="email" type="email" required autofocus
-                        class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-[#1a2231] placeholder-[#1a2231]/30 focus:outline-none focus:ring-2 focus:ring-[#4caf50] focus:border-[#4caf50] sm:text-sm"
+                        class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 sm:text-sm"
                         placeholder="nama@email.com" value="{{ old('email') }}">
                     @error('email')
                     <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
@@ -40,42 +49,41 @@
                 </div>
 
                 <div>
-                    <div class="flex items-center justify-between mb-1.5">
-                        <label for="password" class="block text-sm font-medium text-[#1a2231]">Kata sandi</label>
+                    <div class="mb-2 flex items-center justify-between">
+                        <label for="password" class="block text-sm font-semibold text-gray-dark">Kata sandi</label>
                         <a href="{{ route('password.request') }}"
-                            class="text-sm font-medium text-[#4caf50] hover:text-[#43a047]">
+                            class="text-xs font-semibold text-brand-600 transition hover:text-brand-700">
                             Lupa kata sandi?
                         </a>
                     </div>
                     <input id="password" name="password" type="password" required
-                        class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-[#1a2231] placeholder-[#1a2231]/30 focus:outline-none focus:ring-2 focus:ring-[#4caf50] focus:border-[#4caf50] sm:text-sm"
+                        class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 sm:text-sm"
                         placeholder="Kata sandi kamu">
                     @error('password')
                     <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <div class="flex items-center">
+                <div class="flex items-center pt-1">
                     <input id="remember" name="remember" type="checkbox"
-                        class="h-4 w-4 rounded border-gray-300 text-[#4caf50] focus:ring-[#4caf50]">
-                    <label for="remember" class="ml-2 text-sm text-[#1a2231]">Ingat saya</label>
+                        class="h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500">
+                    <label for="remember" class="ml-2 text-sm text-gray-dark/70">Ingat saya</label>
                 </div>
 
                 <button type="submit"
-                    class="w-full rounded-lg bg-[#4caf50] py-2.5 px-4 text-sm font-medium text-white hover:bg-[#43a047] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4caf50] transition-colors">
+                    class="mt-2 h-12 w-full rounded-xl bg-brand-500 px-4 text-sm font-bold text-white shadow-[0_10px_20px_-12px_rgba(76,175,80,0.9)] transition hover:bg-brand-600 focus:outline-none focus:ring-4 focus:ring-brand-500/25 focus:ring-offset-2">
                     Masuk
                 </button>
-            </form>
-            <div>
-                <p class="mt-1 text-sm text-[#1a2231]/60">
+                </form>
+                <p class="mt-6 text-center text-sm text-gray-dark/55">
                     Belum punya akun?
-                    <a href="{{ route('register') }}" class="font-medium text-[#4caf50] hover:text-[#43a047]">
+                    <a href="{{ route('register') }}" class="font-semibold text-brand-600 transition hover:text-brand-700">
                         Daftar sekarang
                     </a>
                 </p>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 
 <style>
