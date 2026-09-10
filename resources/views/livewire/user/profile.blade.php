@@ -1,7 +1,38 @@
 @extends('layouts.user', ['pageTitle' => 'Profile', 'activeMenu' => 'profile'])
 
 @section('content')
-<div class="w-full">
+<div class="w-full" x-data="{
+    showAvatarModal: false,
+    avatarPreview: null,
+    avatarFile: null,
+    openAvatarModal() {
+        this.showAvatarModal = true;
+        this.avatarPreview = null;
+        this.avatarFile = null;
+        const input = document.querySelector('#avatarInput');
+        if (input) input.value = '';
+    },
+    onAvatarSelect(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        this.avatarFile = file;
+        const reader = new FileReader();
+        reader.onload = (evt) => { this.avatarPreview = evt.target.result; };
+        reader.readAsDataURL(file);
+    },
+    saveAvatar() {
+        const form = document.querySelector('#avatarForm');
+        if (this.avatarFile && form) {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(this.avatarFile);
+            const input = document.querySelector('#avatarInput');
+            input.files = dataTransfer.files;
+            form.submit();
+        } else {
+            this.showAvatarModal = false;
+        }
+    }
+}">
 
     @if (session('status'))
     <div class="mb-6 rounded-lg bg-[#4caf50]/10 border border-[#4caf50]/30 p-4 text-sm text-[#1a2231]">
@@ -25,6 +56,18 @@
                     </svg>
                 </div>
                 @endif
+                <button type="button"
+                    class="absolute bottom-1 right-1 bg-white rounded-full p-1.5 border border-gray-300 shadow-sm hover:bg-gray-100 hover:shadow-md transition-all focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 cursor-pointer"
+                    @click="openAvatarModal()" aria-label="Ubah foto profil">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="size-4 text-gray-500">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
+                    </svg>
+
+                </button>
             </div>
             <div class="flex-1 min-w-0">
                 <h1 class="text-xl font-bold text-gray-900 truncate">{{ $user->name }}</h1>
@@ -36,7 +79,7 @@
 
     <div class="bg-white rounded-3xl border border-gray-200 p-6 mb-6">
         <h2 class="font-bold text-gray-900 text-sm mb-4">Edit Profil</h2>
-        <form method="POST" action="{{ route('user.profile.update') }}" enctype="multipart/form-data" class="space-y-4">
+        <form method="POST" action="{{ route('user.profile.update') }}" class="space-y-4">
             @csrf
             @method('PUT')
 
@@ -58,21 +101,70 @@
                 @enderror
             </div>
 
-            <div>
-                <label class="block text-sm font-medium text-[#1a2231] mb-1.5">Foto Profil</label>
-                <input type="file" name="avatar" accept="image/*"
-                    class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-brand-50 file:text-brand-600 hover:file:bg-brand-100">
-                <p class="text-xs text-gray-400 mt-1">JPG, PNG, atau WebP. Maks 2MB.</p>
-                @error('avatar')
-                <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                @enderror
-            </div>
-
             <button type="submit"
                 class="w-full rounded-lg bg-[#4caf50] py-2.5 px-4 text-sm font-medium text-white hover:bg-[#43a047] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#4caf50] transition-colors">
                 Simpan Perubahan
             </button>
         </form>
+    </div>
+
+    <!-- Avatar Upload (hidden form) -->
+    <form id="avatarForm" method="POST" action="{{ route('user.profile.update') }}" enctype="multipart/form-data"
+        class="hidden">
+        @csrf
+        @method('PUT')
+        <input type="hidden" name="name" value="{{ $user->name }}">
+        <input type="hidden" name="email" value="{{ $user->email }}">
+        <input type="file" id="avatarInput" name="avatar" accept="image/*" @change="onAvatarSelect($event)">
+    </form>
+
+    <!-- Avatar Change Modal -->
+    <div x-show="showAvatarModal" x-transition x-cloak
+        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4">
+        <div @click.outside="showAvatarModal = false" x-transition
+            class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
+            <h3 class="text-lg font-bold text-gray-900 text-center mb-4">Ubah Foto Profil</h3>
+            <div class="flex flex-col items-center">
+                <div class="relative mb-4">
+                    <template x-if="avatarPreview">
+                        <img :src="avatarPreview" alt="Preview"
+                            class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow">
+                    </template>
+                    <template x-if="!avatarPreview">
+                        @if ($user->avatar)
+                        <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}"
+                            class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow">
+                        @else
+                        <div
+                            class="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 border-4 border-gray-100 shadow">
+                            <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.866 0-7 1.79-7 4v2h14v-2c0-2.21-3.134-4-7-4z" />
+                            </svg>
+                        </div>
+                        @endif
+                    </template>
+                </div>
+                <button type="button"
+                    class="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                    @click="$refs.avatarModalInput.click()">
+                    Pilih Foto
+                </button>
+                <input type="file" x-ref="avatarModalInput" accept="image/*" class="hidden"
+                    @change="onAvatarSelect($event)">
+                <p class="text-xs text-gray-400 mt-2">JPG, PNG, atau WebP. Maks 2MB.</p>
+            </div>
+            <div class="mt-6 flex gap-3">
+                <button type="button" @click="showAvatarModal = false"
+                    class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors">
+                    Batal
+                </button>
+                <button type="button" @click="saveAvatar()" :disabled="!avatarFile"
+                    class="flex-1 py-2.5 rounded-xl bg-[#4caf50] text-white font-semibold text-sm hover:bg-[#43a047] transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                    Simpan
+                </button>
+            </div>
+        </div>
     </div>
 
     <div class="grid grid-cols-3 gap-3 mb-6">
@@ -174,8 +266,8 @@
                         class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors">
                         Batal
                     </button>
-                    <form action="{{ route('logout') }}" method="POST" class="flex-1"
-                        x-data="{ isLoggingOut: false }" @submit="isLoggingOut = true">
+                    <form action="{{ route('logout') }}" method="POST" class="flex-1" x-data="{ isLoggingOut: false }"
+                        @submit="isLoggingOut = true">
                         @csrf
                         <button type="submit" data-no-loading :disabled="isLoggingOut"
                             class="flex w-full items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 disabled:cursor-wait disabled:opacity-75">
@@ -183,8 +275,8 @@
                                 fill="none" aria-hidden="true">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                     stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor"
-                                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
+                                </path>
                             </svg>
                             <span x-text="isLoggingOut ? 'Logging out...' : 'Logout'"></span>
                         </button>
