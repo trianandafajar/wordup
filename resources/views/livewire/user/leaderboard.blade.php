@@ -12,7 +12,7 @@
         </p>
     </div>
     <div
-        class="{{ $currentUserLeague['bg'] }} border-2 {{ $currentUserLeague['border'] }} rounded-2xl p-4 mb-8 flex items-center gap-4">
+        class="bg-white border-2 {{ $currentUserLeague['border'] }} rounded-2xl p-4 mb-8 flex items-center gap-4 shadow-sm">
         <span class="text-lg font-bold {{ $currentUserLeague['color'] }} w-8 text-center">#{{ $currentUserLeagueRank
             }}</span>
         <div
@@ -34,12 +34,12 @@
     <div class="bg-white rounded-3xl border border-gray-200 divide-y divide-gray-100 overflow-hidden shadow-sm">
         @forelse ($leagueUsers as $i => $user)
         <div
-            class="flex items-center gap-4 p-4 {{ $user['id'] === $currentUser->id ? 'bg-brand-50' : 'hover:bg-gray-50' }} transition-colors">
+            class="flex items-center gap-4 p-4 {{ $user['id'] === $currentUser->id ? 'bg-amber-50 ring-1 ring-amber-200' : 'hover:bg-gray-50' }} transition-colors">
             <span class="text-sm font-bold {{ $i < 3 ? 'text-amber-500' : 'text-gray-400' }} w-8 text-center">{{
                 $user['rank']
                 }}</span>
             <div
-                class="w-10 h-10 rounded-full {{ $currentUserLeague['bg'] }} {{ $currentUserLeague['color'] }} flex items-center justify-center font-bold shadow-sm text-sm">
+                class="w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold shadow-sm text-sm">
                 {{ strtoupper(substr($user['name'], 0, 1)) }}
             </div>
             <div class="flex-1 min-w-0">
@@ -53,7 +53,7 @@
         @endforelse
     </div>
 
-    <div class="mt-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-center">
+    <div class="mt-6 bg-white border border-amber-300 rounded-2xl p-5 text-center shadow-sm">
         <p class="text-emerald-600 font-bold text-sm">
             Top {{ $promotionCount }} akan dipromosikan ke league berikutnya!
         </p>
