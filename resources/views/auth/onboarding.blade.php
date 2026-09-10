@@ -11,7 +11,6 @@
         </div>
 
         <div class="flex items-center justify-center gap-2 rounded-lg bg-[#4caf50]/10 px-4 py-3 text-sm text-[#1a2231]">
-            <span>🇬🇧</span>
             <span>Kamu akan belajar <span class="font-medium">Bahasa Inggris</span></span>
         </div>
 
