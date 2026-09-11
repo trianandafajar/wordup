@@ -10,7 +10,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         const livesEl = document.querySelector('.lives-count');
         const timerEl = document.querySelector('.lives-timer');
-        if (!livesEl) return;
+        const timerValueEl = timerEl?.querySelector('.lives-timer-value');
+        if (!livesEl || !timerEl || !timerValueEl) return;
 
         let lives = {{ $lives }};
         const maxLives = {{ $maxLives }};
@@ -26,6 +27,7 @@
         function tick() {
             if (lives >= maxLives) {
                 timerEl.classList.add('hidden');
+                timerEl.classList.remove('inline-flex');
                 return;
             }
             if (seconds <= 0) {
@@ -35,11 +37,13 @@
 
                 if (lives >= maxLives) {
                     timerEl.classList.add('hidden');
+                    timerEl.classList.remove('inline-flex');
                     return;
                 }
             }
-            timerEl.textContent = formatTime(seconds);
+            timerValueEl.textContent = formatTime(seconds);
             timerEl.classList.remove('hidden');
+            timerEl.classList.add('inline-flex');
             seconds--;
         }
 
