@@ -32,6 +32,7 @@ class LeaderboardController extends Controller
                     'xp' => $user->league_week_xp > 0 ? $user->league_week_xp : $user->xp_total,
                     'total_xp' => $user->xp_total,
                     'id' => $user->id,
+                    'avatar' => $user->avatar,
                 ];
             });
 

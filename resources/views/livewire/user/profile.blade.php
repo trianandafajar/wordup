@@ -94,11 +94,8 @@
 
             <div>
                 <label class="block text-sm font-medium text-[#1a2231] mb-1.5">Email</label>
-                <input type="email" name="email" value="{{ old('email', $user->email) }}" required
-                    class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-[#1a2231] placeholder-[#1a2231]/30 focus:outline-none focus:ring-2 focus:ring-[#4caf50] focus:border-[#4caf50] sm:text-sm">
-                @error('email')
-                <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                @enderror
+                <input type="email" value="{{ $user->email }}" disabled readonly
+                    class="block w-full cursor-not-allowed rounded-lg border border-gray-300 bg-gray-100 px-4 py-2.5 text-[#1a2231] placeholder-[#1a2231]/30 sm:text-sm">
             </div>
 
             <button type="submit"

@@ -15,10 +15,15 @@
         class="bg-white border-2 {{ $currentUserLeague['border'] }} rounded-2xl p-4 mb-8 flex items-center gap-4 shadow-sm">
         <span class="text-lg font-bold {{ $currentUserLeague['color'] }} w-8 text-center">#{{ $currentUserLeagueRank
             }}</span>
+        @if ($currentUser->avatar)
+        <img src="{{ asset('storage/' . $currentUser->avatar) }}" alt="{{ $currentUser->name }}"
+            class="w-12 h-12 rounded-full object-cover shadow-md">
+        @else
         <div
             class="w-12 h-12 rounded-full {{ $currentUserLeague['icon'] }} text-white flex items-center justify-center text-lg font-bold shadow-md">
             {{ strtoupper(substr($currentUser->name, 0, 1)) }}
         </div>
+        @endif
         <div class="flex-1">
             <p class="font-bold text-gray-900">{{ $currentUser->name }}</p>
             <p class="text-xs {{ $currentUserLeague['color'] }} flex items-center gap-1">
@@ -38,10 +43,15 @@
             <span class="text-sm font-bold {{ $i < 3 ? 'text-amber-500' : 'text-gray-400' }} w-8 text-center">{{
                 $user['rank']
                 }}</span>
+            @if ($user['avatar'])
+            <img src="{{ asset('storage/' . $user['avatar']) }}" alt="{{ $user['name'] }}"
+                class="w-10 h-10 rounded-full object-cover shadow-sm">
+            @else
             <div
                 class="w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold shadow-sm text-sm">
                 {{ strtoupper(substr($user['name'], 0, 1)) }}
             </div>
+            @endif
             <div class="flex-1 min-w-0">
                 <p class="font-semibold text-gray-800">{{ $user['name'] }}</p>
                 <p class="text-xs text-gray-500">{{ number_format($user['xp']) }} XP <span
