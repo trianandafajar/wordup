@@ -11,6 +11,10 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    /**
+     * @tags Authentication
+     * @summary Register new user
+     */
     public function register(Request $request)
     {
         $request->validate([
@@ -35,6 +39,10 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * @tags Authentication
+     * @summary User login
+     */
     public function login(Request $request)
     {
         $request->validate([
@@ -66,6 +74,10 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * @tags Authentication
+     * @summary User logout
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

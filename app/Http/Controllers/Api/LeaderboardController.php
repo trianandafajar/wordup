@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Auth;
 
 class LeaderboardController extends Controller
 {
+    /**
+     * @tags Leaderboard
+     * @summary Get leaderboard for current league
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
     public function index()
     {
         $currentUser = Auth::user();
@@ -36,10 +41,6 @@ class LeaderboardController extends Controller
                 ];
             });
 
-        return response()->json([
-            'leagueUsers' => $leagueUsers,
-            'currentUser' => $currentUser,
-            'currentUserLeague' => $currentUserLeague,
-        ]);
+        return \App\Http\Resources\LeaderboardResource::collection($leagueUsers);
     }
 }

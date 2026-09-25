@@ -9,13 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
+    /**
+     * @tags Profile
+     * @summary Get user profile details
+     * @return \App\Http\Resources\ProfileResource
+     */
     public function index()
     {
         $user = Auth::user();
         $badgeService = new BadgeService;
         $badges = $badgeService->getBadges($user);
 
-        return response()->json([
+        return new \App\Http\Resources\ProfileResource([
             'user' => $user,
             'badges' => $badges,
         ]);

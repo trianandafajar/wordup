@@ -9,16 +9,17 @@ use Illuminate\Support\Facades\Auth;
 
 class LessonController extends Controller
 {
+    /**
+     * @tags Lesson
+     * @summary Get lesson details
+     * @return \App\Http\Resources\LessonResource
+     */
     public function show($lessonId)
     {
         $user = Auth::user();
         $lesson = Lesson::with('questions.options', 'questions.answer', 'unit')->findOrFail($lessonId);
 
-        // API logic for showing lesson
-        return response()->json([
-            'lesson' => $lesson,
-            'lives' => $user->lives,
-        ]);
+        return new \App\Http\Resources\LessonResource($lesson->load('questions.options'));
     }
 
     public function submit(Request $request, $lessonId)
