@@ -20,7 +20,7 @@ class LeaderboardResource extends JsonResource
             'name' => $this['name'] ?? null,
             'xp' => $this['xp'] ?? 0,
             'total_xp' => $this['total_xp'] ?? 0,
-            'avatar' => isset($this['avatar']) && $this['avatar'] ? asset('storage/' . $this['avatar']) : null,
+            'avatar' => isset($this['avatar']) && $this['avatar'] ? asset('storage/'.$this['avatar']) : null,
         ];
     }
 }

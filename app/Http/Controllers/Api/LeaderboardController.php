@@ -3,16 +3,20 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\LeaderboardResource;
 use App\Models\User;
 use App\Services\LeagueService;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class LeaderboardController extends Controller
 {
     /**
      * @tags Leaderboard
+     *
      * @summary Get leaderboard for current league
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     *
+     * @return AnonymousResourceCollection
      */
     public function index()
     {
@@ -41,6 +45,6 @@ class LeaderboardController extends Controller
                 ];
             });
 
-        return \App\Http\Resources\LeaderboardResource::collection($leagueUsers);
+        return LeaderboardResource::collection($leagueUsers);
     }
 }

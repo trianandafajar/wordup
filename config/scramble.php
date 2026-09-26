@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Routing\Route;
+
 return [
     'api_path' => 'api',
     'api_domain' => null,
@@ -16,7 +18,7 @@ return [
     'middleware' => [
         'web',
     ],
-    'routes' => function (\Illuminate\Routing\Route $route) {
+    'routes' => function (Route $route) {
         return str_starts_with($route->uri(), 'api/');
     },
 ];

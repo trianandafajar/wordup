@@ -7,12 +7,14 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     /**
      * @tags Authentication
+     *
      * @summary Register new user
      */
     public function register(Request $request)
@@ -20,7 +22,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', \Illuminate\Validation\Rules\Password::defaults()],
+            'password' => ['required', 'confirmed', Password::defaults()],
         ]);
 
         $user = User::create([
@@ -41,6 +43,7 @@ class AuthController extends Controller
 
     /**
      * @tags Authentication
+     *
      * @summary User login
      */
     public function login(Request $request)
@@ -76,6 +79,7 @@ class AuthController extends Controller
 
     /**
      * @tags Authentication
+     *
      * @summary User logout
      */
     public function logout(Request $request)

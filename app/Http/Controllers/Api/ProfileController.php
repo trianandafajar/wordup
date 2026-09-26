@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProfileResource;
 use App\Services\BadgeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +12,10 @@ class ProfileController extends Controller
 {
     /**
      * @tags Profile
+     *
      * @summary Get user profile details
-     * @return \App\Http\Resources\ProfileResource
+     *
+     * @return ProfileResource
      */
     public function index()
     {
@@ -20,7 +23,7 @@ class ProfileController extends Controller
         $badgeService = new BadgeService;
         $badges = $badgeService->getBadges($user);
 
-        return new \App\Http\Resources\ProfileResource([
+        return new ProfileResource([
             'user' => $user,
             'badges' => $badges,
         ]);

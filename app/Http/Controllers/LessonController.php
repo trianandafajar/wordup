@@ -102,7 +102,7 @@ class LessonController extends Controller
                 $given = strtolower(trim((string) $answerGiven));
                 $isCorrect = $given !== '' && $given === $correct;
             } else {
-                $isCorrect = $question->options->contains(fn($option) => $option->id === (int) $answerGiven && $option->is_correct);
+                $isCorrect = $question->options->contains(fn ($option) => $option->id === (int) $answerGiven && $option->is_correct);
             }
 
             if ($isCorrect) {

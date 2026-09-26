@@ -5,11 +5,10 @@ namespace App\Http\Controllers\Api;
 use App\Enums\AttemptStatusEnum;
 use App\Enums\LessonProgressStatusEnum;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\LessonResource;
 use App\Models\Lesson;
 use App\Models\UserAnswer;
-use App\Models\UserCourseProgress;
 use App\Models\UserLessonProgress;
-use App\Services\LeagueService;
 use App\Services\LifeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,19 +17,22 @@ class LessonController extends Controller
 {
     /**
      * @tags Lesson
+     *
      * @summary Get lesson details
-     * @return \App\Http\Resources\LessonResource
+     *
+     * @return LessonResource
      */
     public function show($lessonId)
     {
         $user = Auth::user();
         $lesson = Lesson::with('questions.options', 'questions.answer', 'unit')->findOrFail($lessonId);
 
-        return new \App\Http\Resources\LessonResource($lesson->load('questions.options'));
+        return new LessonResource($lesson->load('questions.options'));
     }
 
     /**
      * @tags Lesson
+     *
      * @summary Submit lesson answers
      */
     public function submit(Request $request, $lessonId)
@@ -48,17 +50,21 @@ class LessonController extends Controller
 
         foreach ($request->answers as $questionId => $answerGiven) {
             $question = $lesson->questions->firstWhere('id', (int) $questionId);
-            if (! $question) continue;
+            if (! $question) {
+                continue;
+            }
 
             if ($question->type === 'fill_in_the_blank' || ($question->options->count() <= 0 && $question->answer)) {
                 $correct = strtolower(trim((string) $question->answer?->correct_text));
                 $given = strtolower(trim((string) $answerGiven));
                 $isCorrect = $given !== '' && $given === $correct;
             } else {
-                $isCorrect = $question->options->contains(fn($option) => $option->id === (int) $answerGiven && $option->is_correct);
+                $isCorrect = $question->options->contains(fn ($option) => $option->id === (int) $answerGiven && $option->is_correct);
             }
 
-            if ($isCorrect) $correctCount++;
+            if ($isCorrect) {
+                $correctCount++;
+            }
 
             $answeredQuestions->push([
                 'question' => $question,
@@ -104,7 +110,7 @@ class LessonController extends Controller
             $today = now()->toDateString();
             $user->xp_total += $xpEarned;
             $user->league_week_xp += $xpEarned;
-            
+
             // Streak logic simplified for API
             if ($user->last_activity_date?->toDateString() !== $today) {
                 $user->current_streak = ($user->last_activity_date?->toDateString() === now()->subDay()->toDateString()) ? $user->current_streak + 1 : 1;
@@ -120,12 +126,13 @@ class LessonController extends Controller
             'score' => $finalScore,
             'xp_earned' => $xpEarned,
             'passed' => $passed,
-            'attempt_id' => $attempt->id
+            'attempt_id' => $attempt->id,
         ]);
     }
 
     /**
      * @tags Lesson
+     *
      * @summary Get result of last attempt
      */
     public function result($lessonId)
@@ -140,11 +147,11 @@ class LessonController extends Controller
         return response()->json([
             'score' => $attempt->score,
             'status' => $attempt->status,
-            'answers' => $attempt->answers->map(fn($a) => [
+            'answers' => $attempt->answers->map(fn ($a) => [
                 'question' => $a->question->question_text,
                 'given' => $a->answer_given,
-                'correct' => (bool) $a->is_correct
-            ])
+                'correct' => (bool) $a->is_correct,
+            ]),
         ]);
     }
 }

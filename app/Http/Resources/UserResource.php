@@ -23,7 +23,7 @@ class UserResource extends JsonResource
             'longest_streak' => $this->longest_streak,
             'lives' => $this->lives,
             'league' => $this->league,
-            'avatar' => $this->avatar ? asset('storage/' . $this->avatar) : null,
+            'avatar' => $this->avatar ? asset('storage/'.$this->avatar) : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

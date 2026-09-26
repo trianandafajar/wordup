@@ -86,8 +86,7 @@ class EnglishContentSeeder extends Seeder
                         'title' => 'Saying Hello',
                         'type' => 'reading',
                         'xp' => 20,
-                        'explanation' =>
-<<<HTML
+                        'explanation' => <<<'HTML'
     <h3>Greetings in English</h3>
 
     <p>
@@ -112,8 +111,7 @@ class EnglishContentSeeder extends Seeder
                         'title' => 'Introducing Yourself',
                         'type' => 'reading',
                         'xp' => 20,
-                        'explanation' =>
-<<<HTML
+                        'explanation' => <<<'HTML'
     <h3>Talking About Yourself</h3>
 
     <p>When meeting someone new:</p>
@@ -135,8 +133,7 @@ HTML,
                         'title' => 'Saying Goodbye',
                         'type' => 'reading',
                         'xp' => 20,
-                        'explanation' =>
-<<<'HTML'
+                        'explanation' => <<<'HTML'
     <h3>Ways to Say Goodbye</h3>
 
     <ul>
@@ -161,8 +158,7 @@ HTML,
                         'title' => 'Morning Routine',
                         'type' => 'reading',
                         'xp' => 20,
-                        'explanation' =>
-<<<'HTML'
+                        'explanation' => <<<'HTML'
     <h3>Morning Activities</h3>
     <ul>
         <li><strong>wake up</strong> - stop sleeping</li>
@@ -181,8 +177,7 @@ HTML,
                         'title' => 'Work & School',
                         'type' => 'reading',
                         'xp' => 20,
-                        'explanation' =>
-<<<'HTML'
+                        'explanation' => <<<'HTML'
     <h3>Work and School</h3>
     <ul>
         <li><strong>go to work/school</strong></li>
@@ -201,8 +196,7 @@ HTML,
                         'title' => 'Evening & Bedtime',
                         'type' => 'reading',
                         'xp' => 20,
-                        'explanation' =>
-<<<'HTML'
+                        'explanation' => <<<'HTML'
     <h3>Evening Activities</h3>
     <ul>
         <li><strong>have dinner</strong></li>
@@ -226,8 +220,7 @@ HTML,
                         'title' => 'Common Foods',
                         'type' => 'reading',
                         'xp' => 20,
-                        'explanation' =>
-<<<'HTML'
+                        'explanation' => <<<'HTML'
     <h3>Food Vocabulary</h3>
     <ul>
         <li><strong>Fruits:</strong> apple, banana, orange</li>
