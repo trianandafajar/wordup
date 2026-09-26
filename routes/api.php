@@ -26,16 +26,20 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [PasswordResetController::class, 'forgot']);
 Route::post('/reset-password', [PasswordResetController::class, 'reset']);
 
-Route::prefix('admin')->middleware(['auth:sanctum', EnsureAdminApiAccess::class])->group(function () {
-    Route::get('/dashboard', AdminDashboardController::class);
-    Route::apiResource('users', AdminUserController::class)->only(['index', 'show', 'update', 'destroy']);
+Route::prefix('admin')->group(function () {
+    Route::post('/login', [\App\Http\Controllers\Api\Admin\AuthController::class, 'login']);
+    Route::post('/logout', [\App\Http\Controllers\Api\Admin\AuthController::class, 'logout']);
 
-    Route::apiResource('courses', AdminCourseController::class);
-    Route::apiResource('units', AdminUnitController::class);
-    Route::apiResource('lessons', AdminLessonController::class);
-    Route::apiResource('questions', AdminQuestionController::class);
-    Route::apiResource('question-options', AdminQuestionOptionController::class);
-    Route::apiResource('question-answers', AdminQuestionAnswerController::class);
+    Route::middleware(['auth:sanctum', EnsureAdminApiAccess::class])->group(function () {
+        Route::get('/dashboard', AdminDashboardController::class);
+        Route::apiResource('users', AdminUserController::class)->only(['index', 'show', 'update', 'destroy']);
+        Route::apiResource('courses', AdminCourseController::class);
+        Route::apiResource('units', AdminUnitController::class);
+        Route::apiResource('lessons', AdminLessonController::class);
+        Route::apiResource('questions', AdminQuestionController::class);
+        Route::apiResource('question-options', AdminQuestionOptionController::class);
+        Route::apiResource('question-answers', AdminQuestionAnswerController::class);
+    });
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
