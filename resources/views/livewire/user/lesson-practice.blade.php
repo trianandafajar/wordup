@@ -37,8 +37,7 @@ use Illuminate\Support\Facades\Storage;
         <div class="lesson-step" data-step="0" data-type="explanation">
             <div class="bg-white rounded-3xl border-2 border-brand-200 p-6 mb-8 shadow-sm">
                 <div class="flex items-center gap-2 mb-4">
-                    <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-bold rounded-full">MATERI
-                        LESSON</span>
+                    <span class="px-3 py-1 bg-brand-100 text-brand-700 text-xs font-bold rounded-full">LESSON</span>
                 </div>
                 <div
                     class="prose prose-sm prose-li:my-0 prose-ul:space-y-0 leading-tight max-w-none text-gray-800 space-y-3">
