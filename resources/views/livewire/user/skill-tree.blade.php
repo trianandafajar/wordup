@@ -106,11 +106,11 @@ $unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600'
                     class="bg-gray-900 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg shadow-lg whitespace-nowrap">
                     <span class="font-bold">{{ $lesson['title'] }}</span>
                     @if ($isCompleted)
-                    <span class="ml-1.5 opacity-75">— Best: {{ $lesson['best_score'] }}%</span>
+                    <span class="opacity-75">| Best: {{ $lesson['best_score'] }}%</span>
                     @elseif ($isAvailable)
-                    <span class="ml-1.5 opacity-75">— +{{ $lesson['xp_reward'] }} XP</span>
+                    <span class="opacity-75">| +{{ $lesson['xp_reward'] }} XP</span>
                     @elseif ($isLocked)
-                    <span class="ml-1.5 opacity-75">— {{ $lives <= 0 ? 'Nyawa habis, tunggu pemulihan'
+                    <span class="opacity-75">| {{ $lives <= 0 ? 'Nyawa habis, tunggu pemulihan'
                             : 'Selesaikan lesson sebelumnya' }}</span>
                             @endif
                             <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
