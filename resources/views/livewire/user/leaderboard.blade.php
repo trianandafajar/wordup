@@ -3,18 +3,17 @@
 @section('content')
 <div class="w-full">
     <div class="text-center mb-8">
-        <div class="inline-flex p-4 {{ $currentUserLeague['bg'] }} rounded-full {{ $currentUserLeague['color'] }} mb-3">
+        <div class="inline-flex p-4 bg-emerald-100 rounded-full text-emerald-600 mb-3">
             <x-heroicon-s-trophy class="w-10 h-10" />
         </div>
         <h1 class="text-2xl font-extrabold text-gray-900">{{ $currentUserLeague['name'] }} League</h1>
-        <p class="text-xs {{ $currentUserLeague['color'] }} mt-1 flex items-center justify-center gap-1">
+        <p class="text-xs text-emerald-600 mt-1 flex items-center justify-center gap-1">
             Posisi #{{ $currentUserLeagueRank }} dari {{ $totalInLeague }} user
         </p>
     </div>
     <div
-        class="bg-white border-2 {{ $currentUserLeague['border'] }} rounded-2xl p-4 mb-8 flex items-center gap-4 shadow-sm">
-        <span class="text-lg font-bold {{ $currentUserLeague['color'] }} w-8 text-center">#{{ $currentUserLeagueRank
-            }}</span>
+        class="bg-white border-2 border-emerald-500 rounded-2xl p-4 mb-8 flex items-center gap-4 shadow-sm">
+        <span class="text-lg font-bold text-emerald-600 w-8 text-center">#{{ $currentUserLeagueRank }}</span>
         @if ($currentUser->avatar)
         <img src="{{ asset('storage/' . $currentUser->avatar) }}" alt="{{ $currentUser->name }}"
             class="w-12 h-12 rounded-full object-cover shadow-md">
@@ -26,21 +25,21 @@
         @endif
         <div class="flex-1">
             <p class="font-bold text-gray-900">{{ $currentUser->name }}</p>
-            <p class="text-xs {{ $currentUserLeague['color'] }} flex items-center gap-1">
+            <p class="text-xs text-emerald-600 flex items-center gap-1">
                 {{ number_format($currentUser->league_week_xp > 0 ? $currentUser->league_week_xp :
                 $currentUser->xp_total) }} XP
                 <span class="bg-emerald-100 text-emerald-700 text-[10px] px-1.5 py-0.5 rounded">Mingguan</span>
             </p>
         </div>
         <span
-            class="text-xs font-bold {{ $currentUserLeague['bg'] }} {{ $currentUserLeague['color'] }} px-3 py-1 rounded-full border border-current">Kamu</span>
+            class="text-xs font-bold bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full border border-current">Kamu</span>
     </div>
 
     <div class="bg-white rounded-3xl border border-gray-200 divide-y divide-gray-100 overflow-hidden shadow-sm">
         @forelse ($leagueUsers as $i => $user)
         <div
-            class="flex items-center gap-4 p-4 {{ $user['id'] === $currentUser->id ? 'bg-amber-50 ring-1 ring-amber-200' : 'hover:bg-gray-50' }} transition-colors">
-            <span class="text-sm font-bold {{ $i < 3 ? 'text-amber-500' : 'text-gray-400' }} w-8 text-center">{{
+            class="flex items-center gap-4 p-4 {{ $user['id'] === $currentUser->id ? 'bg-emerald-50 ring-1 ring-emerald-200' : 'hover:bg-gray-50' }} transition-colors">
+            <span class="text-sm font-bold {{ $i < 3 ? 'text-emerald-600' : 'text-gray-400' }} w-8 text-center">{{
                 $user['rank']
                 }}</span>
             @if ($user['avatar'])
@@ -63,7 +62,7 @@
         @endforelse
     </div>
 
-    <div class="mt-6 bg-white border border-amber-300 rounded-2xl p-5 text-center shadow-sm">
+    <div class="mt-6 bg-white border border-emerald-300 rounded-2xl p-5 text-center shadow-sm">
         <p class="text-emerald-600 font-bold text-sm">
             Top {{ $promotionCount }} akan dipromosikan ke league berikutnya!
         </p>
