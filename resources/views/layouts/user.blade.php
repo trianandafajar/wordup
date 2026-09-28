@@ -23,7 +23,7 @@
         </a>
 
         <div class="flex items-center gap-1.5 sm:gap-3">
-            <div class="relative flex items-center min-w-14 justify-center gap-1 font-bold text-sm cursor-pointer select-none"
+            <div class="relative flex items-center min-w-14 justify-center gap-2 font-bold text-sm cursor-pointer select-none"
                 @click="activeStat = (activeStat === 'streak' ? 'xp' : (activeStat === 'xp' ? 'lives' : 'streak'))"
                 title="Klik untuk mengganti stat">
 
