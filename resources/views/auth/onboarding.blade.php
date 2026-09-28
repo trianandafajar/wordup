@@ -5,6 +5,10 @@
     <div class="max-w-md w-full space-y-8 animate-[fadeUp_0.4s_ease-out]">
 
         <div class="text-center space-y-2">
+            <div class="flex justify-center">
+                <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image"
+                    class="w-40 h-40 object-contain mb-4" />
+            </div>
             <img src="{{ asset('images/logo.png') }}" alt="WordUp" class="mx-auto h-12 w-12 object-contain" />
             <h1 class="font-sans text-2xl font-bold text-[#1a2231]">Sesuaikan cara belajarmu</h1>
             <p class="text-sm text-[#1a2231]/60">Dua pertanyaan singkat, lalu kamu langsung mulai</p>

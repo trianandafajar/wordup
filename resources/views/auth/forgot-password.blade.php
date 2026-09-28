@@ -3,8 +3,12 @@
 @section('content')
 <div class="relative flex min-h-dvh overflow-x-hidden bg-white lg:bg-brand-50">
 
-    <div class="hidden lg:flex lg:w-[42%] bg-brand-800 flex-col justify-between p-12 text-white">
+    <div class="hidden lg:flex lg:w-[42%] bg-brand-800 flex-col justify-center items-center p-12 text-white">
         <div class="space-y-6">
+            <div class="flex justify-center">
+                <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image"
+                    class="w-100 h-100 object-contain mb-6" />
+            </div>
             <h1 class="font-sans text-4xl leading-tight text-white">
                 Tenang, kata sandimu akan kembali.
             </h1>
