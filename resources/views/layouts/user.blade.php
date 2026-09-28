@@ -23,33 +23,32 @@
         </a>
 
         <div class="flex items-center gap-1.5 sm:gap-3">
-            <div class="flex min-w-12 items-center justify-center gap-1 text-orange-500 font-bold text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                    <path fill-rule="evenodd"
-                        d="M12.963 2.286a.75.75 0 0 0-1.071-.136 9.742 9.742 0 0 0-3.539 6.176 7.547 7.547 0 0 1-1.705-1.715.75.75 0 0 0-1.152-.082A9 9 0 1 0 15.68 4.534a7.46 7.46 0 0 1-2.717-2.248ZM15.75 14.25a3.75 3.75 0 1 1-7.313-1.172c.628.465 1.35.81 2.133 1a5.99 5.99 0 0 1 1.925-3.546 3.75 3.75 0 0 1 3.255 3.718Z"
-                        clip-rule="evenodd" />
-                </svg>
-                <span>{{ auth()->user()->current_streak }}</span>
-            </div>
-            <div class="flex min-w-12 items-center justify-center gap-1 text-amber-500 font-bold text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                    <path fill-rule="evenodd"
-                        d="M14.615 1.595a.75.75 0 0 1 .359.852L12.982 9.75h7.268a.75.75 0 0 1 .548 1.262l-10.5 11.25a.75.75 0 0 1-1.272-.71l1.992-7.302H3.75a.75.75 0 0 1-.548-1.262l10.5-11.25a.75.75 0 0 1 .913-.143Z"
-                        clip-rule="evenodd" />
-                </svg>
-                <span>{{ number_format(auth()->user()->xp_total) }}</span>
-            </div>
-            <div class="relative flex min-w-12 items-center justify-center gap-1 text-rose-500 font-bold text-sm">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                        <path
-                            d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
-                    </svg>
+            <div class="relative flex items-center min-w-14 justify-center gap-1 font-bold text-sm cursor-pointer select-none"
+                @click="activeStat = (activeStat === 'streak' ? 'xp' : (activeStat === 'xp' ? 'lives' : 'streak'))"
+                title="Klik untuk mengganti stat">
+
+                <!-- Streak -->
+                <div x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" class="flex items-center gap-1.5 text-orange-500">
+                    <img src="{{ asset(auth()->user()->last_activity_date?->isToday() ? 'images/icon-stats/strike-active.png' : 'images/icon-stats/strike-inactive.png') }}" alt="Streak" class="h-6 w-6 object-contain" />
+                    <span>{{ auth()->user()->current_streak }}</span>
+                </div>
+
+                <!-- XP -->
+                <div x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" class="flex items-center gap-1.5 text-amber-500">
+                    <img src="{{ asset('images/icon-stats/xp.png') }}" alt="XP" class="h-6 w-6 object-contain" />
+                    <span>{{ number_format(auth()->user()->xp_total) }}</span>
+                </div>
+
+                <!-- Lives -->
+                <div x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" class="flex items-center gap-1.5 text-rose-500">
+                    <img src="{{ asset(auth()->user()->lives > 0 ? 'images/icon-stats/life-active.png' : 'images/icon-stats/life-inactive.png') }}" alt="Lives" class="h-6 w-6 object-contain" />
                     <span class="lives-count min-w-3 text-center tabular-nums" data-lives="{{ auth()->user()->lives }}"
                         data-max="{{ \App\Services\LifeService::MAX_LIVES }}">{{ auth()->user()->lives }}</span>
-                <span class="lives-timer hidden absolute left-1/2 top-full z-10 -translate-x-1/2 whitespace-nowrap pt-0.5 font-mono text-[10px] font-normal leading-none text-gray-500 tabular-nums sm:text-[11px]"
-                    role="timer" aria-label="Waktu isi ulang nyawa berikutnya" title="Waktu isi ulang nyawa berikutnya">
-                    <span class="lives-timer-value">00:00:00</span>
-                </span>
+                    <span class="lives-timer hidden absolute left-1/2 top-full z-10 -translate-x-1/2 whitespace-nowrap pt-0.5 font-mono text-[10px] font-normal leading-none text-gray-500 tabular-nums sm:text-[11px]"
+                        role="timer" aria-label="Waktu isi ulang nyawa berikutnya" title="Waktu isi ulang nyawa berikutnya">
+                        <span class="lives-timer-value">00:00:00</span>
+                    </span>
+                </div>
             </div>
         </div>
     </header>
@@ -70,7 +69,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const spinnerHtml = '<svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path></svg> Memproses...';
+            const spinnerHtml = '<svg class="animate-spin h-5 w-5 inline mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></svg> Memproses...';
 
             document.querySelectorAll('form').forEach(function (form) {
                 form.addEventListener('submit', function () {
