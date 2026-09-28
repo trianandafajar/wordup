@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -49,6 +53,29 @@ class AuthenticatedSessionController extends Controller
         if (! $onboarding || ! $onboarding->completed_at) {
             return redirect()->route('user.onboarding');
         }
+
+        return redirect()->intended(route('user.home'));
+    }
+
+    public function redirectToGoogle()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+
+    public function handleGoogleCallback()
+    {
+        $googleUser = Socialite::driver('google')->user();
+
+        $user = User::updateOrCreate([
+            'email' => $googleUser->getEmail(),
+        ], [
+            'name' => $googleUser->getName(),
+            'google_id' => $googleUser->getId(),
+            'provider' => 'google',
+            'password' => Hash::make(Str::random(16)),
+        ]);
+
+        Auth::login($user);
 
         return redirect()->intended(route('user.home'));
     }
