@@ -43,7 +43,7 @@
                     <div>
                         <label for="email" class="mb-2 block text-sm font-semibold text-gray-dark">Email</label>
                         <input id="email" name="email" type="email" required autofocus
-                            class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 sm:text-sm"
+                            class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                             placeholder="nama@email.com" value="{{ old('email') }}">
                         @error('email')
                         <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
@@ -51,7 +51,7 @@
                     </div>
 
                     <button type="submit"
-                        class="mt-2 h-12 w-full rounded-xl bg-brand-500 px-4 text-sm font-bold text-white shadow-[0_10px_20px_-12px_rgba(76,175,80,0.9)] transition hover:bg-brand-600 focus:outline-none focus:ring-4 focus:ring-brand-500/25 focus:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="mt-2 h-12 w-full rounded-xl bg-brand-500 px-4 text-sm font-bold text-white transition hover:bg-brand-600 focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                         Kirim Link Reset
                     </button>
 

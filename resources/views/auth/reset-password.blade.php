@@ -42,7 +42,7 @@
                             <div class="relative">
                                 <input id="password" name="password" :type="showPassword ? 'text' : 'password'" required
                                     autofocus
-                                    class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 pr-12 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 sm:text-sm"
+                                    class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 pr-12 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                                     placeholder="Minimal 8 karakter">
                                 <button type="button" @click="showPassword = !showPassword"
                                     class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition cursor-pointer">
@@ -71,7 +71,7 @@
                             <div class="relative">
                                 <input id="password_confirmation" name="password_confirmation"
                                     :type="showPassword ? 'text' : 'password'" required
-                                    class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 pr-12 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 sm:text-sm"
+                                    class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 pr-12 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                                     placeholder="Ulangi kata sandi baru">
                                 <button type="button" @click="showPassword = !showPassword"
                                     class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition cursor-pointer">
@@ -96,7 +96,7 @@
                     </div>
 
                     <button type="submit"
-                        class="mt-2 h-12 w-full rounded-xl bg-brand-500 px-4 text-sm font-bold text-white shadow-[0_10px_20px_-12px_rgba(76,175,80,0.9)] transition hover:bg-brand-600 focus:outline-none focus:ring-4 focus:ring-brand-500/25 focus:ring-offset-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="mt-2 h-12 w-full rounded-xl bg-brand-500 px-4 text-sm font-bold text-white transition hover:bg-brand-600 focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                         Simpan Kata Sandi
                     </button>
                 </form>
