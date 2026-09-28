@@ -9,7 +9,7 @@
                 <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image"
                     class="w-100 h-100 object-contain mb-6" />
             </div>
-            <h1 class="font-sans text-4xl leading-tight text-white">
+            <h1 class="font-dynapuff text-4xl leading-tight text-white">
                 Rutin 5 menit sehari, Inggrismu makin lancar.
             </h1>
         </div>

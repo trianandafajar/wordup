@@ -9,7 +9,7 @@
                 <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image"
                     class="w-100 h-100 object-contain mb-6" />
             </div>
-            <h1 class="font-sans text-4xl leading-tight text-white">
+            <h1 class="font-dynapuff text-4xl leading-tight text-white">
                 Buat kata sandi baru yang aman.
             </h1>
         </div>
