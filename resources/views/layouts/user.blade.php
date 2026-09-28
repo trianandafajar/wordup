@@ -11,6 +11,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $pageTitle }} - WordUp</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -19,7 +22,7 @@
         class="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full max-w-md bg-white border-b border-gray-200 h-16 flex items-center justify-between px-3 sm:px-4 rounded-b-2xl shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)]">
         <a href="/" class="flex items-center gap-2">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-auto" />
-            <span class="text-xl font-bold text-brand-600">WordUp</span>
+            <span class="font-dynapuff text-xl font-bold text-brand-600">WordUp</span>
         </a>
 
         <div class="flex items-center gap-1.5 sm:gap-3">
