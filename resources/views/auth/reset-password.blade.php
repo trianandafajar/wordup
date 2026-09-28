@@ -4,18 +4,11 @@
 <div class="relative flex min-h-dvh overflow-x-hidden bg-white lg:bg-brand-50">
 
     <div class="hidden lg:flex lg:w-[42%] bg-brand-800 flex-col justify-between p-12 text-white">
-        <img src="{{ asset('images/logo.png') }}" alt="WordUp" class="h-12 w-12 object-contain" />
-
         <div class="space-y-6">
             <h1 class="font-sans text-4xl leading-tight text-white">
                 Buat kata sandi baru yang aman.
             </h1>
-            <p class="text-white/70 text-base max-w-xs">
-                Gunakan kombinasi yang mudah kamu ingat, tapi sulit ditebak.
-            </p>
         </div>
-
-        <p class="text-white/40 text-xs">&copy; {{ date('Y') }} WordUp</p>
     </div>
 
     <main
@@ -34,9 +27,6 @@
             <div class="lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
                 <div class="mb-6 space-y-1.5">
                     <h2 class="font-sans text-[1.7rem] font-bold tracking-tight text-gray-dark">Reset kata sandi</h2>
-                    <p class="text-sm leading-6 text-gray-dark/55">
-                        Masukkan kata sandi baru untuk akun kamu.
-                    </p>
                 </div>
 
                 <form method="POST" action="{{ route('password.store') }}" class="space-y-4">
