@@ -116,53 +116,49 @@
     </form>
 
     <!-- Avatar Change Modal -->
-    <div x-show="showAvatarModal" x-transition x-cloak
-        class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4">
-        <div @click.outside="showAvatarModal = false" x-transition
-            class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
-            <h3 class="text-lg font-bold text-gray-900 text-center mb-4">Ubah Foto Profil</h3>
-            <div class="flex flex-col items-center">
-                <div class="relative mb-4">
-                    <template x-if="avatarPreview">
-                        <img :src="avatarPreview" alt="Preview"
-                            class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow">
-                    </template>
-                    <template x-if="!avatarPreview">
-                        @if ($user->avatar)
-                        <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}"
-                            class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow">
-                        @else
-                        <div
-                            class="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 border-4 border-gray-100 shadow">
-                            <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.866 0-7 1.79-7 4v2h14v-2c0-2.21-3.134-4-7-4z" />
-                            </svg>
-                        </div>
-                        @endif
-                    </template>
-                </div>
-                <button type="button"
-                    class="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors cursor-pointer"
-                    @click="$refs.avatarModalInput.click()">
-                    Pilih Foto
-                </button>
-                <input type="file" x-ref="avatarModalInput" accept="image/*" class="hidden"
-                    @change="onAvatarSelect($event)">
-                <p class="text-xs text-gray-400 mt-2">JPG, PNG, atau WebP. Maks 2MB.</p>
+    <x-modal show="showAvatarModal">
+        <h3 class="text-lg font-bold text-gray-900 text-center mb-4">Ubah Foto Profil</h3>
+        <div class="flex flex-col items-center">
+            <div class="relative mb-4">
+                <template x-if="avatarPreview">
+                    <img :src="avatarPreview" alt="Preview"
+                        class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow">
+                </template>
+                <template x-if="!avatarPreview">
+                    @if ($user->avatar)
+                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}"
+                        class="w-32 h-32 rounded-full object-cover border-4 border-gray-100 shadow">
+                    @else
+                    <div
+                        class="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center text-gray-400 border-4 border-gray-100 shadow">
+                        <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zm0 2c-3.866 0-7 1.79-7 4v2h14v-2c0-2.21-3.134-4-7-4z" />
+                        </svg>
+                    </div>
+                    @endif
+                </template>
             </div>
-            <div class="mt-6 flex gap-3">
-                <button type="button" @click="showAvatarModal = false"
-                    class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors cursor-pointer">
-                    Batal
-                </button>
-                <button type="button" @click="saveAvatar()" :disabled="!avatarFile"
-                    class="flex-1 py-2.5 rounded-xl bg-[#4caf50] text-white font-semibold text-sm hover:bg-[#43a047] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                    Simpan
-                </button>
-            </div>
+            <button type="button"
+                class="w-full rounded-lg border border-gray-300 bg-white py-2.5 px-4 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors cursor-pointer"
+                @click="$refs.avatarModalInput.click()">
+                Pilih Foto
+            </button>
+            <input type="file" x-ref="avatarModalInput" accept="image/*" class="hidden"
+                @change="onAvatarSelect($event)">
+            <p class="text-xs text-gray-400 mt-2">JPG, PNG, atau WebP. Maks 2MB.</p>
         </div>
-    </div>
+        <div class="mt-6 flex gap-3">
+            <button type="button" @click="showAvatarModal = false"
+                class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors cursor-pointer">
+                Batal
+            </button>
+            <button type="button" @click="saveAvatar()" :disabled="!avatarFile"
+                class="flex-1 py-2.5 rounded-xl bg-[#4caf50] text-white font-semibold text-sm hover:bg-[#43a047] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                Simpan
+            </button>
+        </div>
+    </x-modal>
 
     <div class="bg-white rounded-3xl border border-gray-200 p-6 mb-6">
         <h2 class="font-bold text-gray-900 text-sm mb-4">Badge</h2>
@@ -219,44 +215,40 @@
             Logout
         </button>
 
-        <div x-show="showLogoutModal" x-transition x-cloak
-            class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4">
-            <div @click.outside="showLogoutModal = false" x-transition
-                class="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
-                <div class="text-center">
-                    <div class="mx-auto mb-4 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-6 h-6 text-red-500">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900">Yakin ingin logout?</h3>
-                    <p class="mt-2 text-sm text-gray-500">Kamu harus login kembali untuk mengakses akunmu.</p>
+        <x-modal show="showLogoutModal">
+            <div class="text-center">
+                <div class="mx-auto mb-4 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 text-red-500">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+                    </svg>
                 </div>
-                <div class="mt-6 flex gap-3">
-                    <button type="button" @click="showLogoutModal = false"
-                        class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors cursor-pointer">
-                        Batal
-                    </button>
-                    <form action="{{ route('logout') }}" method="POST" class="flex-1" x-data="{ isLoggingOut: false }"
-                        @submit="isLoggingOut = true">
-                        @csrf
-                        <button type="submit" data-no-loading :disabled="isLoggingOut"
-                            class="flex w-full items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50">
-                            <svg x-show="isLoggingOut" x-cloak class="h-4 w-4 animate-spin" viewBox="0 0 24 24"
-                                fill="none" aria-hidden="true">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                    stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
-                                </path>
-                            </svg>
-                            <span x-text="isLoggingOut ? 'Logging out...' : 'Logout'"></span>
-                        </button>
-                    </form>
-                </div>
+                <h3 class="text-lg font-bold text-gray-900">Yakin ingin logout?</h3>
+                <p class="mt-2 text-sm text-gray-500">Kamu harus login kembali untuk mengakses akunmu.</p>
             </div>
-        </div>
+            <div class="mt-6 flex gap-3">
+                <button type="button" @click="showLogoutModal = false"
+                    class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors cursor-pointer">
+                    Batal
+                </button>
+                <form action="{{ route('logout') }}" method="POST" class="flex-1" x-data="{ isLoggingOut: false }"
+                    @submit="isLoggingOut = true">
+                    @csrf
+                    <button type="submit" data-no-loading :disabled="isLoggingOut"
+                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50">
+                        <svg x-show="isLoggingOut" x-cloak class="h-4 w-4 animate-spin" viewBox="0 0 24 24"
+                            fill="none" aria-hidden="true">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
+                            </path>
+                        </svg>
+                        <span x-text="isLoggingOut ? 'Logging out...' : 'Logout'"></span>
+                    </button>
+                </form>
+            </div>
+        </x-modal>
     </div>
 
 </div>
