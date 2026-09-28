@@ -164,30 +164,6 @@
         </div>
     </div>
 
-    <div class="grid grid-cols-3 gap-3 mb-6">
-        <div class="bg-white rounded-xl p-4 border border-gray-200 text-center">
-            <div class="text-orange-500 font-extrabold text-xl">
-                <x-heroicon-s-fire class="w-6 h-6 inline" />
-            </div>
-            <p class="text-lg font-bold text-gray-900 mt-1">{{ $user->current_streak }}</p>
-            <p class="text-xs text-gray-500">Streak</p>
-        </div>
-        <div class="bg-white rounded-xl p-4 border border-gray-200 text-center">
-            <div class="text-amber-500 font-extrabold text-xl">
-                <x-heroicon-s-sparkles class="w-6 h-6 inline" />
-            </div>
-            <p class="text-lg font-bold text-gray-900 mt-1">{{ number_format($totalXp) }}</p>
-            <p class="text-xs text-gray-500">XP</p>
-        </div>
-        <div class="bg-white rounded-xl p-4 border border-gray-200 text-center">
-            <div class="text-rose-500 font-extrabold text-xl">
-                <x-heroicon-s-heart class="w-6 h-6 inline" />
-            </div>
-            <p class="text-lg font-bold text-gray-900 mt-1">{{ $user->lives }}</p>
-            <p class="text-xs text-gray-500">Lives</p>
-        </div>
-    </div>
-
     <div class="bg-white rounded-3xl border border-gray-200 p-6 mb-6">
         <h2 class="font-bold text-gray-900 text-sm mb-4">Badge</h2>
         <div class="grid grid-cols-2 gap-3">
