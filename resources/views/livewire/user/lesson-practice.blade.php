@@ -107,19 +107,23 @@ use Illuminate\Support\Facades\Storage;
         </div>
         @endforeach
 
-        <div class="lesson-nav flex items-center gap-3">
-            <button type="button"
-                class="lesson-prev hidden py-4 px-4 bg-gray-100 text-gray-600 font-bold text-sm rounded-2xl hover:bg-gray-200 transition-colors cursor-pointer">
-                Kembali
-            </button>
-            <button type="button"
-                class="lesson-next flex-1 py-4 bg-gray-200 text-gray-400 font-bold text-lg rounded-2xl cursor-not-allowed transition-colors">
-                Berikutnya
-            </button>
-            <button type="submit"
-                class="lesson-submit hidden flex-1 py-4 bg-brand-500 text-white font-bold text-lg rounded-2xl hover:bg-brand-600 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
-                Cek Jawaban
-            </button>
+        <div class="lesson-nav fixed bottom-0 inset-x-0 z-40 px-4 py-4 pointer-events-none">
+            <div class="max-w-md mx-auto flex items-center gap-3 pointer-events-auto">
+                <button type="button"
+                    class="lesson-prev hidden py-4 px-4 bg-gray-100 text-gray-600 font-bold text-sm rounded-2xl hover:bg-gray-200 transition-colors cursor-pointer">
+                    Kembali
+                </button>
+
+                <button type="button"
+                    class="lesson-next flex-1 py-4 bg-gray-200 text-gray-400 font-bold text-lg rounded-2xl cursor-not-allowed transition-colors">
+                    Berikutnya
+                </button>
+
+                <button type="submit" form="lessonForm"
+                    class="lesson-submit hidden flex-1 py-4 bg-brand-500 text-white font-bold text-lg rounded-2xl hover:bg-brand-600 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                    Cek Jawaban
+                </button>
+            </div>
         </div>
     </form>
 </div>
