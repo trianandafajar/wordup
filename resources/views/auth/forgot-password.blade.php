@@ -4,17 +4,17 @@
 <div class="relative flex min-h-dvh overflow-x-hidden bg-white lg:bg-brand-50">
 
     <div class="hidden lg:flex lg:w-[60%] bg-brand-800 flex-col justify-center items-center p-12 text-white">
-        <div class="space-y-6">
+        <div class="space-y-3 text-center">
             <div class="flex justify-center">
                 <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image"
-                    class="w-100 h-100 object-contain mb-6" />
+                    class="w-100 h-100 object-contain" />
             </div>
             <h1 class="font-dynapuff text-4xl leading-tight text-white">
                 Tenang, kata sandimu akan kembali.
             </h1>
         </div>
 
-        <p class="text-white/40 text-xs">&copy; {{ date('Y') }} WordUp</p>
+        <p class="text-white/40 text-xs mt-6">&copy; {{ date('Y') }} WordUp</p>
     </div>
 
     <main
