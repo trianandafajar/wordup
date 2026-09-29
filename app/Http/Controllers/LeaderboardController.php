@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Services\LeagueService;
+use App\Services\RankService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -42,6 +43,11 @@ class LeaderboardController extends Controller
         $currentUserRecord = $leagueUsers->firstWhere('id', $currentUser->id);
         $currentUserLeagueRank = $currentUserRecord['rank'] ?? 1;
 
+        $rankService = new RankService;
+        $currentRank = $rankService->getRankForXp($currentUser->xp_total);
+        $allRanks = RankService::RANKS;
+        $currentRankIndex = $rankService->getRankIndex($currentRank['key']);
+
         return view('livewire.user.leaderboard', [
             'leagueUsers' => $leagueUsers,
             'currentUser' => $currentUser,
@@ -49,6 +55,9 @@ class LeaderboardController extends Controller
             'currentUserLeagueRank' => $currentUserLeagueRank,
             'promotionCount' => $promotionCount,
             'totalInLeague' => $totalInLeague,
+            'currentRank' => $currentRank,
+            'allRanks' => $allRanks,
+            'currentRankIndex' => $currentRankIndex,
         ]);
     }
 }
