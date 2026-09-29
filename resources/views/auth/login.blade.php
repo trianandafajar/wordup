@@ -47,7 +47,7 @@
                     <div>
                         <label for="email" class="mb-2 block text-sm font-semibold text-gray-dark">Email</label>
                         <input id="email" name="email" type="email" required autofocus
-                            class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
+                            class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                             placeholder="nama@email.com" value="{{ old('email') }}">
                     </div>
 
@@ -61,7 +61,7 @@
                         </div>
                         <div class="relative">
                             <input id="password" name="password" :type="showPassword ? 'text' : 'password'" required
-                                class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 pr-12 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
+                                class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 pr-12 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                                 placeholder="Kata sandi kamu">
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition cursor-pointer">
@@ -103,7 +103,7 @@
                 </div>
 
                 <a href="{{ route('login.google') }}"
-                    class="flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-[#dce7df] bg-white px-4 text-sm font-semibold text-gray-dark shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-brand-500/15 cursor-pointer">
+                    class="flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-[#dce7df] bg-white px-4 text-sm font-semibold text-gray-dark transition hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-brand-500/15 cursor-pointer">
                     <svg class="h-5 w-5" viewBox="0 0 24 24">
                         <path
                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

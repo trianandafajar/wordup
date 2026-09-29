@@ -55,7 +55,7 @@
                     <div>
                         <label for="email" class="mb-2 block text-sm font-semibold text-gray-dark">Email</label>
                         <input id="email" name="email" type="email" required autofocus
-                            class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
+                            class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                             placeholder="nama@email.com" value="{{ old('email') }}">
                         @error('email')
                         <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
