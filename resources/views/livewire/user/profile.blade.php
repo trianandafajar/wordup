@@ -164,8 +164,25 @@
         <h2 class="font-bold text-gray-900 text-sm mb-4">Badge</h2>
         <div class="grid grid-cols-2 gap-3">
             @foreach ($badges as $badge)
-            <div class="bg-gray-50 rounded-xl p-3 border border-gray-100 flex items-center gap-3">
-                <span class="w-8 h-8 rounded-full {{ $badge['color'] }} flex items-center justify-center font-bold">
+            @if ($badge['icon'] === 'user')
+            <div class="bg-brand-50 rounded-xl p-3 border border-brand-200 flex items-center gap-3 min-w-0">
+                <img src="{{ asset('images/rank-icon/' . $currentRank['icon']) }}" alt="{{ $currentRank['name'] }}"
+                    class="w-9 h-9 object-contain shrink-0 drop-shadow">
+                <div class="min-w-0">
+                    <p class="font-bold text-gray-900 text-sm truncate">{{ $currentRank['name'] }}</p>
+                    <p class="text-xs text-gray-500 truncate">
+                        @if ($nextRank)
+                        {{ number_format($nextRank['min_xp'] - $user->xp_total) }} XP lagi ke {{ $nextRank['name'] }}
+                        @else
+                        Rank tertinggi
+                        @endif
+                    </p>
+                </div>
+            </div>
+            @else
+            <div class="bg-gray-50 rounded-xl p-3 border border-gray-100 flex items-center gap-3 min-w-0">
+                <span
+                    class="w-8 h-8 shrink-0 rounded-full {{ $badge['color'] }} flex items-center justify-center font-bold">
                     @if ($badge['icon'] === 'book-open')
                     <x-heroicon-s-book-open class="w-5 h-5" />
                     @elseif ($badge['icon'] === 'sparkles')
@@ -174,15 +191,14 @@
                     <x-heroicon-s-fire class="w-5 h-5" />
                     @elseif ($badge['icon'] === 'trophy')
                     <x-heroicon-s-trophy class="w-5 h-5" />
-                    @elseif ($badge['icon'] === 'user')
-                    <x-heroicon-s-user class="w-5 h-5" />
                     @endif
                 </span>
-                <div>
-                    <p class="font-bold text-gray-900 text-sm">{{ $badge['title'] }}</p>
-                    <p class="text-xs text-gray-500">{{ $badge['desc'] }}</p>
+                <div class="min-w-0">
+                    <p class="font-bold text-gray-900 text-sm truncate">{{ $badge['title'] }}</p>
+                    <p class="text-xs text-gray-500 truncate">{{ $badge['desc'] }}</p>
                 </div>
             </div>
+            @endif
             @endforeach
         </div>
     </div>
@@ -237,10 +253,10 @@
                     @csrf
                     <button type="submit" data-no-loading :disabled="isLoggingOut"
                         class="flex w-full items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50">
-                        <svg x-show="isLoggingOut" x-cloak class="h-4 w-4 animate-spin" viewBox="0 0 24 24"
-                            fill="none" aria-hidden="true">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                stroke-width="4"></circle>
+                        <svg x-show="isLoggingOut" x-cloak class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none"
+                            aria-hidden="true">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z">
                             </path>
                         </svg>

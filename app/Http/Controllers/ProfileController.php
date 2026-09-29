@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\BadgeService;
+use App\Services\RankService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,10 @@ class ProfileController extends Controller
             ->limit(3)
             ->get();
 
+        $rankService = new RankService;
+        $currentRank = $rankService->getRankForXp($user->xp_total);
+        $nextRank = RankService::RANKS[$rankService->getRankIndex($currentRank['key']) + 1] ?? null;
+
         return view('livewire.user.profile', [
             'user' => $user,
             'completedLessonsCount' => $completedLessonsCount,
@@ -34,6 +39,8 @@ class ProfileController extends Controller
             'currentStreak' => $currentStreak,
             'recentActivities' => $recentActivities,
             'badges' => $badges,
+            'currentRank' => $currentRank,
+            'nextRank' => $nextRank,
         ]);
     }
 
