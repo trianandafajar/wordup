@@ -3,7 +3,7 @@
 @section('content')
 <div class="relative flex min-h-dvh overflow-x-hidden bg-white lg:bg-brand-50">
 
-    <div class="hidden lg:flex lg:w-[42%] bg-brand-800 flex-col justify-center items-center p-12 text-white">
+    <div class="hidden lg:flex lg:w-[60%] bg-brand-800 flex-col justify-center items-center p-12 text-white">
         <div class="space-y-6">
             <div class="flex justify-center">
                 <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image"
@@ -17,7 +17,7 @@
 
     <main
         class="relative flex min-h-dvh flex-1 items-center justify-center px-5 py-8 sm:px-10 sm:py-12 lg:min-h-screen lg:py-16">
-        <div class="w-full max-w-sm animate-[fadeUp_0.4s_ease-out] lg:max-w-[26rem]">
+        <div class="w-full max-w-sm animate-[fadeUp_0.4s_ease-out] lg:max-w-[25rem]">
 
             <div class="mb-9 text-center lg:hidden">
                 <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.5rem] bg-brand-50">
