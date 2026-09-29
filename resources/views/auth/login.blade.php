@@ -33,6 +33,14 @@
                     <h2 class="font-sans text-[1.7rem] font-bold tracking-tight text-gray-dark">Masuk</h2>
                 </div>
 
+                @if ($errors->any())
+                    <div class="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                            @foreach ($errors->all() as $error)
+                                <span class="font-semibold ">{{ $error }}</span>
+                            @endforeach
+                    </div>
+                @endif
+
                 <form class="space-y-4" method="POST" action="{{ route('login') }}">
                     @csrf
 
@@ -41,9 +49,6 @@
                         <input id="email" name="email" type="email" required autofocus
                             class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark shadow-sm outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                             placeholder="nama@email.com" value="{{ old('email') }}">
-                        @error('email')
-                        <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <div x-data="{ showPassword: false }">
@@ -74,9 +79,6 @@
                                 </svg>
                             </button>
                         </div>
-                        @error('password')
-                        <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
                     </div>
 
                     <div class="flex items-center pt-1">

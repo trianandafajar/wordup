@@ -30,7 +30,7 @@ class AuthenticatedSessionController extends Controller
 
         if (! Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'email' => 'Email atau kata sandi salah.',
             ]);
         }
 
@@ -44,7 +44,7 @@ class AuthenticatedSessionController extends Controller
             $request->session()->regenerateToken();
 
             throw ValidationException::withMessages([
-                'email' => 'Akun admin tidak bisa login di sini. Gunakan /admin/login.',
+                'email' => 'Email atau kata sandi salah.',
             ]);
         }
 
