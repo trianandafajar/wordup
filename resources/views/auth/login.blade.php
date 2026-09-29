@@ -41,7 +41,7 @@
                     </div>
                 @endif
 
-                <form class="space-y-4" method="POST" action="{{ route('login') }}">
+                <form class="space-y-2" method="POST" action="{{ route('login') }}">
                     @csrf
 
                     <div>
@@ -88,12 +88,12 @@
                     </div>
 
                     <button type="submit"
-                        class="mt-2 h-12 w-full rounded-xl bg-brand-500 px-4 text-sm font-bold text-white transition hover:bg-brand-600 focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
+                        class="mt-1.5 h-11 w-full rounded-xl bg-brand-500 px-4 text-sm font-bold text-white transition hover:bg-brand-600 focus:outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                         Masuk
                     </button>
                 </form>
 
-                <div class="relative my-6">
+                <div class="relative my-2">
                     <div class="absolute inset-0 flex items-center">
                         <div class="w-full border-t border-[#dce7df]"></div>
                     </div>
@@ -103,7 +103,7 @@
                 </div>
 
                 <a href="{{ route('login.google') }}"
-                    class="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-[#dce7df] bg-white px-4 text-sm font-semibold text-gray-dark shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-brand-500/15 cursor-pointer">
+                    class="flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-[#dce7df] bg-white px-4 text-sm font-semibold text-gray-dark shadow-sm transition hover:bg-gray-50 focus:outline-none focus:ring-4 focus:ring-brand-500/15 cursor-pointer">
                     <svg class="h-5 w-5" viewBox="0 0 24 24">
                         <path
                             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -121,7 +121,7 @@
                     Masuk dengan Google
                 </a>
 
-                <p class="mt-6 text-center text-sm text-gray-dark/55">
+                <p class="mt-3 text-center text-sm text-gray-dark/55">
                     Belum punya akun?
                     <a href="{{ route('register') }}"
                         class="font-semibold text-brand-600 transition hover:text-brand-700">
