@@ -3,7 +3,7 @@
 ])
 
 <nav
-    class="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full max-w-md bg-white border-t border-gray-200 py-2 flex items-center safe-area-bottom rounded-t-2xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+    class="fixed bottom-0 left-1/2 -translate-x-1/2 z-50 w-full max-w-md bg-white border-t border-gray-200 py-2 flex items-center safe-area-bottom rounded-t-2xl">
     <a href="/"
         class="flex-1 flex flex-col items-center gap-0.5 py-1 transition-colors {{ $active === 'home' ? 'text-brand-500' : 'text-gray-400' }}">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
