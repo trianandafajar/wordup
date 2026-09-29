@@ -38,11 +38,11 @@ class NewPasswordController extends Controller
         );
 
         if ($status === Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', __($status));
+            return redirect()->route('login')->with('status', 'Kata sandi Anda telah berhasil diatur ulang.');
         }
 
         throw ValidationException::withMessages([
-            'email' => [__($status)],
+            'email' => ['Tautan atur ulang kata sandi ini tidak valid.'],
         ]);
     }
 }

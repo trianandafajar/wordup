@@ -27,11 +27,11 @@ class PasswordResetLinkController extends Controller
         );
 
         if ($status === Password::RESET_LINK_SENT) {
-            return back()->with('status', __($status));
+            return back()->with('status', 'Kami telah mengirimkan tautan atur ulang kata sandi ke email Anda.');
         }
 
         throw ValidationException::withMessages([
-            'email' => [__($status)],
+            'email' => ['Kami tidak dapat menemukan pengguna dengan alamat email tersebut.'],
         ]);
     }
 }

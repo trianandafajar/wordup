@@ -35,6 +35,14 @@
                     <h2 class="font-sans text-[1.7rem] font-bold tracking-tight text-gray-dark">Lupa kata sandi?</h2>
                 </div>
 
+                @if ($errors->any())
+                    <div class="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                            @foreach ($errors->all() as $error)
+                                <span class="font-semibold">{{ $error }}</span>
+                            @endforeach
+                    </div>
+                @endif
+
                 @if (session('status'))
                 <div class="mb-5 rounded-2xl border border-brand-200 bg-brand-50 p-4 text-sm leading-6 text-gray-dark">
                     {{ session('status') }}
