@@ -39,7 +39,7 @@
                     <div>
                         <label for="name" class="mb-2 block text-sm font-semibold text-gray-dark">Nama lengkap</label>
                         <input id="name" name="name" type="text" required autofocus
-                            class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
+                            class="block h-12 w-full rounded-xl border {{ $errors->has('name') ? 'border-red-500' : 'border-[#dce7df]' }} bg-[#fbfefc] px-4 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                             placeholder="Nama kamu" value="{{ old('name') }}">
                         @error('name')
                         <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
@@ -49,7 +49,7 @@
                     <div>
                         <label for="email" class="mb-2 block text-sm font-semibold text-gray-dark">Email</label>
                         <input id="email" name="email" type="email" required
-                            class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
+                            class="block h-12 w-full rounded-xl border {{ $errors->has('email') ? 'border-red-500' : 'border-[#dce7df]' }} bg-[#fbfefc] px-4 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                             placeholder="nama@email.com" value="{{ old('email') }}">
                         @error('email')
                         <p class="mt-1.5 text-sm text-red-600">{{ $message }}</p>
@@ -62,7 +62,7 @@
                                 sandi</label>
                             <div class="relative">
                                 <input id="password" name="password" :type="showPassword ? 'text' : 'password'" required
-                                    class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 pr-12 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
+                                    class="block h-12 w-full rounded-xl border {{ $errors->has('password') ? 'border-red-500' : 'border-[#dce7df]' }} bg-[#fbfefc] px-4 pr-12 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                                     placeholder="Minimal 8 karakter">
                                 <button type="button" @click="showPassword = !showPassword"
                                     class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition cursor-pointer">
@@ -91,7 +91,7 @@
                             <div class="relative">
                                 <input id="password_confirmation" name="password_confirmation"
                                     :type="showPassword ? 'text' : 'password'" required
-                                    class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 pr-12 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
+                                    class="block h-12 w-full rounded-xl border {{ $errors->has('password_confirmation') ? 'border-red-500' : 'border-[#dce7df]' }} bg-[#fbfefc] px-4 pr-12 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                                     placeholder="Ulangi kata sandi">
                                 <button type="button" @click="showPassword = !showPassword"
                                     class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition cursor-pointer">

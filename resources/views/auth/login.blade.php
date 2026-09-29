@@ -46,9 +46,9 @@
 
                     <div>
                         <label for="email" class="mb-2 block text-sm font-semibold text-gray-dark">Email</label>
-                        <input id="email" name="email" type="email" required autofocus
-                            class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
-                            placeholder="nama@email.com" value="{{ old('email') }}">
+<input id="email" name="email" type="email" required autofocus
+                             class="block h-12 w-full rounded-xl border {{ $errors->has('email') ? 'border-red-500' : 'border-[#dce7df]' }} bg-[#fbfefc] px-4 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
+                             placeholder="nama@email.com" value="{{ old('email') }}">
                     </div>
 
                     <div x-data="{ showPassword: false }">
@@ -61,7 +61,7 @@
                         </div>
                         <div class="relative">
                             <input id="password" name="password" :type="showPassword ? 'text' : 'password'" required
-                                class="block h-12 w-full rounded-xl border border-[#dce7df] bg-[#fbfefc] px-4 pr-12 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
+                                class="block h-12 w-full rounded-xl border {{ $errors->has('password') ? 'border-red-500' : 'border-[#dce7df]' }} bg-[#fbfefc] px-4 pr-12 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
                                 placeholder="Kata sandi kamu">
                             <button type="button" @click="showPassword = !showPassword"
                                 class="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition cursor-pointer">
