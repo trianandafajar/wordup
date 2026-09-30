@@ -1,271 +1,312 @@
 @extends('layouts.user', ['pageTitle' => 'Learn', 'activeMenu' => 'learn'])
 
 @section('content')
+@php
+$amplitude = 56;
+$wave = fn (int $i): int => (int) round(sin($i * M_PI / 4) * $amplitude);
+$sparks = [[-140,-110],[130,-120],[-160,10],[160,20],[-90,-170],[100,-165],[-60,90],[70,100]];
+$chestClosedImg = asset('images/rewards/reward-chest-locked.png');
+$chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
+@endphp
+
 @foreach ($units as $unitData)
 @php
 $allCompleted = $unitData['lessons']->every('status', 'completed');
 $hasAvailable = $unitData['lessons']->firstWhere('status', 'available') !== null;
-$unitColor = $allCompleted ? 'bg-brand-500' : ($hasAvailable ? 'bg-amber-500' : 'bg-gray-300 text-gray-600');
-$unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600';
+
+$bannerClass = $allCompleted
+? 'bg-gradient-to-r from-brand-600 to-brand-400 text-white'
+: ($hasAvailable
+? 'bg-gradient-to-r from-orange-500 to-amber-400 text-white'
+: 'bg-gray-200 text-gray-500');
+
+$slot = 0;
 @endphp
-<div id="unit-{{ $loop->iteration }}" class="w-full max-w-lg mb-4 scroll-mt-24">
+
+<section id="unit-{{ $loop->iteration }}" class="w-full max-w-lg mx-auto mb-10 scroll-mt-24">
     <div
-        class="rounded-2xl {{ $unitColor }} {{ $unitTextColor }} p-4 shadow-md flex items-center justify-between gap-4 mb-8">
-        <div>
-            <span class="text-xs font-bold uppercase tracking-wider opacity-80">Unit {{ $loop->iteration }}</span>
-            <h3 class="text-lg font-bold leading-snug">{{ $unitData['unit']->title }}</h3>
-            @if ($hasAvailable)
-            <p class="text-xs opacity-90 mt-0.5">Sedang berjalan</p>
-            @elseif ($allCompleted)
-            <p class="text-xs opacity-90 mt-0.5">Selesai</p>
-            @else
-            <p class="text-xs opacity-80 mt-0.5">Terkunci</p>
-            @endif
+        class="relative overflow-hidden rounded-2xl {{ $bannerClass }} px-5 py-4 shadow-lg shadow-black/10 flex items-center justify-between gap-4 mb-6">
+        <div class="absolute -right-8 -bottom-10 w-40 h-40 rounded-full bg-white/10 pointer-events-none"></div>
+        <div class="absolute right-16 -top-12 w-28 h-28 rounded-full bg-white/10 pointer-events-none"></div>
+
+        <div class="relative min-w-0">
+            <span class="text-xs font-bold uppercase tracking-wider opacity-90">Unit {{ $loop->iteration }}</span>
+            <h3 class="text-xl font-extrabold leading-tight mt-0.5">{{ $unitData['unit']->title }}</h3>
+
+            <p class="mt-1.5 flex items-center gap-1.5 text-sm font-medium opacity-95">
+                @if ($hasAvailable)
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <circle cx="12" cy="12" r="10" fill="#fff" />
+                    <path d="M10 8.5v7l6-3.5z" fill="#f97316" />
+                </svg>
+                Sedang berjalan
+                @elseif ($allCompleted)
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="10" fill="#fff" />
+                    <path d="M7.5 12.5l3 3 6-6.5" stroke="#16a34a" stroke-width="2.2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+                Selesai
+                @else
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M17 9h-1V7a4 4 0 00-8 0v2H7a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2v-8a2 2 0 00-2-2zm-7-2a2 2 0 014 0v2h-4V7z" />
+                </svg>
+                Terkunci
+                @endif
+            </p>
         </div>
-        <div class="shrink-0 bg-white/20 p-2.5 rounded-xl backdrop-blur-sm">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="fill-current">
-                <path d="M12 3L1 9L12 15L21 10.09V17H23V9M5 13.18V17.18L12 21L19 17.18V13.18L12 17L5 13.18Z" />
+
+        <div
+            class="relative shrink-0 w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+            <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 6.2C10.6 5.1 8.5 4.5 6 4.5c-1.2 0-2.3.2-3.2.5-.5.2-.8.6-.8 1.1v11.4c0 .7.7 1.2 1.4 1 .8-.2 1.7-.4 2.6-.4 2.2 0 4.2.6 5.5 1.8a.8.8 0 001 0c1.3-1.2 3.3-1.8 5.5-1.8.9 0 1.8.2 2.6.4.7.2 1.4-.3 1.4-1V6.1c0-.5-.3-.9-.8-1.1-.9-.3-2-.5-3.2-.5-2.5 0-4.6.6-6 1.7zM11 18.2c-1.1-.7-2.5-1-4-1-.7 0-1.4.1-2 .2V6.4c.6-.1 1.3-.2 2-.2 1.5 0 2.9.4 4 1.2v10.8zm2 0V7.4c1.1-.8 2.5-1.2 4-1.2.7 0 1.4.1 2 .2v10.9c-.6-.1-1.3-.2-2-.2-1.5 0-2.9.3-4 1z" />
             </svg>
         </div>
     </div>
-</div>
 
-<div class="flex flex-col items-center gap-0 w-full mb-8 relative" style="padding-bottom: 2rem;">
-    @foreach ($unitData['lessons'] as $index => $lesson)
-    @php
-    $isFirst = $index === 0;
-    $isLast = $index === $unitData['lessons']->count() - 1;
-    $isAvailable = $lesson['status'] === 'available';
-    $isCompleted = $lesson['status'] === 'completed';
-    $isLocked = $lesson['status'] === 'locked';
+    <div class="relative flex flex-col items-center w-full pb-6">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+            <div class="absolute left-[6%] top-[10%] w-16 h-7 rounded-full bg-white/70 blur-[1px]"></div>
+            <div class="absolute left-[11%] top-[7%] w-8 h-6 rounded-full bg-white/70 blur-[1px]"></div>
+            <div class="absolute right-[6%] top-[38%] w-16 h-7 rounded-full bg-white/60 blur-[1px]"></div>
+            <div class="absolute right-[3%] top-[26%] w-8 h-8 text-brand-400/60">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 22c0-6 1-10 6-14-1 6-2 10-6 14zM12 22C11 16 9 12 4 9c1 6 3 10 8 13z" />
+                </svg>
+            </div>
+            <div class="absolute left-[14%] top-[44%] w-8 h-8 text-brand-400/50">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 22c0-6 1-10 6-14-1 6-2 10-6 14zM12 22C11 16 9 12 4 9c1 6 3 10 8 13z" />
+                </svg>
+            </div>
+            <div class="absolute right-[12%] top-[62%] w-7 h-7 text-brand-400/50">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 22c0-6 1-10 6-14-1 6-2 10-6 14zM12 22C11 16 9 12 4 9c1 6 3 10 8 13z" />
+                </svg>
+            </div>
+            <div class="absolute left-[8%] top-[70%] w-10 h-6 rounded-[50%] bg-gray-300/60"></div>
+            <div class="absolute right-[5%] top-[80%] w-8 h-4 rounded-[50%] bg-gray-300/50"></div>
+            <div class="absolute left-[10%] top-[90%] w-7 h-7 text-brand-400/50">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 22c0-6 1-10 6-14-1 6-2 10-6 14zM12 22C11 16 9 12 4 9c1 6 3 10 8 13z" />
+                </svg>
+            </div>
+        </div>
 
-    $position = $index % 4;
-    $mlClass = $position === 1 ? 'self-start ml-8 sm:ml-16' : ($position === 3 ? 'self-end mr-8 sm:mr-16' : 'self-center
-    ml-0');
-    $lockedText = $lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : 'Selesaikan lesson sebelumnya' ; @endphp <div
-        class="{{ $mlClass }} mb-0" data-node="{{ $lesson['id'] }}" data-done="{{ $isCompleted ? '1' : '0' }}">
-        <button @if ($isCompleted)
-            onclick="window.dispatchEvent(new CustomEvent('open-lesson-modal', { detail: { url: '{{ route('user.lesson.practice', $lesson['id']) }}' } }))"
-            @elseif (!$isLocked) onclick="window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'"
-            @else disabled @endif
-            class="relative group focus:outline-none w-14 h-14 lg:w-16 lg:h-16 rounded-full border-4 transition-all duration-300 flex items-center justify-center shrink-0 z-10 {{ $isLocked ? 'bg-gray-200 border-gray-300 opacity-60 cursor-not-allowed' : ($isAvailable ? 'bg-brand-500 border-brand-400 shadow-lg shadow-brand-500/30 cursor-pointer hover:scale-105' : 'bg-brand-500 border-brand-600 shadow-lg shadow-brand-500/30 cursor-pointer hover:scale-105') }}">
-            @if ($isLocked)
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="text-gray-400 fill-current">
-                <path
-                    d="M12 2C9.243 2 7 4.243 7 7V10H6C4.897 10 4 10.897 4 12V20C4 21.103 4.897 22 6 22H18C19.103 22 20 21.103 20 20V12C20 10.897 19.103 10 18 10H17V7C17 4.243 14.757 2 12 2ZM12 4C13.654 4 15 5.346 15 7V10H9V7C9 5.346 10.346 4 12 4ZM18 12V20H6V12H18ZM12 13C11.448 13 11 13.448 11 14V18C11 18.552 11.448 19 12 19C12.552 19 13 18.552 13 18V14C13 13.448 12.552 13 12 13Z" />
-            </svg>
-            @elseif ($isCompleted)
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="text-white fill-current">
-                <path
-                    d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" />
-            </svg>
-            @else
-            @if ($lesson['type'] === 'listening')
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="text-white fill-current">
-                <path
-                    d="M12 3C10.34 3 9 4.37 9 6V12C9 13.66 10.34 15 12 15C13.66 15 15 13.66 15 12V6C15 4.37 13.66 3 12 3ZM19 12C19 15.53 16.39 18.44 13 18.92V21H11V18.92C7.61 18.44 5 15.53 5 12H7C7 14.76 9.24 17 12 17C14.76 17 17 14.76 17 12H19Z" />
-            </svg>
-            @elseif ($lesson['type'] === 'speaking')
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="text-white fill-current">
-                <path
-                    d="M12 14C13.66 14 15 12.66 15 11V5C15 3.34 13.66 2 12 2C10.34 2 9 3.34 9 5V11C9 12.66 10.34 14 12 14ZM17 11C17 13.76 14.76 16 12 16C9.24 16 7 13.76 7 11H5C5 14.53 7.61 17.43 11 17.92V21H13V17.92C16.39 17.43 19 14.53 19 11H17Z" />
-            </svg>
-            @elseif ($lesson['type'] === 'quiz')
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="text-white fill-current">
-                <path
-                    d="M11 18H13V16H11V18ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 6C9.24 6 7 8.24 7 11H9C9 9.34 10.34 8 12 8C13.66 8 15 9.34 15 11C15 12.66 13.66 14 12 14V16H16V14C16 11.24 14.21 6 12 6Z" />
-            </svg>
-            @else
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                class="text-white fill-current">
-                <path
-                    d="M18 2H6C4.89 2 4 2.9 4 4V20C4 21.1 4.89 22 6 22H18C19.1 22 20 21.1 20 20V4C20 2.9 19.11 2 18 2ZM6 4H11V12L8.5 10.5L6 12V4Z" />
-            </svg>
-            @endif
-            @endif
+        @foreach ($unitData['lessons'] as $index => $lesson)
+        @php
+        $isAvailable = $lesson['status'] === 'available';
+        $isCompleted = $lesson['status'] === 'completed';
+        $isLocked = $lesson['status'] === 'locked';
+        $bestScore = $lesson['best_score'] ?? 0;
 
-            @if ($isCompleted)
-            <span
-                class="absolute -top-1 -right-1 bg-amber-500 text-white text-[10px] font-bold rounded-full px-1.5 py-0.5 shadow-sm">
-                +{{ $lesson['xp_reward'] }}
-            </span>
-            @endif
+        $icon = asset('images/learn/vocabulary.png');
+        if ($isLocked) {
+        $icon = asset('images/learn/vocabulary-locked.png');
+        } elseif ($isCompleted) {
+        if ($bestScore == 100) {
+        $icon = asset('images/learn/vocabulary-xp.png');
+        } elseif ($bestScore >= 80) {
+        $icon = asset('images/learn/vocabulary-completed.png');
+        }
+        }
 
-            @if ($isAvailable)
-            <span class="absolute inset-0 rounded-full border-2 border-brand-400/60 animate-ping"></span>
-            @endif
+        $offset = $wave($slot);
+        $slot++;
 
-            <div
-                class="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 hidden group-hover:block z-20 pointer-events-none">
+        $lockedText = $lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : 'Selesaikan lesson sebelumnya' ;
+            $showXpBadge=$isAvailable || ($isCompleted && $bestScore==100); @endphp {{-- Node lesson --}} <div
+            class="relative z-10 mb-3" style="left: {{ $offset }}px;" data-node="{{ $lesson['id'] }}"
+            data-done="{{ $isCompleted ? '1' : '0' }}">
+            <button @if ($isCompleted)
+                onclick="window.dispatchEvent(new CustomEvent('open-lesson-modal', { detail: { url: '{{ route('user.lesson.practice', $lesson['id']) }}' } }))"
+                @elseif (!$isLocked) onclick="window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'"
+                @else disabled @endif
+                class="relative group focus:outline-none w-20 h-20 lg:w-24 lg:h-24 flex items-center justify-center shrink-0 transition-transform duration-300 {{ $isLocked ? 'cursor-not-allowed' : 'cursor-pointer hover:scale-105 active:scale-95' }}">
+
+                @if ($isAvailable)
+                <span class="absolute inset-3 rounded-full bg-brand-400/30 animate-ping"></span>
+                @endif
+
+                <img src="{{ $icon }}" alt="Lesson Icon"
+                    class="relative w-full h-full object-contain drop-shadow-lg {{ $isLocked ? 'opacity-90' : '' }}">
+
+                @if ($showXpBadge)
+                <span
+                    class="absolute top-1 right-0 bg-amber-500 text-white text-xs font-extrabold rounded-full px-2 py-0.5 shadow-md ring-2 ring-white/70">
+                    +{{ $lesson['xp_reward'] }}
+                </span>
+                @endif
+
                 <div
-                    class="bg-gray-900 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg shadow-lg whitespace-nowrap">
-                    <span class="font-bold">{{ $lesson['title'] }}</span>
-                    @if ($isCompleted)
-                    <span class="opacity-75">| Best: {{ $lesson['best_score'] }}%</span>
-                    @elseif ($isAvailable)
-                    <span class="opacity-75">| +{{ $lesson['xp_reward'] }} XP</span>
-                    @elseif ($isLocked)
-                    <span class="opacity-75">| {{ $lockedText }}</span>
-                    @endif
-                    <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
-                        <div class="w-2 h-2 bg-gray-900 rotate-45 transform"></div>
+                    class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 hidden group-hover:block z-20 pointer-events-none">
+                    <div
+                        class="bg-gray-900 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg shadow-lg whitespace-nowrap">
+                        <span class="font-bold">{{ $lesson['title'] }}</span>
+                        @if ($isCompleted)
+                        <span class="opacity-75">| Best: {{ $bestScore }}%</span>
+                        @elseif ($isAvailable)
+                        <span class="opacity-75">| +{{ $lesson['xp_reward'] }} XP</span>
+                        @elseif ($isLocked)
+                        <span class="opacity-75">| {{ $lockedText }}</span>
+                        @endif
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
+                            <div class="w-2 h-2 bg-gray-900 rotate-45 transform"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </button>
-</div>
+            </button>
+    </div>
 
-@php
+    @php
     $isChestLevel = ($lesson['order'] % 5 === 0);
     $reward = $isChestLevel ? \App\Models\UserReward::where('user_id', auth()->id())
-        ->where('unit_id', $unitData['unit']->id)
-        ->where('level_milestone', $lesson['order'])
-        ->first() : null;
+    ->where('unit_id', $unitData['unit']->id)
+    ->where('level_milestone', $lesson['order'])
+    ->first() : null;
     $isOpened = $reward?->is_opened ?? false;
     $isReady = $isCompleted && !$isOpened;
-    $sparks = [[-140,-110],[130,-120],[-160,10],[160,20],[-90,-170],[100,-165],[-60,90],[70,100]];
-    $chestClosedImg = asset('images/rewards/reward-chest-locked.png');
-    $chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
-@endphp
 
-@if ($isChestLevel)
-<div class="my-2 flex justify-center" x-data="{
-        opened: {{ $isOpened ? 'true' : 'false' }},
-        ready: {{ $isReady ? 'true' : 'false' }},
-        showAnim: false,
-        phase: 'idle',
-        justClaimed: false,
-        loading: false,
-        rewards: [
-            { text: '+50 XP', cls: 'text-amber-300' },
-            { text: '+5 Energi', cls: 'text-emerald-300' }
-        ],
+    $chestOffset = $wave($slot);
+    if ($isChestLevel) { $slot++; }
+    @endphp
 
-        playAnim() {
-            this.showAnim = true;
-            this.phase = 'grow';
-            setTimeout(() => { this.phase = 'shake'; }, 700);
-            setTimeout(() => { this.phase = 'open'; }, 1500);
-        },
+    @if ($isChestLevel)
+    <div class="relative z-10 mb-3" style="left: {{ $chestOffset }}px;" x-data="{
+                opened: {{ $isOpened ? 'true' : 'false' }},
+                ready: {{ $isReady ? 'true' : 'false' }},
+                showAnim: false,
+                phase: 'idle',
+                justClaimed: false,
+                loading: false,
+                rewards: [
+                    { text: '+50 XP', cls: 'text-amber-300' },
+                    { text: '+5 Energi', cls: 'text-emerald-300' }
+                ],
 
-        closeAnim() {
-            if (this.phase !== 'open') return;
-            this.showAnim = false;
-            this.phase = 'idle';
-            if (this.justClaimed) window.location.reload();
-        },
+                playAnim() {
+                    this.showAnim = true;
+                    this.phase = 'grow';
+                    setTimeout(() => { this.phase = 'shake'; }, 700);
+                    setTimeout(() => { this.phase = 'open'; }, 1500);
+                },
 
-        async openChest() {
-            if (this.loading) return;
+                closeAnim() {
+                    if (this.phase !== 'open') return;
+                    this.showAnim = false;
+                    this.phase = 'idle';
+                    if (this.justClaimed) window.location.reload();
+                },
 
-            if (this.opened) {
-                this.justClaimed = false;
-                this.playAnim();
-                return;
-            }
-            if (!this.ready) return;
+                async openChest() {
+                    if (this.loading) return;
 
-            this.loading = true;
-            try {
-                const response = await fetch('{{ route('user.reward.claim') }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        unit_id: {{ $unitData['unit']->id }},
-                        level_milestone: {{ $lesson['order'] }}
-                    })
-                });
-                const data = await response.json();
+                    if (this.opened) {
+                        this.justClaimed = false;
+                        this.playAnim();
+                        return;
+                    }
+                    if (!this.ready) return;
 
-                if (!response.ok) {
-                    console.error('Reward error:', response.status, data);
-                    return;
+                    this.loading = true;
+                    try {
+                        const response = await fetch('{{ route('user.reward.claim') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            body: JSON.stringify({
+                                unit_id: {{ $unitData['unit']->id }},
+                                level_milestone: {{ $lesson['order'] }}
+                            })
+                        });
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            console.error('Reward error:', response.status, data);
+                            return;
+                        }
+                        if (data.success) {
+                            this.opened = true;
+                            this.ready = false;
+                            this.justClaimed = true;
+                            this.playAnim();
+                        }
+                    } catch (error) {
+                        console.error('Fetch error:', error);
+                    } finally {
+                        this.loading = false;
+                    }
                 }
-                if (data.success) {
-                    this.opened = true;
-                    this.ready = false;
-                    this.justClaimed = true;
-                    this.playAnim();
-                }
-            } catch (error) {
-                console.error('Fetch error:', error);
-            } finally {
-                this.loading = false;
-            }
-        }
-    }">
-    <button @click="openChest()"
-        :class="{'animate-bounce': ready && !opened, 'cursor-pointer': ready || opened, 'opacity-50 cursor-not-allowed': !ready && !opened}"
-        class="relative focus:outline-none transition-transform hover:scale-110">
-        <img :src="opened ? '{{ $chestOpenedImg }}' : '{{ $chestClosedImg }}'"
-            class="w-12 h-12 object-contain drop-shadow-md" alt="Harta Karun">
-    </button>
+            }">
+        <button @click="openChest()"
+            :class="{'animate-bounce': ready && !opened, 'cursor-pointer': ready || opened, 'opacity-60 cursor-not-allowed': !ready && !opened}"
+            class="relative focus:outline-none transition-transform hover:scale-110">
+            <img :src="opened ? '{{ $chestOpenedImg }}' : '{{ $chestClosedImg }}'"
+                class="w-24 h-24 object-contain drop-shadow-lg" alt="Harta Karun">
+        </button>
 
-    <div x-show="showAnim" style="display: none;" x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-        x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0" @click="closeAnim()"
-        class="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-pointer select-none">
+        <div x-show="showAnim" style="display: none;" x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" @click="closeAnim()"
+            class="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-pointer select-none">
 
-        <div class="relative flex flex-col items-center">
-            <div x-show="phase === 'open'" style="display: none;" class="chest-rays"></div>
-            <div x-show="phase === 'open'" style="display: none;" class="chest-burst"></div>
-            <template x-if="phase === 'open'">
-                <div class="absolute inset-0 pointer-events-none">
-                    @foreach ($sparks as $i => $p)
-                    <span class="chest-spark"
-                        style="--x: {{ $p[0] }}px; --y: {{ $p[1] }}px; animation-delay: {{ $i * 40 }}ms;"></span>
-                    @endforeach
-                </div>
-            </template>
-            <template x-if="phase === 'open' && justClaimed">
-                <div class="pointer-events-none">
-                    <template x-for="(r, i) in rewards" :key="i">
-                        <span class="float-point" :class="r.cls"
-                            :style="`--dx: ${(i - (rewards.length - 1) / 2) * 110}px; animation-delay: ${i * 200}ms`"
-                            x-text="r.text"></span>
-                    </template>
-                </div>
-            </template>
-            <img :src="phase === 'open' ? '{{ $chestOpenedImg }}' : '{{ $chestClosedImg }}'" :class="{
-                        'chest-grow': phase === 'grow',
-                        'chest-shake': phase === 'shake',
-                        'chest-pop': phase === 'open'
-                    }" class="relative z-10 w-48 h-48 sm:w-60 sm:h-60 object-contain drop-shadow-2xl"
-                alt="Harta Karun">
+            <div class="relative flex flex-col items-center">
+                <div x-show="phase === 'open'" style="display: none;" class="chest-rays"></div>
+                <div x-show="phase === 'open'" style="display: none;" class="chest-burst"></div>
+                <template x-if="phase === 'open'">
+                    <div class="absolute inset-0 pointer-events-none">
+                        @foreach ($sparks as $i => $p)
+                        <span class="chest-spark"
+                            style="--x: {{ $p[0] }}px; --y: {{ $p[1] }}px; animation-delay: {{ $i * 40 }}ms;"></span>
+                        @endforeach
+                    </div>
+                </template>
+                <template x-if="phase === 'open' && justClaimed">
+                    <div class="pointer-events-none">
+                        <template x-for="(r, i) in rewards" :key="i">
+                            <span class="float-point" :class="r.cls"
+                                :style="`--dx: ${(i - (rewards.length - 1) / 2) * 110}px; animation-delay: ${i * 200}ms`"
+                                x-text="r.text"></span>
+                        </template>
+                    </div>
+                </template>
+                <img :src="phase === 'open' ? '{{ $chestOpenedImg }}' : '{{ $chestClosedImg }}'" :class="{
+                                'chest-grow': phase === 'grow',
+                                'chest-shake': phase === 'shake',
+                                'chest-pop': phase === 'open'
+                            }" class="relative z-10 w-48 h-48 sm:w-60 sm:h-60 object-contain drop-shadow-2xl"
+                    alt="Harta Karun">
 
-            <div x-show="phase === 'open' && justClaimed" style="display: none;"
-                class="reward-up relative z-10 mt-6 text-center">
-                <p class="text-amber-300 text-sm font-bold uppercase tracking-widest mb-3">Hadiah!</p>
-                <div class="flex items-center justify-center gap-3">
-                    <span
-                        class="bg-white/10 border border-white/20 text-white font-extrabold text-lg px-4 py-2 rounded-2xl">+5
-                        Energi</span>
-                    <span
-                        class="bg-white/10 border border-white/20 text-amber-300 font-extrabold text-lg px-4 py-2 rounded-2xl">+50
-                        XP</span>
+                <div x-show="phase === 'open' && justClaimed" style="display: none;"
+                    class="reward-up relative z-10 mt-6 text-center">
+                    <p class="text-amber-300 text-sm font-bold uppercase tracking-widest mb-3">Hadiah!</p>
+                    <div class="flex items-center justify-center gap-3">
+                        <span
+                            class="bg-white/10 border border-white/20 text-white font-extrabold text-lg px-4 py-2 rounded-2xl">+5
+                            Energi</span>
+                        <span
+                            class="bg-white/10 border border-white/20 text-amber-300 font-extrabold text-lg px-4 py-2 rounded-2xl">+50
+                            XP</span>
+                    </div>
                 </div>
+
+                <p x-show="phase === 'open'" style="display: none;"
+                    class="tap-hint relative z-10 mt-6 text-white/70 text-xs tracking-wide">Ketuk untuk lanjut</p>
             </div>
-
-            <p x-show="phase === 'open'" style="display: none;"
-                class="tap-hint relative z-10 mt-6 text-white/70 text-xs tracking-wide">Ketuk untuk lanjut</p>
         </div>
     </div>
-</div>
-@endif
+    @endif
+    @endforeach
+    </div>
+</section>
 @endforeach
 
-<!-- Modal Konfirmasi -->
 <div x-data="{ show: false, url: '' }" @open-lesson-modal.window="show = true; url = $event.detail.url" x-show="show"
     style="display: none;"
     class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
@@ -280,10 +321,6 @@ $unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600'
         </div>
     </div>
 </div>
-
-<svg class="lesson-path absolute inset-0 w-full h-full pointer-events-none" width="100%" height="100%"></svg>
-</div>
-@endforeach
 @endsection
 
 @push('scripts')
@@ -505,49 +542,13 @@ $unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600'
             top: 120px;
         }
     }
-</style>
 
-<script>
-    function drawLessonPaths() {
-        document.querySelectorAll('.lesson-path').forEach(function (svg) {
-            while (svg.firstChild) { svg.removeChild(svg.firstChild); }
-            svg.removeAttribute('viewBox');
-        });
+    @media (prefers-reduced-motion: reduce) {
 
-        document.querySelectorAll('.lesson-path').forEach(function (svg) {
-            const container = svg.parentElement;
-            const nodes = container.querySelectorAll('[data-node]');
-            const svgRect = svg.getBoundingClientRect();
-
-            if (nodes.length < 2 || svgRect.width === 0) return;
-
-            const ns = 'http://www.w3.org/2000/svg';
-            svg.setAttribute('viewBox', `0 0 ${svgRect.width} ${svgRect.height}`);
-
-            for (let i = 0; i < nodes.length - 1; i++) {
-                const a = nodes[i].getBoundingClientRect();
-                const b = nodes[i + 1].getBoundingClientRect();
-
-                const x1 = a.left + a.width / 2 - svgRect.left;
-                const y1 = a.bottom - svgRect.top;
-                const x2 = b.left + b.width / 2 - svgRect.left;
-                const y2 = b.top - svgRect.top;
-
-                const midY = (y1 + y2) / 2;
-                const color = nodes[i].dataset.done === '1' ? '#4caf50' : '#d1d5db';
-
-                const path = document.createElementNS(ns, 'path');
-                path.setAttribute('d', `M ${x1.toFixed(1)} ${y1.toFixed(1)} C ${x1.toFixed(1)} ${midY.toFixed(1)}, ${x2.toFixed(1)} ${midY.toFixed(1)}, ${x2.toFixed(1)} ${y2.toFixed(1)}`);
-                path.setAttribute('stroke', color);
-                path.setAttribute('stroke-width', '6');
-                path.setAttribute('fill', 'none');
-                path.setAttribute('stroke-linecap', 'round');
-                svg.appendChild(path);
-            }
-        });
+        .tap-hint,
+        .chest-rays {
+            animation: none;
+        }
     }
-
-    document.addEventListener('DOMContentLoaded', drawLessonPaths);
-    window.addEventListener('resize', drawLessonPaths);
-</script>
+</style>
 @endpush
