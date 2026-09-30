@@ -97,7 +97,7 @@ class LessonController extends Controller
                 $given = strtolower(trim((string) $answerGiven));
                 $isCorrect = $given !== '' && $given === $correct;
             } else {
-                $isCorrect = $question->options->contains(fn($option) => $option->id === (int) $answerGiven && $option->is_correct);
+                $isCorrect = $question->options->contains(fn ($option) => $option->id === (int) $answerGiven && $option->is_correct);
             }
 
             if ($isCorrect) {
@@ -167,10 +167,13 @@ class LessonController extends Controller
         );
 
         $xpEarned = 0;
-        if ($passed && !$alreadyCompleted) {
-            $xpEarned = $lesson->xp_reward;
-            $bonusXp = ($user->current_streak >= 2) ? 10 : 0;
-            $xpEarned += $bonusXp;
+        if ($passed && ! $alreadyCompleted) {
+            // Hanya beri XP jika skor sempurna 100%
+            if ($finalScore === 100) {
+                $xpEarned = $lesson->xp_reward;
+                $bonusXp = ($user->current_streak >= 2) ? 10 : 0;
+                $xpEarned += $bonusXp;
+            }
 
             if ($lesson->order % 5 === 0) {
                 UserReward::updateOrCreate(
