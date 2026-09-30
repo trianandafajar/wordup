@@ -17,9 +17,9 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="h-full bg-brand-50 font-sans text-gray-900 antialiased flex flex-col justify-between">
+<body class="h-full bg-white font-sans text-gray-900 antialiased flex flex-col justify-between">
     <header
-        class="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full max-w-md bg-white border-b border-gray-200 h-16 flex items-center justify-between px-3 sm:px-4 rounded-b-2xl">
+        class="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full max-w-md bg-white border border-gray-200 h-16 flex items-center justify-between px-3 sm:px-4 rounded-b-2xl">
         <a href="/" class="flex items-center gap-2">
             <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-8 w-auto" />
             <span class="font-dynapuff text-xl font-bold text-brand-600">WordUp</span>
