@@ -22,14 +22,22 @@ class LessonController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->lives <= 0) {
+        $lesson = Lesson::with('questions.options', 'questions.answer', 'unit.course.units.lessons')
+            ->findOrFail($lessonId);
+
+        $progress = UserLessonProgress::where('user_id', $user->id)
+            ->where('lesson_id', $lesson->id)
+            ->first();
+
+        $status = $progress?->status ?? LessonProgressStatusEnum::NotStarted;
+        $isReview = $status === LessonProgressStatusEnum::Completed;
+
+        if (! $isReview && $user->lives <= 0) {
             return redirect()->route('user.home')
                 ->with('error', 'Nyawa habis! Tunggu sampai nyawa terisi kembali.');
         }
 
-        $lesson = Lesson::with('questions.options', 'questions.answer', 'unit')->findOrFail($lessonId);
-
-        $courseProgress = UserCourseProgress::firstOrCreate(
+        UserCourseProgress::firstOrCreate(
             ['user_id' => $user->id, 'course_id' => $lesson->unit->course_id],
             [
                 'completed_lessons' => 0,
@@ -39,43 +47,29 @@ class LessonController extends Controller
             ]
         );
 
-        $progress = UserLessonProgress::where('user_id', $user->id)
-            ->where('lesson_id', $lesson->id)
-            ->first();
-
-        $status = $progress?->status ?? LessonProgressStatusEnum::NotStarted;
-
-        if ($status === LessonProgressStatusEnum::Completed) {
-            return redirect()->route('user.learn')
-                ->with('message', 'Lesson ini sudah diselesaikan');
-        }
-
-        $previousLesson = Lesson::where('unit_id', $lesson->unit_id)
-            ->where('order', $lesson->order - 1)
-            ->first();
-
-        if ($previousLesson) {
-            $prevProgress = UserLessonProgress::where('user_id', $user->id)
-                ->where('lesson_id', $previousLesson->id)
+        if (! $isReview) {
+            $previousLesson = Lesson::where('unit_id', $lesson->unit_id)
+                ->where('order', $lesson->order - 1)
                 ->first();
 
-            $isFirstLesson = Lesson::where('unit_id', $lesson->unit_id)
-                ->where('order', 1)
-                ->first()->id === $lesson->id;
+            if ($previousLesson) {
+                $prevProgress = UserLessonProgress::where('user_id', $user->id)
+                    ->where('lesson_id', $previousLesson->id)
+                    ->first();
 
-            if (! $isFirstLesson && ($prevProgress === null || $prevProgress->status !== LessonProgressStatusEnum::Completed)) {
-                return redirect()->route('user.learn')
-                    ->with('error', 'Selesaikan lesson sebelumnya terlebih dahulu');
+                if ($prevProgress === null || $prevProgress->status !== LessonProgressStatusEnum::Completed) {
+                    return redirect()->route('user.learn')
+                        ->with('error', 'Selesaikan lesson sebelumnya terlebih dahulu');
+                }
             }
         }
 
-        $questions = $lesson->questions;
-
         return view('livewire.user.lesson-practice', [
             'lesson' => $lesson,
-            'questions' => $questions,
+            'questions' => $lesson->questions,
             'status' => $status,
             'lives' => $user->lives,
+            'isReview' => $isReview,
         ]);
     }
 
@@ -103,7 +97,7 @@ class LessonController extends Controller
                 $given = strtolower(trim((string) $answerGiven));
                 $isCorrect = $given !== '' && $given === $correct;
             } else {
-                $isCorrect = $question->options->contains(fn ($option) => $option->id === (int) $answerGiven && $option->is_correct);
+                $isCorrect = $question->options->contains(fn($option) => $option->id === (int) $answerGiven && $option->is_correct);
             }
 
             if ($isCorrect) {
@@ -156,18 +150,24 @@ class LessonController extends Controller
             ->where('lesson_id', $lesson->id)
             ->first();
 
+        $alreadyCompleted = ($progress?->status === LessonProgressStatusEnum::Completed);
+
         UserLessonProgress::updateOrCreate(
             ['user_id' => $user->id, 'lesson_id' => $lesson->id],
             [
-                'status' => $passed ? LessonProgressStatusEnum::Completed : LessonProgressStatusEnum::InProgress,
+                'status' => ($alreadyCompleted || $passed)
+                    ? LessonProgressStatusEnum::Completed
+                    : LessonProgressStatusEnum::InProgress,
                 'best_score' => max($progress?->best_score ?? 0, $finalScore),
                 'attempts_count' => ($progress?->attempts_count ?? 0) + 1,
-                'completed_at' => $passed ? now() : null,
+                'completed_at' => $alreadyCompleted
+                    ? $progress->completed_at
+                    : ($passed ? now() : null),
             ]
         );
 
         $xpEarned = 0;
-        if ($passed) {
+        if ($passed && !$alreadyCompleted) {
             $xpEarned = $lesson->xp_reward;
             $bonusXp = ($user->current_streak >= 2) ? 10 : 0;
             $xpEarned += $bonusXp;
@@ -235,7 +235,7 @@ class LessonController extends Controller
                     : 0;
                 $courseProgress->save();
             }
-        } else {
+        } elseif (! $passed && ! $alreadyCompleted) {
             app(LifeService::class)->loseLife($user);
         }
 
@@ -244,6 +244,7 @@ class LessonController extends Controller
             'xp_earned' => $xpEarned,
             'bonus_xp' => $bonusXp ?? 0,
             'passed' => $passed,
+            'is_review' => $alreadyCompleted,
             'questions' => $answeredQuestions->map(function ($answer) {
                 $question = $answer['question'];
                 $correctText = match (true) {

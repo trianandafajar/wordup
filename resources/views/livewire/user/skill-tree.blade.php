@@ -45,9 +45,11 @@ $unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600'
     ml-0');
     $lockedText = $lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : 'Selesaikan lesson sebelumnya' ; @endphp <div
         class="{{ $mlClass }} mb-0" data-node="{{ $lesson['id'] }}" data-done="{{ $isCompleted ? '1' : '0' }}">
-        <button @if (!$isLocked) onclick="window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'"
+        <button @if ($isCompleted)
+            onclick="window.dispatchEvent(new CustomEvent('open-lesson-modal', { detail: { url: '{{ route('user.lesson.practice', $lesson['id']) }}' } }))"
+            @elseif (!$isLocked) onclick="window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'"
             @else disabled @endif
-            class="relative group focus:outline-none w-14 h-14 lg:w-16 lg:h-16 rounded-full border-4 transition-all duration-300 flex items-center justify-center shrink-0 z-10 {{ $isLocked ? 'bg-gray-200 border-gray-300 opacity-60 cursor-not-allowed' : ($isAvailable ? 'bg-brand-500 border-brand-400 shadow-lg shadow-brand-500/30 cursor-pointer hover:scale-105' : 'bg-brand-500 border-brand-600 shadow-lg shadow-brand-500/30 cursor-default') }}">
+            class="relative group focus:outline-none w-14 h-14 lg:w-16 lg:h-16 rounded-full border-4 transition-all duration-300 flex items-center justify-center shrink-0 z-10 {{ $isLocked ? 'bg-gray-200 border-gray-300 opacity-60 cursor-not-allowed' : ($isAvailable ? 'bg-brand-500 border-brand-400 shadow-lg shadow-brand-500/30 cursor-pointer hover:scale-105' : 'bg-brand-500 border-brand-600 shadow-lg shadow-brand-500/30 cursor-pointer hover:scale-105') }}">
             @if ($isLocked)
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
                 class="text-gray-400 fill-current">
@@ -266,6 +268,22 @@ $chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
 @endif
 @endforeach
 
+<!-- Modal Konfirmasi -->
+<div x-data="{ show: false, url: '' }" @open-lesson-modal.window="show = true; url = $event.detail.url" x-show="show"
+    style="display: none;"
+    class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+        <h3 class="text-lg font-bold mb-2">Review Pelajaran</h3>
+        <p class="text-gray-600 mb-6">Pelajaran ini sudah selesai. Kamu bisa mengulanginya, tapi tidak akan mendapat
+            tambahan XP atau energi.</p>
+        <div class="flex gap-3">
+            <button @click="show = false" class="flex-1 px-4 py-2 bg-gray-200 rounded-xl font-bold">Batal</button>
+            <button @click="window.location.href = url"
+                class="flex-1 px-4 py-2 bg-brand-500 text-white rounded-xl font-bold">Mulai Ulang</button>
+        </div>
+    </div>
+</div>
+
 <svg class="lesson-path absolute inset-0 w-full h-full pointer-events-none" width="100%" height="100%"></svg>
 </div>
 @endforeach
@@ -296,6 +314,7 @@ $chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
     .chest-grow {
         animation: chestGrow 0.7s cubic-bezier(.22, 1, .36, 1) forwards;
     }
+
     @keyframes chestShake {
 
         0%,
@@ -345,6 +364,7 @@ $chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
     .chest-pop {
         animation: chestPop 0.5s cubic-bezier(.22, 1, .36, 1) forwards;
     }
+
     @keyframes raysSpin {
         to {
             transform: translate(-50%, -50%) rotate(360deg);
@@ -364,6 +384,7 @@ $chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
         animation: raysSpin 10s linear infinite;
         pointer-events: none;
     }
+
     @keyframes burst {
         0% {
             transform: translate(-50%, -50%) scale(0.2);
@@ -387,6 +408,7 @@ $chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
         animation: burst 0.7s ease-out forwards;
         pointer-events: none;
     }
+
     @keyframes spark {
         0% {
             transform: translate(-50%, -50%) scale(0);
@@ -410,6 +432,7 @@ $chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
         box-shadow: 0 0 10px 3px rgba(253, 224, 71, .8);
         animation: spark 0.9s ease-out forwards;
     }
+
     @keyframes rewardUp {
         0% {
             opacity: 0;
@@ -446,6 +469,7 @@ $chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
     .tap-hint {
         animation: hintBlink 1.4s ease-in-out infinite;
     }
+
     @keyframes floatPoint {
         0% {
             transform: translate(calc(-50% + var(--dx)), 0) scale(0.3);
