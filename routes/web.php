@@ -29,8 +29,6 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware(['auth', 'onboarding'])->group(function () {
-    Route::get('/onboarding', [OnboardingController::class, 'create'])->name('user.onboarding');
-    Route::post('/onboarding', [OnboardingController::class, 'store']);
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
     Route::post('/reward/claim', function (Request $request) {
         $request->validate(['unit_id' => 'required', 'level_milestone' => 'required']);
@@ -51,6 +49,11 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
 
         return response()->json(['success' => true]);
     })->name('user.reward.claim');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/onboarding', [OnboardingController::class, 'create'])->name('user.onboarding');
+    Route::post('/onboarding', [OnboardingController::class, 'store']);
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('user.home')->middleware(['auth', 'onboarding']);
