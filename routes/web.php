@@ -10,6 +10,8 @@ use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SkillTreeController;
+use App\Models\UserReward;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -26,10 +28,29 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'onboarding'])->group(function () {
     Route::get('/onboarding', [OnboardingController::class, 'create'])->name('user.onboarding');
     Route::post('/onboarding', [OnboardingController::class, 'store']);
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    Route::post('/reward/claim', function (Request $request) {
+        $request->validate(['unit_id' => 'required', 'level_milestone' => 'required']);
+        $reward = UserReward::firstOrCreate(
+            [
+                'user_id' => auth()->id(),
+                'unit_id' => $request->unit_id,
+                'level_milestone' => $request->level_milestone,
+            ],
+            ['is_opened' => false]
+        );
+
+        if (!$reward->is_opened) {
+            $reward->update(['is_opened' => true]);
+            auth()->user()->increment('energy', 5);
+            auth()->user()->increment('xp_total', 50);
+        }
+
+        return response()->json(['success' => true]);
+    })->name('user.reward.claim');
 });
 
 Route::get('/', [HomeController::class, 'index'])->name('user.home')->middleware(['auth', 'onboarding']);

@@ -10,473 +10,244 @@ use App\Models\QuestionAnswer;
 use App\Models\QuestionOption;
 use App\Models\Unit;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class EnglishContentSeeder extends Seeder
 {
     public function run(): void
     {
-        // Course::query()->delete();
-
-        $course = Course::query()->firstOrCreate(
-            ['title' => 'Complete English Mastery'],
-            [
-                'description' => 'Master English from absolute beginner (A1) to expert (C2). Structured curriculum covering grammar, vocabulary, conversation, and professional communication.',
-                'language_target' => 'English',
-                'level' => 'beginner',
-                'is_active' => true,
-            ]
-        );
-
-        $units = $this->getUnits();
-
-        foreach ($units as $unitIndex => $unitData) {
-            $unit = Unit::query()->firstOrCreate(
-                ['course_id' => $course->id, 'order' => $unitIndex + 1],
-                ['title' => $unitData['title']]
+        DB::transaction(function () {
+            $course = Course::query()->updateOrCreate(
+                ['title' => 'Complete English Mastery'],
+                [
+                    'description' => 'Master English from absolute beginner (A1) to expert (C2). Structured curriculum covering grammar, vocabulary, conversation, and professional communication.',
+                    'language_target' => 'English',
+                    'level' => 'beginner',
+                    'is_active' => true,
+                ]
             );
 
-            foreach ($unitData['lessons'] as $lessonIndex => $lessonData) {
-                $lesson = Lesson::query()->updateOrCreate(
-                    ['unit_id' => $unit->id, 'order' => $lessonIndex + 1],
-                    [
-                        'title' => $lessonData['title'],
-                        'type' => $lessonData['type'] ?? 'reading',
-                        'xp_reward' => $lessonData['xp'] ?? 20,
-                        'explanation' => $lessonData['explanation'],
-                    ]
+            foreach ($this->getUnits() as $unitIndex => $unitData) {
+                $unit = Unit::query()->updateOrCreate(
+                    ['course_id' => $course->id, 'order' => $unitIndex + 1],
+                    ['title' => $unitData['title']]
                 );
 
-                foreach ($lessonData['questions'] as $questionIndex => $questionData) {
-                    $question = Question::query()->updateOrCreate(
-                        ['lesson_id' => $lesson->id, 'order' => $questionIndex + 1],
+                foreach ($unitData['lessons'] as $lessonIndex => $lessonData) {
+                    $lesson = Lesson::query()->updateOrCreate(
+                        ['unit_id' => $unit->id, 'order' => $lessonIndex + 1],
                         [
-                            'type' => $questionData['type'],
-                            'difficulty_level' => $questionData['difficulty'],
-                            'question_text' => $questionData['text'],
+                            'title' => $lessonData['title'],
+                            'type' => $lessonData['type'] ?? 'reading',
+                            'xp_reward' => $lessonData['xp'] ?? 20,
+                            'explanation' => $lessonData['explanation'],
                         ]
                     );
 
-                    if ($questionData['type'] === QuestionTypeEnum::FillInTheBlank->value) {
-                        QuestionAnswer::query()->updateOrCreate(
-                            ['question_id' => $question->id],
-                            ['correct_text' => $questionData['answer']]
+                    foreach ($lessonData['questions'] as $questionIndex => $q) {
+                        $question = Question::query()->updateOrCreate(
+                            ['lesson_id' => $lesson->id, 'order' => $questionIndex + 1],
+                            [
+                                'type' => $q['type'],
+                                'difficulty_level' => $q['difficulty'],
+                                'question_text' => $q['text'],
+                            ]
                         );
-                    } else {
-                        QuestionOption::where('question_id', $question->id)->delete();
-                        foreach ($questionData['options'] as $opt) {
-                            QuestionOption::query()->create([
-                                'question_id' => $question->id,
-                                'option_text' => $opt['text'],
-                                'is_correct' => $opt['correct'],
-                            ]);
-                        }
+
+                        $this->syncAnswers($question, $q);
                     }
+
+                    Question::where('lesson_id', $lesson->id)
+                        ->where('order', '>', count($lessonData['questions']))
+                        ->delete();
                 }
             }
+        });
+    }
+
+    private function syncAnswers(Question $question, array $q): void
+    {
+        if ($q['type'] === QuestionTypeEnum::FillInTheBlank->value) {
+            QuestionOption::where('question_id', $question->id)->delete();
+            QuestionAnswer::query()->updateOrCreate(
+                ['question_id' => $question->id],
+                ['correct_text' => $q['answer']]
+            );
+
+            return;
         }
+
+        QuestionAnswer::where('question_id', $question->id)->delete();
+        QuestionOption::where('question_id', $question->id)->delete();
+
+        foreach ($q['options'] as $opt) {
+            QuestionOption::query()->create([
+                'question_id' => $question->id,
+                'option_text' => $opt['text'],
+                'is_correct' => $opt['correct'],
+            ]);
+        }
+    }
+
+    private function mc(string $text, array $options, string $correct, string $difficulty = 'beginner'): array
+    {
+        return [
+            'type' => 'multiple_choice',
+            'difficulty' => $difficulty,
+            'text' => $text,
+            'options' => array_map(
+                fn ($o) => ['text' => $o, 'correct' => $o === $correct],
+                $options
+            ),
+        ];
+    }
+
+    private function fib(string $text, string $answer, string $difficulty = 'beginner'): array
+    {
+        return [
+            'type' => QuestionTypeEnum::FillInTheBlank->value,
+            'difficulty' => $difficulty,
+            'text' => $text,
+            'answer' => $answer,
+        ];
+    }
+
+    private function lesson(string $title, string $explanation, array $questions, int $xp = 20): array
+    {
+        return [
+            'title' => $title,
+            'type' => 'reading',
+            'xp' => $xp,
+            'explanation' => $explanation,
+            'questions' => $questions,
+        ];
     }
 
     private function getUnits(): array
     {
         return [
             [
-                'title' => 'Unit 1: Foundations & Greetings',
+                'title' => 'Unit 1: Introduction to English',
                 'lessons' => [
-                    [
-                        'title' => 'Saying Hello',
-                        'type' => 'reading',
-                        'xp' => 20,
-                        'explanation' => <<<'HTML'
-    <h3>Greetings in English</h3>
+                    $this->lesson('Greetings', '<h3>Greetings</h3><p><b>Hello / Hi</b> adalah sapaan umum.</p><ul><li>Good morning (pagi)</li><li>Good afternoon (siang/sore)</li><li>Good evening (malam)</li><li>Good night (selamat tidur)</li><li>Goodbye / See you (perpisahan)</li></ul>', [
+                        $this->mc('Which greeting is used in the morning?', ['Good night', 'Good morning', 'Good evening', 'Goodbye'], 'Good morning'),
+                        $this->mc('What do you say when leaving?', ['Hello', 'Good morning', 'Goodbye', 'Nice to meet you'], 'Goodbye'),
+                        $this->mc('Which greeting is used before going to bed?', ['Good afternoon', 'Good night', 'Good morning', 'Hello'], 'Good night'),
+                        $this->fib('Good ___, Ms. Rina! (sapaan sore hari)', 'afternoon'),
+                        $this->fib('Good ___, everyone! (sapaan malam hari saat bertemu)', 'evening'),
+                    ]),
 
-    <p>
-        There are many ways to say hello in English depending on the time of day and formality:
-    </p>
+                    $this->lesson('The Alphabet', '<h3>The Alphabet</h3><p>Ada 26 huruf: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z.</p><p>Vokal: <b>A, E, I, O, U</b>. Sisanya adalah konsonan.</p>', [
+                        $this->mc('How many letters are in the English alphabet?', ['24', '25', '26', '28'], '26'),
+                        $this->mc('Which one is a vowel?', ['B', 'K', 'E', 'T'], 'E'),
+                        $this->mc('Which one is a consonant?', ['A', 'O', 'U', 'M'], 'M'),
+                        $this->fib('The letter after C is ___.', 'D'),
+                        $this->fib('The first letter of the alphabet is ___.', 'A'),
+                    ]),
 
-    <ul>
-        <li><strong>Hello</strong> - universal, works anytime</li>
-        <li><strong>Hi</strong> - informal and friendly</li>
-        <li><strong>Good morning</strong> - before noon</li>
-        <li><strong>Good afternoon</strong> - noon to evening</li>
-        <li><strong>Good evening</strong> - after sunset</li>
-    </ul>
-    HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'Which greeting is the most formal?', 'options' => [['text' => 'Hey', 'correct' => false], ['text' => 'Yo', 'correct' => false], ['text' => 'Good morning', 'correct' => true], ['text' => 'Sup', 'correct' => false]]],
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'When do you say "Good evening"?', 'options' => [['text' => 'Before noon', 'correct' => false], ['text' => 'After sunset', 'correct' => true], ['text' => 'At midnight', 'correct' => false], ['text' => 'In the morning', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "Good _____, how are you today?" (used before noon)', 'answer' => 'morning'],
-                        ],
-                    ],
-                    [
-                        'title' => 'Introducing Yourself',
-                        'type' => 'reading',
-                        'xp' => 20,
-                        'explanation' => <<<'HTML'
-    <h3>Talking About Yourself</h3>
+                    $this->lesson('Numbers 1-20', '<h3>Numbers 1-20</h3><p>one, two, three, four, five, six, seven, eight, nine, ten, eleven, twelve, thirteen, fourteen, fifteen, sixteen, seventeen, eighteen, nineteen, twenty.</p>', [
+                        $this->mc('What is "7" in English?', ['Six', 'Seven', 'Eight', 'Seventeen'], 'Seven'),
+                        $this->mc('Which number is "fifteen"?', ['5', '50', '15', '13'], '15'),
+                        $this->mc('What is "twelve" in numbers?', ['2', '20', '12', '21'], '12'),
+                        $this->fib('Ten plus ten is ___.', 'twenty'),
+                        $this->fib('Five plus four is ___.', 'nine'),
+                    ]),
 
-    <p>When meeting someone new:</p>
+                    $this->lesson('Personal Pronouns', '<h3>Personal Pronouns</h3><ul><li>I (saya)</li><li>You (kamu/kalian)</li><li>He (dia laki-laki)</li><li>She (dia perempuan)</li><li>It (benda/hewan)</li><li>We (kami/kita)</li><li>They (mereka)</li></ul>', [
+                        $this->mc('Which pronoun is used for a woman?', ['He', 'She', 'It', 'They'], 'She'),
+                        $this->mc('"Kami" in English is...', ['They', 'You', 'We', 'I'], 'We'),
+                        $this->mc('Which pronoun is used for a cat?', ['He', 'She', 'It', 'We'], 'It'),
+                        $this->fib('Budi is my brother. ___ is a student. (He/She)', 'He'),
+                        $this->fib('Rina and Dita are my friends. ___ are kind. (They/We)', 'They'),
+                    ]),
 
-    <ul>
-        <li><strong>My name is...</strong> / <strong>I'm...</strong></li>
-        <li><strong>I'm from...</strong> (country/city)</li>
-        <li><strong>I live in...</strong></li>
-        <li><strong>I'm a student / worker</strong></li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'Which phrase introduces your name?', 'options' => [['text' => 'I like', 'correct' => false], ['text' => 'My name is', 'correct' => true], ['text' => 'I go', 'correct' => false], ['text' => 'I have', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "I _____ from Japan."', 'answer' => 'am'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => '"I live in Jakarta" tells people...', 'options' => [['text' => 'Your job', 'correct' => false], ['text' => 'Your city', 'correct' => true], ['text' => 'Your age', 'correct' => false], ['text' => 'Your hobby', 'correct' => false]]],
-                        ],
-                    ],
-                    [
-                        'title' => 'Saying Goodbye',
-                        'type' => 'reading',
-                        'xp' => 20,
-                        'explanation' => <<<'HTML'
-    <h3>Ways to Say Goodbye</h3>
+                    $this->lesson('Verb "To Be": am, is, are', '<h3>To Be</h3><ul><li>I <b>am</b></li><li>He / She / It <b>is</b></li><li>You / We / They <b>are</b></li></ul><p>Contoh: I am a student. She is a teacher. They are friends.</p>', [
+                        $this->mc('I ___ a student.', ['is', 'are', 'am', 'be'], 'am'),
+                        $this->mc('They ___ from Indonesia.', ['is', 'are', 'am', 'was'], 'are'),
+                        $this->mc('He ___ my father.', ['am', 'are', 'is', 'be'], 'is'),
+                        $this->fib('She ___ a doctor.', 'is'),
+                        $this->fib('We ___ happy today.', 'are'),
+                    ]),
 
-    <ul>
-        <li><strong>Goodbye</strong> - formal</li>
-        <li><strong>Bye</strong> - informal</li>
-        <li><strong>See you later</strong> - casual</li>
-        <li><strong>Have a nice day</strong> - polite</li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'Which goodbye is the most formal?', 'options' => [['text' => 'Bye', 'correct' => false], ['text' => 'See ya', 'correct' => false], ['text' => 'Goodbye', 'correct' => true], ['text' => 'Later', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "See you _____!" (meaning you will meet tomorrow)', 'answer' => 'tomorrow'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => '"Take care" is used to...', 'options' => [['text' => 'Start a conversation', 'correct' => false], ['text' => 'Say goodbye warmly', 'correct' => true], ['text' => 'Ask for help', 'correct' => false], ['text' => 'Introduce yourself', 'correct' => false]]],
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'title' => 'Unit 2: Daily Life & Routines',
-                'lessons' => [
-                    [
-                        'title' => 'Morning Routine',
-                        'type' => 'reading',
-                        'xp' => 20,
-                        'explanation' => <<<'HTML'
-    <h3>Morning Activities</h3>
-    <ul>
-        <li><strong>wake up</strong> - stop sleeping</li>
-        <li><strong>take a shower</strong> - wash body</li>
-        <li><strong>brush teeth</strong> - clean teeth</li>
-        <li><strong>have breakfast</strong> - eat morning meal</li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'What do you do right after you wake up?', 'options' => [['text' => 'Get up from bed', 'correct' => true], ['text' => 'Have dinner', 'correct' => false], ['text' => 'Go to sleep', 'correct' => false], ['text' => 'Watch TV', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "I _____ my teeth every morning."', 'answer' => 'brush'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => '"Get dressed" means...', 'options' => [['text' => 'Take off clothes', 'correct' => false], ['text' => 'Put on clothes', 'correct' => true], ['text' => 'Buy clothes', 'correct' => false], ['text' => 'Wash clothes', 'correct' => false]]],
-                        ],
-                    ],
-                    [
-                        'title' => 'Work & School',
-                        'type' => 'reading',
-                        'xp' => 20,
-                        'explanation' => <<<'HTML'
-    <h3>Work and School</h3>
-    <ul>
-        <li><strong>go to work/school</strong></li>
-        <li><strong>have a meeting</strong></li>
-        <li><strong>finish work</strong></li>
-        <li><strong>come home</strong></li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'What does "finish work" mean?', 'options' => [['text' => 'Start working', 'correct' => false], ['text' => 'Stop working', 'correct' => true], ['text' => 'Go to work', 'correct' => false], ['text' => 'Take a break', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "I _____ to school every day."', 'answer' => 'go'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'When you "have a meeting", you...', 'options' => [['text' => 'Eat lunch', 'correct' => false], ['text' => 'Sleep', 'correct' => false], ['text' => 'Discuss things with colleagues', 'correct' => true], ['text' => 'Go shopping', 'correct' => false]]],
-                        ],
-                    ],
-                    [
-                        'title' => 'Evening & Bedtime',
-                        'type' => 'reading',
-                        'xp' => 20,
-                        'explanation' => <<<'HTML'
-    <h3>Evening Activities</h3>
-    <ul>
-        <li><strong>have dinner</strong></li>
-        <li><strong>watch TV</strong></li>
-        <li><strong>go to bed</strong></li>
-        <li><strong>fall asleep</strong></li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'What meal do you eat in the evening?', 'options' => [['text' => 'Breakfast', 'correct' => false], ['text' => 'Lunch', 'correct' => false], ['text' => 'Dinner', 'correct' => true], ['text' => 'Snack', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "I _____ to bed at 10 PM."', 'answer' => 'go'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => '"Fall asleep" means...', 'options' => [['text' => 'Wake up', 'correct' => false], ['text' => 'Start sleeping', 'correct' => true], ['text' => 'Get up from bed', 'correct' => false], ['text' => 'Have a dream', 'correct' => false]]],
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'title' => 'Unit 3: Food & Shopping',
-                'lessons' => [
-                    [
-                        'title' => 'Common Foods',
-                        'type' => 'reading',
-                        'xp' => 20,
-                        'explanation' => <<<'HTML'
-    <h3>Food Vocabulary</h3>
-    <ul>
-        <li><strong>Fruits:</strong> apple, banana, orange</li>
-        <li><strong>Vegetables:</strong> tomato, potato, carrot</li>
-        <li><strong>Grains:</strong> rice, bread, pasta</li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'Which is a fruit?', 'options' => [['text' => 'Potato', 'correct' => false], ['text' => 'Carrot', 'correct' => false], ['text' => 'Banana', 'correct' => true], ['text' => 'Onion', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "I would like some _____." (a grain, white and fluffy)', 'answer' => 'rice'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'Which is a vegetable?', 'options' => [['text' => 'Apple', 'correct' => false], ['text' => 'Chicken', 'correct' => false], ['text' => 'Broccoli', 'correct' => true], ['text' => 'Bread', 'correct' => false]]],
-                        ],
-                    ],
-                    [
-                        'title' => 'Ordering Food',
-                        'type' => 'reading',
-                        'xp' => 20,
-                        'explanation' => <<<'HTML'
-    <h3>At a Restaurant</h3>
-    <ul>
-        <li><strong>I would like...</strong></li>
-        <li><strong>Can I have...?</strong></li>
-        <li><strong>Could I get the bill, please?</strong></li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'How do you politely order food?', 'options' => [['text' => 'Give me food!', 'correct' => false], ['text' => 'I would like a chicken salad.', 'correct' => true], ['text' => 'Food now!', 'correct' => false], ['text' => 'Want chicken.', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "Could I _____ the bill, please?"', 'answer' => 'get'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => '"What do you recommend?" is used to...', 'options' => [['text' => 'Order food', 'correct' => false], ['text' => 'Ask for suggestions', 'correct' => true], ['text' => 'Pay the bill', 'correct' => false], ['text' => 'Leave the restaurant', 'correct' => false]]],
-                        ],
-                    ],
-                    [
-                        'title' => 'Prices & Money',
-                        'type' => 'reading',
-                        'xp' => 20,
-                        'explanation' => <<<'HTML'
-    <h3>Prices</h3>
-    <ul>
-        <li><strong>How much is this?</strong></li>
-        <li><strong>It costs...</strong></li>
-        <li><strong>Can I pay by card?</strong></li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => 'How do you ask about price?', 'options' => [['text' => 'How many is this?', 'correct' => false], ['text' => 'How much is this?', 'correct' => true], ['text' => 'How old is this?', 'correct' => false], ['text' => 'How long is this?', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'beginner', 'text' => 'Complete: "Can I pay _____ card?"', 'answer' => 'by'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'beginner', 'text' => '"I will take it" means...', 'options' => [['text' => 'I want to buy it', 'correct' => true], ['text' => 'I want to return it', 'correct' => false], ['text' => 'I don\'t want it', 'correct' => false], ['text' => 'It is too expensive', 'correct' => false]]],
-                        ],
-                    ],
-                ],
-            ],
+                    $this->lesson('Introducing Yourself', '<h3>Introducing Yourself</h3><ul><li>My name is Rina.</li><li>I am 20 years old.</li><li>I am from Jakarta.</li><li>Nice to meet you.</li></ul>', [
+                        $this->mc('Which sentence introduces your name?', ['I am fine.', 'My name is Rina.', 'See you later.', 'Thank you.'], 'My name is Rina.'),
+                        $this->mc('The reply to "Nice to meet you" is...', ['Nice to meet you too.', 'Good night.', 'I am 20.', 'Sorry.'], 'Nice to meet you too.'),
+                        $this->mc('Which sentence tells your age?', ['I am from Bali.', 'I am 20 years old.', 'I am a teacher.', 'I am happy.'], 'I am 20 years old.'),
+                        $this->fib('I ___ from Jakarta.', 'am'),
+                        $this->fib('My ___ is Budi. (nama)', 'name'),
+                    ]),
 
-            [
-                'title' => 'Unit 4: Travel & Directions',
-                'lessons' => [
-                    [
-                        'title' => 'At the Airport',
-                        'type' => 'reading',
-                        'xp' => 30,
-                        'explanation' => <<<'HTML'
-    <h3>Airport Vocabulary</h3>
-    <ul>
-        <li><strong>Boarding pass</strong> ticket to board</li>
-        <li><strong>Gate</strong> where you board</li>
-        <li><strong>Luggage</strong> bags</li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => 'Where do you board the plane?', 'options' => [['text' => 'Customs', 'correct' => false], ['text' => 'Check-in counter', 'correct' => false], ['text' => 'Gate', 'correct' => true], ['text' => 'Lounge', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'intermediate', 'text' => 'Complete: "I need to check in my _____ before the flight."', 'answer' => 'luggage'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => 'A layover means...', 'options' => [['text' => 'Flight cancelled', 'correct' => false], ['text' => 'A stop between two flights', 'correct' => true], ['text' => 'Lost luggage', 'correct' => false], ['text' => 'Missed flight', 'correct' => false]]],
-                        ],
-                    ],
-                    [
-                        'title' => 'Asking Directions',
-                        'type' => 'reading',
-                        'xp' => 30,
-                        'explanation' => <<<'HTML'
-    <h3>Directions</h3>
-    <ul>
-        <li><strong>Turn left / right</strong></li>
-        <li><strong>Go straight</strong></li>
-        <li><strong>Across from / next to</strong></li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => '"Go straight" means...', 'options' => [['text' => 'Turn around', 'correct' => false], ['text' => 'Continue forward without turning', 'correct' => true], ['text' => 'Stop walking', 'correct' => false], ['text' => 'Walk backward', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'intermediate', 'text' => 'Complete: "Turn _____ at the next intersection."', 'answer' => 'left'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => '"Across from the bank" means...', 'options' => [['text' => 'Inside the bank', 'correct' => false], ['text' => 'On the opposite side of the street', 'correct' => true], ['text' => 'Behind the bank', 'correct' => false], ['text' => 'Same side as the bank', 'correct' => false]]],
-                        ],
-                    ],
-                    [
-                        'title' => 'Hotel Booking',
-                        'type' => 'reading',
-                        'xp' => 30,
-                        'explanation' => <<<'HTML'
-    <h3>Hotel Stay</h3>
-    <ul>
-        <li><strong>Reservation</strong> booking</li>
-        <li><strong>Checkout</strong> leaving time</li>
-        <li><strong>Wake-up call</strong> morning phone call</li>
-    </ul>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => 'When you arrive at a hotel, you say...', 'options' => [['text' => 'I have a reservation under Smith.', 'correct' => true], ['text' => 'I want to leave now.', 'correct' => false], ['text' => 'Where is the airport?', 'correct' => false], ['text' => 'Give me food.', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'intermediate', 'text' => 'Complete: "What time is _____?" (when you leave)', 'answer' => 'checkout'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => 'A wake-up call is...', 'options' => [['text' => 'Friend call', 'correct' => false], ['text' => 'Front desk call to wake you up', 'correct' => true], ['text' => 'Check out call', 'correct' => false], ['text' => 'Room service call', 'correct' => false]]],
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'title' => 'Unit 5: Past & Future',
-                'lessons' => [
-                    [
-                        'title' => 'Past Simple Regular & Irregular',
-                        'type' => 'reading',
-                        'xp' => 30,
-                        'explanation' => <<<'HTML'
-    <h3>Past Tense</h3>
-    <p>Regular verbs add -ed. Irregular verbs change form (go -> went, eat -> ate).</p>
-HTML,
-                        'questions' => [
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'intermediate', 'text' => 'Complete: "I _____ to the park yesterday." (go -> past)', 'answer' => 'went'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => 'What is the past tense of "eat"?', 'options' => [['text' => 'Eated', 'correct' => false], ['text' => 'Eat', 'correct' => false], ['text' => 'Ate', 'correct' => true], ['text' => 'Eaten', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'intermediate', 'text' => 'Complete: "We _____ a movie last night." (see -> past)', 'answer' => 'saw'],
-                        ],
-                    ],
-                    [
-                        'title' => 'Going to Future',
-                        'type' => 'reading',
-                        'xp' => 30,
-                        'explanation' => <<<'HTML'
-    <h3>Future Plans</h3>
-    <p>Use "am/is/are + going to + verb" for planned future actions.</p>
-HTML,
-                        'questions' => [
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'intermediate', 'text' => 'Complete: "I _____ going to travel next summer."', 'answer' => 'am'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => '"We are going to move" means...', 'options' => [['text' => 'We moved already', 'correct' => false], ['text' => 'We plan to move in the future', 'correct' => true], ['text' => 'We don\'t want to move', 'correct' => false], ['text' => 'We forgot to move', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'intermediate', 'text' => 'Complete: "She _____ going to start a new course."', 'answer' => 'is'],
-                        ],
-                    ],
-                    [
-                        'title' => 'Will for Predictions',
-                        'type' => 'reading',
-                        'xp' => 30,
-                        'explanation' => <<<'HTML'
-    <h3>Will vs Going to</h3>
-    <p>Use "will" for quick decisions and predictions.</p>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => 'Which is a prediction?', 'options' => [['text' => 'I am going to cook dinner.', 'correct' => false], ['text' => 'It will rain tomorrow.', 'correct' => true], ['text' => 'I will help you right now.', 'correct' => false], ['text' => 'We are going to the park.', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'intermediate', 'text' => 'Complete: "I think it _____ be a sunny day."', 'answer' => 'will'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'intermediate', 'text' => '"I will help you" is a...', 'options' => [['text' => 'Planned action', 'correct' => false], ['text' => 'Spontaneous decision', 'correct' => true], ['text' => 'Past event', 'correct' => false], ['text' => 'Question', 'correct' => false]]],
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'title' => 'Unit 6: Professional Emails',
-                'lessons' => [
-                    [
-                        'title' => 'Email Structure',
-                        'type' => 'reading',
-                        'xp' => 40,
-                        'explanation' => <<<'HTML'
-    <h3>Professional Email</h3>
-    <p>Subject line, clear greeting, purpose in first paragraph, professional sign-off.</p>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'What should a good email subject line be?', 'options' => [['text' => 'Very long and detailed', 'correct' => false], ['text' => 'Short, clear, and specific', 'correct' => true], ['text' => 'Left blank', 'correct' => false], ['text' => 'Vague like "Question"', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'advanced', 'text' => 'Complete: "Best _____," (common email sign-off)', 'answer' => 'regards'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'The first paragraph of a professional email should...', 'options' => [['text' => 'Tell a story', 'correct' => false], ['text' => 'State your purpose immediately', 'correct' => true], ['text' => 'Ask personal questions', 'correct' => false], ['text' => 'Complain about something', 'correct' => false]]],
-                        ],
-                    ],
-                    [
-                        'title' => 'Formal vs Informal Tone',
-                        'type' => 'reading',
-                        'xp' => 40,
-                        'explanation' => <<<'HTML'
-    <h3>Tone in Emails</h3>
-    <p>Use formal language for new clients and managers. Use "I wanted to follow up" instead of "Just checking in".</p>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'Which is more formal?', 'options' => [['text' => 'Hey, what is up?', 'correct' => false], ['text' => 'I wanted to follow up on our discussion.', 'correct' => true], ['text' => 'Yo, did you see my email?', 'correct' => false], ['text' => 'LOL, that is funny!', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'advanced', 'text' => 'Complete: "Please _____ me know if you have any questions."', 'answer' => 'let'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'When should you use a formal tone?', 'options' => [['text' => 'Emailing a close friend', 'correct' => false], ['text' => 'Emailing a new client', 'correct' => true], ['text' => 'Sending a meme', 'correct' => false], ['text' => 'Texting your colleague', 'correct' => false]]],
-                        ],
-                    ],
-                ],
-            ],
-            [
-                'title' => 'Unit 7: Conditionals & Hypothesis',
-                'lessons' => [
-                    [
-                        'title' => 'First Conditional',
-                        'type' => 'reading',
-                        'xp' => 40,
-                        'explanation' => <<<'HTML'
-    <h3>First Conditional</h3>
-    <p>If + present simple, will + base verb (real future possibility).</p>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'Which is correct for first conditional?', 'options' => [['text' => 'If it will rain, I stay home.', 'correct' => false], ['text' => 'If it rains, I will stay home.', 'correct' => true], ['text' => 'If it rained, I will stay home.', 'correct' => false], ['text' => 'If it rains, I stay home.', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'advanced', 'text' => 'Complete: "If you _____ hard, you will pass the exam."', 'answer' => 'study'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'After "if", we use...', 'options' => [['text' => 'Will + verb', 'correct' => false], ['text' => 'Present simple', 'correct' => true], ['text' => 'Past tense', 'correct' => false], ['text' => 'Future tense', 'correct' => false]]],
-                        ],
-                    ],
-                    [
-                        'title' => 'Second Conditional',
-                        'type' => 'reading',
-                        'xp' => 40,
-                        'explanation' => <<<'HTML'
-    <h3>Second Conditional</h3>
-    <p>If + past simple, would + base verb (unreal/imaginary present).</p>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'Second conditional uses "would" because...', 'options' => [['text' => 'It is a real situation', 'correct' => false], ['text' => 'It is an imaginary situation', 'correct' => true], ['text' => 'It happened in the past', 'correct' => false], ['text' => 'It is a question', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'advanced', 'text' => 'Complete: "If I _____ rich, I would buy a house."', 'answer' => 'were'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'Which is a second conditional sentence?', 'options' => [['text' => 'If it rains, I will stay home.', 'correct' => false], ['text' => 'If I were a bird, I would fly.', 'correct' => true], ['text' => 'If I studied, I passed.', 'correct' => false], ['text' => 'If I had studied, I would have passed.', 'correct' => false]]],
-                        ],
-                    ],
-                ],
-            ],
+                    $this->lesson('Countries and Nationalities', '<h3>Countries and Nationalities</h3><ul><li>Indonesia: Indonesian</li><li>Japan: Japanese</li><li>America: American</li><li>England: English</li><li>China: Chinese</li></ul>', [
+                        $this->mc('A person from Japan is...', ['Japan', 'Japanese', 'Japanian', 'Japaner'], 'Japanese'),
+                        $this->mc('"Indonesian" is a...', ['Country', 'Nationality', 'City', 'Color'], 'Nationality'),
+                        $this->mc('A person from China is...', ['Chinaese', 'Chinese', 'Chinan', 'Chinian'], 'Chinese'),
+                        $this->fib('She is from America. She is ___.', 'American'),
+                        $this->fib('He is from Indonesia. He is ___.', 'Indonesian'),
+                    ]),
 
-            [
-                'title' => 'Unit 8: Academic & Legal English',
-                'lessons' => [
-                    [
-                        'title' => 'Academic Essay Structure',
-                        'type' => 'reading',
-                        'xp' => 50,
-                        'explanation' => <<<'HTML'
-    <h3>Academic Writing</h3>
-    <p>Introduction with thesis statement, body paragraphs with evidence, conclusion summarizing findings.</p>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'A "thesis statement" is...', 'options' => [['text' => 'The conclusion of an essay', 'correct' => false], ['text' => 'The main argument or claim of the essay', 'correct' => true], ['text' => 'A type of introduction', 'correct' => false], ['text' => 'A bibliography entry', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'advanced', 'text' => 'Complete: "This essay _____ that technology has changed education."', 'answer' => 'argues'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'The purpose of a conclusion is to...', 'options' => [['text' => 'Introduce new arguments', 'correct' => false], ['text' => 'Restate the thesis and summarize key points', 'correct' => true], ['text' => 'List sources', 'correct' => false], ['text' => 'Ask questions', 'correct' => false]]],
-                        ],
-                    ],
-                    [
-                        'title' => 'Contract Terminology',
-                        'type' => 'reading',
-                        'xp' => 50,
-                        'explanation' => <<<'HTML'
-    <h3>Legal English</h3>
-    <p>Key terms: "hereby", "shall" (obligation), "breach of contract", "terms and conditions".</p>
-HTML,
-                        'questions' => [
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => 'In legal English, "shall" means...', 'options' => [['text' => 'Maybe', 'correct' => false], ['text' => 'Must (obligation)', 'correct' => true], ['text' => 'Should', 'correct' => false], ['text' => 'Could', 'correct' => false]]],
-                            ['type' => 'fill_in_the_blank', 'difficulty' => 'advanced', 'text' => 'Complete: "The parties _____ agree to the terms."', 'answer' => 'hereby'],
-                            ['type' => 'multiple_choice', 'difficulty' => 'advanced', 'text' => '"This agreement is binding" means...', 'options' => [['text' => 'It is optional', 'correct' => false], ['text' => 'Both parties must follow it', 'correct' => true], ['text' => 'It can be ignored', 'correct' => false], ['text' => 'It is a suggestion', 'correct' => false]]],
-                        ],
-                    ],
+                    $this->lesson('Family Members', '<h3>Family</h3><ul><li>father, mother</li><li>brother, sister</li><li>grandfather, grandmother</li><li>uncle, aunt</li><li>parents (ayah dan ibu)</li></ul>', [
+                        $this->mc('Your father\'s brother is your...', ['Uncle', 'Cousin', 'Aunt', 'Grandfather'], 'Uncle'),
+                        $this->mc('"Nenek" in English is...', ['Grandfather', 'Grandmother', 'Aunt', 'Sister'], 'Grandmother'),
+                        $this->mc('Your mother\'s sister is your...', ['Aunt', 'Uncle', 'Sister', 'Mother'], 'Aunt'),
+                        $this->fib('My mother and father are my ___.', 'parents'),
+                        $this->fib('My father\'s father is my ___.', 'grandfather'),
+                    ]),
+
+                    $this->lesson('Colors', '<h3>Colors</h3><p>red, blue, green, yellow, black, white, orange, purple, pink, brown.</p>', [
+                        $this->mc('The sky is usually...', ['Green', 'Blue', 'Black', 'Pink'], 'Blue'),
+                        $this->mc('Which color is "hitam"?', ['White', 'Brown', 'Black', 'Purple'], 'Black'),
+                        $this->mc('Grass is usually...', ['Red', 'Green', 'Yellow', 'White'], 'Green'),
+                        $this->fib('A banana is ___. (kuning)', 'yellow'),
+                        $this->fib('Snow is ___. (putih)', 'white'),
+                    ]),
+
+                    $this->lesson('Days of the Week', '<h3>Days of the Week</h3><p>Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday.</p><p>Weekend adalah Saturday dan Sunday.</p>', [
+                        $this->mc('Which day comes after Monday?', ['Sunday', 'Tuesday', 'Wednesday', 'Friday'], 'Tuesday'),
+                        $this->mc('Which days are the weekend?', ['Monday and Tuesday', 'Friday and Saturday', 'Saturday and Sunday', 'Sunday and Monday'], 'Saturday and Sunday'),
+                        $this->mc('How many days are in a week?', ['5', '6', '7', '8'], '7'),
+                        $this->fib('The day before Friday is ___.', 'Thursday'),
+                        $this->fib('The day after Saturday is ___.', 'Sunday'),
+                    ]),
+
+                    $this->lesson('Months of the Year', '<h3>Months of the Year</h3><p>January, February, March, April, May, June, July, August, September, October, November, December.</p>', [
+                        $this->mc('How many months are in a year?', ['10', '11', '12', '13'], '12'),
+                        $this->mc('Which month comes after March?', ['February', 'April', 'May', 'June'], 'April'),
+                        $this->mc('Which month comes before December?', ['October', 'November', 'January', 'September'], 'November'),
+                        $this->fib('The first month of the year is ___.', 'January'),
+                        $this->fib('The month after July is ___.', 'August'),
+                    ]),
+
+                    $this->lesson('Articles: a, an, the', '<h3>Articles</h3><ul><li><b>a</b> dipakai sebelum bunyi konsonan: a book</li><li><b>an</b> dipakai sebelum bunyi vokal: an apple</li><li><b>the</b> dipakai untuk sesuatu yang spesifik: the sun</li></ul>', [
+                        $this->mc('I have ___ apple.', ['a', 'an', 'the', 'two'], 'an'),
+                        $this->mc('She has ___ cat.', ['a', 'an', 'is', 'are'], 'a'),
+                        $this->mc('___ sun is very hot today.', ['A', 'An', 'The', 'Some'], 'The'),
+                        $this->fib('He is ___ engineer.', 'an'),
+                        $this->fib('This is ___ pen.', 'a'),
+                    ]),
+
+                    $this->lesson('Singular and Plural Nouns', '<h3>Plural Nouns</h3><ul><li>Umumnya tambah s: book jadi books</li><li>Akhiran s, x, ch, sh tambah es: box jadi boxes</li><li>Tidak beraturan: child jadi children, man jadi men</li></ul>', [
+                        $this->mc('The plural of "book" is...', ['Bookes', 'Books', 'Bookies', 'Book'], 'Books'),
+                        $this->mc('The plural of "child" is...', ['Childs', 'Childes', 'Children', 'Childrens'], 'Children'),
+                        $this->mc('The plural of "man" is...', ['Mans', 'Men', 'Manes', 'Mens'], 'Men'),
+                        $this->fib('One box, two ___.', 'boxes'),
+                        $this->fib('One cat, three ___.', 'cats'),
+                    ]),
+
+                    $this->lesson('This, That, These, Those', '<h3>Demonstratives</h3><ul><li><b>This</b>: satu benda, dekat</li><li><b>That</b>: satu benda, jauh</li><li><b>These</b>: banyak benda, dekat</li><li><b>Those</b>: banyak benda, jauh</li></ul>', [
+                        $this->mc('___ is my pen. (dekat, satu)', ['That', 'These', 'This', 'Those'], 'This'),
+                        $this->mc('___ are my shoes. (dekat, banyak)', ['This', 'These', 'That', 'Those'], 'These'),
+                        $this->mc('___ are birds in the sky. (jauh, banyak)', ['This', 'That', 'These', 'Those'], 'Those'),
+                        $this->fib('___ is a mountain over there. (jauh, satu)', 'That'),
+                        $this->fib('___ are my books here on the table. (dekat, banyak)', 'These'),
+                    ]),
+
+                    $this->lesson('Unit 1 Review', '<h3>Review Unit 1</h3><p>Ulasan Unit 1: greetings, alphabet, numbers, pronouns, to be, introductions, nationalities, family, colors, days, months, articles, plurals, dan demonstratives.</p>', [
+                        $this->mc('Choose the correct sentence.', ['She am a teacher.', 'She is a teacher.', 'She are a teacher.', 'She be a teacher.'], 'She is a teacher.', 'intermediate'),
+                        $this->mc('Choose the correct sentence.', ['I have a orange.', 'I have an orange.', 'I have the oranges.', 'I have an oranges.'], 'I have an orange.', 'intermediate'),
+                        $this->mc('Which day is part of the weekend?', ['Monday', 'Wednesday', 'Sunday', 'Thursday'], 'Sunday', 'intermediate'),
+                        $this->fib('We ___ students. (to be)', 'are'),
+                        $this->fib('Two ___ are playing in the yard. (child, plural)', 'children', 'intermediate'),
+                    ], 30),
                 ],
             ],
         ];

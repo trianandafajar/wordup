@@ -8,6 +8,7 @@ use App\Models\Lesson;
 use App\Models\UserAnswer;
 use App\Models\UserCourseProgress;
 use App\Models\UserLessonProgress;
+use App\Models\UserReward;
 use App\Services\LeagueService;
 use App\Services\LifeService;
 use Illuminate\Http\RedirectResponse;
@@ -170,6 +171,18 @@ class LessonController extends Controller
             $xpEarned = $lesson->xp_reward;
             $bonusXp = ($user->current_streak >= 2) ? 10 : 0;
             $xpEarned += $bonusXp;
+
+            if ($lesson->order % 5 === 0) {
+                UserReward::updateOrCreate(
+                    [
+                        'user_id' => $user->id,
+                        'unit_id' => $lesson->unit_id,
+                        'level_milestone' => $lesson->order,
+                    ],
+                    ['is_opened' => false]
+                );
+            }
+
             $today = now()->toDateString();
             $lastActivity = $user->last_activity_date?->toDateString();
 
