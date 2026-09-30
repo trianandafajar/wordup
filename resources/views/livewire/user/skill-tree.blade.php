@@ -121,19 +121,17 @@ $unitTextColor = $hasAvailable || $allCompleted ? 'text-white' : 'text-gray-600'
         </button>
 </div>
 
-@if (!$isLast)
-<div class="h-10 w-full flex items-center justify-center"></div>
 @php
-$isChestLevel = ($lesson['order'] % 5 === 0);
-$reward = $isChestLevel ? \App\Models\UserReward::where('user_id', auth()->id())
-->where('unit_id', $unitData['unit']->id)
-->where('level_milestone', $lesson['order'])
-->first() : null;
-$isOpened = $reward?->is_opened ?? false;
-$isReady = $isCompleted && !$isOpened;
-$sparks = [[-140,-110],[130,-120],[-160,10],[160,20],[-90,-170],[100,-165],[-60,90],[70,100]];
-$chestClosedImg = asset('images/rewards/reward-chest-locked.png');
-$chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
+    $isChestLevel = ($lesson['order'] % 5 === 0);
+    $reward = $isChestLevel ? \App\Models\UserReward::where('user_id', auth()->id())
+        ->where('unit_id', $unitData['unit']->id)
+        ->where('level_milestone', $lesson['order'])
+        ->first() : null;
+    $isOpened = $reward?->is_opened ?? false;
+    $isReady = $isCompleted && !$isOpened;
+    $sparks = [[-140,-110],[130,-120],[-160,10],[160,20],[-90,-170],[100,-165],[-60,90],[70,100]];
+    $chestClosedImg = asset('images/rewards/reward-chest-locked.png');
+    $chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
 @endphp
 
 @if ($isChestLevel)
@@ -264,7 +262,6 @@ $chestOpenedImg = asset('images/rewards/reward-chest-opened.png');
         </div>
     </div>
 </div>
-@endif
 @endif
 @endforeach
 
