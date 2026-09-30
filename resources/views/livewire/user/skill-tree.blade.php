@@ -122,8 +122,11 @@ $slot = 0;
         $showMascot = $index % 4 === 1;
         $mascotSide = $offset > 0 ? -1 : 1;
         $mascotX = $mascotSide * 112 - $offset;
+        
+        $randomMascot = asset('images/mascots/' . rand(1, 4) . '.png');
 
         $lockedText = $lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : 'Selesaikan lesson sebelumnya' ;
+
             $showXpBadge=($isCompleted && $bestScore==100); @endphp <div
             class="relative z-10 mb-3" style="left: {{ $offset }}px;" data-node="{{ $lesson['id'] }}"
             data-done="{{ $isCompleted ? '1' : '0' }}">
@@ -167,20 +170,9 @@ $slot = 0;
             </button>
 
             @if ($showMascot)
-            <div class="absolute top-1/2 w-20 -ml-0 flex flex-col items-center pointer-events-none select-none"
+            <div class="absolute top-1/2 w-32 -ml-0 flex flex-col items-center pointer-events-none select-none"
                 style="left: {{ $mascotX }}px; transform: translateY(-50%);" aria-hidden="true">
-                <img src="{{ $mascotImg }}" alt="" class="w-16 h-16 object-contain drop-shadow-md">
-                <div class="mt-1 flex items-end gap-0.5">
-                    <svg class="w-3.5 h-3.5 text-gray-300" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2l3 6.5 7 .9-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.9z" />
-                    </svg>
-                    <svg class="w-4 h-4 mb-[-4px] text-gray-300" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2l3 6.5 7 .9-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.9z" />
-                    </svg>
-                    <svg class="w-3.5 h-3.5 text-gray-300" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 2l3 6.5 7 .9-5.2 4.8 1.4 7L12 17.8 5.8 21.2l1.4-7L2 9.4l7-.9z" />
-                    </svg>
-                </div>
+                <img src="{{ $randomMascot }}" alt="" class="w-32 h-32 object-contain drop-shadow-md">
             </div>
             @endif
     </div>
