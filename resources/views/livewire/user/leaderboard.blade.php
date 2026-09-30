@@ -23,9 +23,9 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
             <div class="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-24 bg-brand-500/10 rounded-full animate-pulse">
             </div>
             <img src="{{ asset('images/rank-icon/' . $rank['icon']) }}" alt="{{ $rank['name'] }}"
-                class="w-24 h-24 object-contain relative z-10 drop-shadow-lg">
+                class="w-24 h-24 object-contain relative z-10">
             <span class="text-sm font-extrabold text-brand-600">{{ $rank['name'] }}</span>
-            <span class="text-[10px] font-bold bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full">Aktif</span>
+            <span class="text-[10px] font-bold bg-white text-brand-700 px-2 py-0.5 rounded-full border border-brand-100">Aktif</span>
         </button>
         @else
         <button type="button" @click="open = true"
