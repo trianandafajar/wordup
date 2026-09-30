@@ -17,9 +17,9 @@ $allCompleted = $unitData['lessons']->every('status', 'completed');
 $hasAvailable = $unitData['lessons']->firstWhere('status', 'available') !== null;
 
 $bannerClass = $allCompleted
-? 'bg-gradient-to-r from-brand-600 to-brand-400 text-white'
+? 'bg-[#43A047] text-white'
 : ($hasAvailable
-? 'bg-gradient-to-r from-orange-500 to-amber-400 text-white'
+? 'bg-[#43A047] text-white'
 : 'bg-gray-200 text-gray-500');
 
 $slot = 0;
