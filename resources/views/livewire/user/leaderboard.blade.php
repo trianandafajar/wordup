@@ -42,7 +42,7 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
         Total XP: <span class="font-bold text-gray-900">{{ number_format($currentUser->xp_total) }}</span>
     </p>
 
-    <div class="bg-white rounded-3xl border border-gray-200 divide-y divide-gray-100 overflow-hidden shadow-sm mt-4">
+    <div class="bg-white rounded-3xl border border-gray-200 divide-y divide-gray-100 overflow-hidden mt-4">
         <div class="p-4 flex items-center gap-4 bg-emerald-50">
             <span class="text-lg font-bold text-emerald-600 w-8 text-center">#{{ $currentUserLeagueRank }}</span>
             @if ($currentUser->avatar)
@@ -91,12 +91,6 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
         @empty
         <p class="text-center text-gray-400 py-6">Belum ada user lain di league ini</p>
         @endforelse
-    </div>
-
-    <div class="mt-6 bg-white border border-emerald-300 rounded-2xl p-5 text-center shadow-sm">
-        <p class="text-emerald-600 font-bold text-sm">
-            Top {{ $promotionCount }} akan dipromosikan ke league berikutnya!
-        </p>
     </div>
 
     {{-- Modal --}}
