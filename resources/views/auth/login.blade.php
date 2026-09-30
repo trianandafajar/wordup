@@ -6,8 +6,7 @@
     <div class="hidden lg:flex lg:w-[60%] bg-brand-800 flex-col justify-center items-center p-12 text-white">
         <div class="space-y-3 text-center">
             <div class="flex justify-center">
-                <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image"
-                    class="w-100 h-100 object-contain" />
+                <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image" class="w-100 h-100 object-contain" />
             </div>
             <h1 class="font-dynapuff text-4xl leading-tight text-white">
                 Lanjutkan streak-mu, jangan sampai putus.
@@ -34,11 +33,11 @@
                 </div>
 
                 @if ($errors->any())
-                    <div class="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                            @foreach ($errors->all() as $error)
-                                <span class="font-semibold ">{{ $error }}</span>
-                            @endforeach
-                    </div>
+                <div class="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    @foreach ($errors->all() as $error)
+                    <span class="font-semibold ">{{ $error }}</span>
+                    @endforeach
+                </div>
                 @endif
 
                 <form class="space-y-2" method="POST" action="{{ route('login') }}">
@@ -46,9 +45,9 @@
 
                     <div>
                         <label for="email" class="mb-2 block text-sm font-semibold text-gray-dark">Email</label>
-<input id="email" name="email" type="email" required autofocus
-                             class="block h-12 w-full rounded-xl border {{ $errors->has('email') ? 'border-red-500' : 'border-[#dce7df]' }} bg-[#fbfefc] px-4 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
-                             placeholder="nama@email.com" value="{{ old('email') }}">
+                        <input id="email" name="email" type="email" required autofocus
+                            class="block h-12 w-full rounded-xl border {{ $errors->has('email') ? 'border-red-500' : 'border-[#dce7df]' }} bg-[#fbfefc] px-4 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
+                            placeholder="nama@email.com" value="{{ old('email') }}">
                     </div>
 
                     <div x-data="{ showPassword: false }">
@@ -81,10 +80,12 @@
                         </div>
                     </div>
 
-                    <div class="flex items-center pt-1">
+                    <div class="flex items-center pt-1 cursor-pointer">
                         <input id="remember" name="remember" type="checkbox"
-                            class="h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500 cursor-pointer">
-                        <label for="remember" class="ml-2 text-sm text-gray-dark/70">Ingat saya</label>
+                            class="h-4 w-4 rounded border-gray-300 text-brand-500 focus:ring-brand-500">
+                        <label for="remember" class="ml-2 text-sm text-gray-dark/70 hover:cursor-pointer">
+                            Ingat saya
+                        </label>
                     </div>
 
                     <button type="submit"
