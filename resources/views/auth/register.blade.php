@@ -10,7 +10,7 @@
                     class="w-100 h-100 object-contain" />
             </div>
             <h1 class="font-dynapuff text-4xl leading-tight text-white">
-                Rutin 5 menit sehari, Inggrismu makin lancar.
+                Rutin 5 menit sehari <br/> Inggrismu makin lancar.
             </h1>
         </div>
     </div>

@@ -13,8 +13,6 @@
                 Tenang, kata sandimu akan kembali.
             </h1>
         </div>
-
-        <p class="text-white/40 text-xs mt-6">&copy; {{ date('Y') }} WordUp</p>
     </div>
 
     <main

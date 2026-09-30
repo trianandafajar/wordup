@@ -9,7 +9,7 @@
                 <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image" class="w-100 h-100 object-contain" />
             </div>
             <h1 class="font-dynapuff text-4xl leading-tight text-white">
-                Lanjutkan streak-mu, jangan sampai putus.
+                Lanjutkan streak-mu <br/> Jangan sampai putus.
             </h1>
         </div>
     </div>
