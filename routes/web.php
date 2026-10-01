@@ -61,6 +61,7 @@ Route::get('/learn', [SkillTreeController::class, 'index'])->name('user.learn')-
 Route::get('/lesson/{lesson}', [LessonController::class, 'show'])->name('user.lesson.practice')->middleware(['auth', 'onboarding']);
 Route::post('/lesson/{lesson}/submit', [LessonController::class, 'submit'])->name('user.lesson.submit')->middleware(['auth', 'onboarding']);
 Route::get('/lesson/{lesson}/result', [LessonController::class, 'result'])->name('user.lesson.result')->middleware(['auth', 'onboarding']);
+Route::get('/api/user/{id}/lessons', [\App\Http\Controllers\Api\UserLessonController::class, 'show'])->middleware(['auth', 'onboarding']);
 Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('user.leaderboard')->middleware(['auth', 'onboarding']);
 Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile')->middleware(['auth', 'onboarding']);
 Route::put('/profile', [ProfileController::class, 'update'])->name('user.profile.update')->middleware(['auth', 'onboarding']);

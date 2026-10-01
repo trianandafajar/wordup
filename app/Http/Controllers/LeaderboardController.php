@@ -50,6 +50,22 @@ class LeaderboardController extends Controller
         $allRanks = RankService::RANKS;
         $currentRankIndex = $rankService->getRankIndex($currentRank['key']);
 
+        $currentUserCompletedLessons = $currentUser->lessonProgress()
+            ->where('status', 'completed')
+            ->with(['lesson' => function ($query) {
+                $query->with('unit');
+            }])
+            ->get()
+            ->map(function ($progress) {
+                return [
+                    'lesson_title' => $progress->lesson->title,
+                    'unit_title' => $progress->lesson->unit->title,
+                    'best_score' => $progress->best_score,
+                    'attempts_count' => $progress->attempts_count,
+                    'completed_at' => $progress->completed_at->format('d M Y'),
+                ];
+            });
+
         return view('livewire.user.leaderboard', [
             'leagueUsers' => $leagueUsers,
             'currentUser' => $currentUser,
@@ -60,6 +76,7 @@ class LeaderboardController extends Controller
             'currentRank' => $currentRank,
             'allRanks' => $allRanks,
             'currentRankIndex' => $currentRankIndex,
+            'currentUserCompletedLessons' => $currentUserCompletedLessons,
         ]);
     }
 }
