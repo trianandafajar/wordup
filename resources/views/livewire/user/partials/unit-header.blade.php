@@ -7,12 +7,15 @@
 
 <div class="w-full max-w-lg my-6">
     <div class="rounded-2xl bg-brand-500 text-white p-4 shadow-md flex items-center justify-between gap-4">
-        <div>
-            <span class="text-xs font-bold uppercase tracking-wider opacity-80">Unit {{ $number }}</span>
-            <h3 class="text-lg font-bold leading-snug">{{ $title }}</h3>
-            @if ($description)
-            <p class="text-xs opacity-90 mt-0.5 line-clamp-1">{{ $description }}</p>
-            @endif
+        <div class="flex items-center gap-3">
+            <img src="{{ asset('images/mascots/1.png') }}" alt="Guru" class="w-12 h-12">
+            <div>
+                <span class="text-xs font-bold uppercase tracking-wider opacity-80">Unit {{ $number }}</span>
+                <h3 class="text-lg font-dynapuff font-bold leading-snug">{{ $title }}</h3>
+                @if ($description)
+                <p class="text-xs opacity-90 mt-0.5 line-clamp-1">{{ $description }}</p>
+                @endif
+            </div>
         </div>
         <div class="shrink-0 bg-white/20 p-2.5 rounded-xl backdrop-blur-sm">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"

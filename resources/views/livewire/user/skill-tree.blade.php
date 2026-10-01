@@ -33,7 +33,7 @@ $slot = 0;
 
         <div class="relative min-w-0">
             <span class="text-xs font-bold uppercase tracking-wider opacity-90">Unit {{ $loop->iteration }}</span>
-            <h3 class="text-xl font-extrabold leading-tight mt-0.5">{{ $unitData['unit']->title }}</h3>
+            <h3 class="text-xl font-dynapuff font-extrabold leading-tight mt-0.5">{{ $unitData['unit']->title }}</h3>
 
             <p class="mt-1.5 flex items-center gap-1.5 text-sm font-medium opacity-95">
                 @if ($hasAvailable)
@@ -61,10 +61,8 @@ $slot = 0;
 
         <div
             class="relative shrink-0 w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-            <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                    d="M12 6.2C10.6 5.1 8.5 4.5 6 4.5c-1.2 0-2.3.2-3.2.5-.5.2-.8.6-.8 1.1v11.4c0 .7.7 1.2 1.4 1 .8-.2 1.7-.4 2.6-.4 2.2 0 4.2.6 5.5 1.8a.8.8 0 001 0c1.3-1.2 3.3-1.8 5.5-1.8.9 0 1.8.2 2.6.4.7.2 1.4-.3 1.4-1V6.1c0-.5-.3-.9-.8-1.1-.9-.3-2-.5-3.2-.5-2.5 0-4.6.6-6 1.7zM11 18.2c-1.1-.7-2.5-1-4-1-.7 0-1.4.1-2 .2V6.4c.6-.1 1.3-.2 2-.2 1.5 0 2.9.4 4 1.2v10.8zm2 0V7.4c1.1-.8 2.5-1.2 4-1.2.7 0 1.4.1 2 .2v10.9c-.6-.1-1.3-.2-2-.2-1.5 0-2.9.3-4 1z" />
-            </svg>
+            <img src="{{ asset('images/mascots/' . (($loop->iteration % 4) + 1) . '.png') }}" alt="Mascot"
+                class="w-12 h-12 object-contain">
         </div>
     </div>
 
