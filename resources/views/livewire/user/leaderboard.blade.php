@@ -25,7 +25,8 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
             <img src="{{ asset('images/rank-icon/' . $rank['icon']) }}" alt="{{ $rank['name'] }}"
                 class="w-24 h-24 object-contain relative z-10">
             <span class="text-sm font-extrabold text-brand-600">{{ $rank['name'] }}</span>
-            <span class="text-[10px] font-bold bg-white text-brand-700 px-2 py-0.5 rounded-full border border-brand-100">Aktif</span>
+            <span
+                class="text-[10px] font-bold bg-white text-brand-700 px-2 py-0.5 rounded-full border border-brand-100">Aktif</span>
         </button>
         @else
         <button type="button" @click="open = true"
@@ -93,13 +94,14 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
         @endforelse
     </div>
 
-    {{-- Modal --}}
     <div x-show="open" x-transition.opacity style="display:none;"
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+        class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/50">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-xl" @click.away="open = false">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-gray-900 text-lg">Daftar Rank</h3>
-                <button type="button" @click="open = false" class="text-gray-400 hover:text-gray-600">
+                <h3 class="font-bold text-gray-900 text-lg">
+                    Daftar Rank
+                </h3>
+                <button type="button" @click="open = false" class="text-gray-400 hover:text-gray-600 cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -108,7 +110,7 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
                 </button>
             </div>
 
-            <div class="space-y-3 max-h-80 overflow-y-auto">
+            <div class="space-y-3 overflow-y-auto">
                 @foreach ($allRanks as $index => $rank)
                 <div
                     class="flex items-center gap-4 p-3 rounded-2xl {{ $index === $currentIdx ? 'bg-brand-50 border border-brand-200' : 'bg-gray-50 border border-gray-100' }}">
