@@ -6,7 +6,7 @@ $allRanks = $allRanks ?? \App\Services\RankService::RANKS;
 $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex($currentRank['key']);
 @endphp
 
-<div class="w-full" x-data="{ open: false }">
+<div class="w-full" x-data="{ open: false, userDetailOpen: false, selectedUser: null }">
 
     @php $total = count($allRanks); @endphp
     <div class="flex items-center justify-center gap-4 sm:gap-6 overflow-hidden pt-6 pb-4"
@@ -44,7 +44,16 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
     </p>
 
     <div class="bg-white rounded-3xl border border-gray-200 divide-y divide-gray-100 overflow-hidden mt-4">
-        <div class="p-4 flex items-center gap-4 bg-emerald-50">
+        <button type="button"
+            @click="selectedUser = { 
+                name: '{{ $currentUser->name }}', 
+                avatar: '{{ $currentUser->avatar }}', 
+                total_xp: {{ $currentUser->xp_total }}, 
+                completed_lessons: {{ $currentUser->courseProgress()->sum('completed_lessons') }}, 
+                member_since: '{{ $currentUser->created_at->format('M Y') }}', 
+                rank: {{ $currentUserLeagueRank }} 
+            }; userDetailOpen = true"
+            class="p-4 flex items-center gap-4 bg-emerald-50 w-full cursor-pointer text-left">
             <span class="text-lg font-bold text-emerald-600 w-8 text-center">#{{ $currentUserLeagueRank }}</span>
             @if ($currentUser->avatar)
             <img src="{{ asset('storage/' . $currentUser->avatar) }}" alt="{{ $currentUser->name }}"
@@ -64,12 +73,13 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
             </div>
             <span
                 class="text-xs font-bold bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full border border-current">Kamu</span>
-        </div>
+        </button>
 
         @forelse ($leagueUsers as $i => $user)
         @if ($user['id'] !== $currentUser->id)
-        <div
-            class="flex items-center gap-4 p-4 {{ $i < 3 ? 'text-emerald-600' : 'text-gray-400' }} hover:bg-gray-50 transition-colors">
+        <button type="button"
+            @click="selectedUser = {{ json_encode($user) }}; userDetailOpen = true"
+            class="w-full flex items-center gap-4 p-4 {{ $i < 3 ? 'text-emerald-600' : 'text-gray-400' }} hover:bg-gray-50 transition-colors cursor-pointer text-left">
             <span class="text-sm font-bold w-8 text-center">{{ $user['rank'] }}</span>
             @if ($user['avatar'])
             <img src="{{ asset('storage/' . $user['avatar']) }}" alt="{{ $user['name'] }}"
@@ -86,7 +96,7 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
                     XP
                 </p>
             </div>
-        </div>
+        </button>
         @endif
         @empty
         <p class="text-center text-gray-400 py-6">Belum ada user lain di league ini</p>
@@ -143,6 +153,71 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
                 @else
                 <p class="text-xs text-brand-600 mt-1 font-bold">Rank tertinggi tercapai!</p>
                 @endif
+            </div>
+        </div>
+    </div>
+
+    <div x-show="userDetailOpen" x-transition.opacity style="display:none;"
+        class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/50">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-xl" @click.away="userDetailOpen = false">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-gray-900 text-lg">
+                    Detail Profil
+                </h3>
+                <button type="button" @click="userDetailOpen = false" class="text-gray-400 hover:text-gray-600 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="space-y-4" x-show="selectedUser">
+                <div class="flex justify-center">
+                    <template x-if="selectedUser && selectedUser.avatar">
+                        <img :src="'{{ asset('storage') }}/' + selectedUser.avatar" :alt="selectedUser.name"
+                            class="w-24 h-24 rounded-full object-cover shadow-md">
+                    </template>
+                    <template x-if="selectedUser && !selectedUser.avatar">
+                        <div class="w-24 h-24 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-bold shadow-md text-2xl">
+                            <span x-text="selectedUser.name.charAt(0).toUpperCase()"></span>
+                        </div>
+                    </template>
+                </div>
+
+                <div class="text-center">
+                    <h4 class="font-bold text-gray-900 text-lg" x-text="selectedUser ? selectedUser.name : ''"></h4>
+                </div>
+
+                <div class="space-y-3 pt-2 border-t border-gray-100">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Total XP</span>
+                        <span class="font-bold text-gray-900" x-text="selectedUser ? new Intl.NumberFormat('id-ID').format(selectedUser.total_xp) : ''"></span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Pelajaran Selesai</span>
+                        <span class="font-bold text-gray-900" x-text="selectedUser ? selectedUser.completed_lessons : ''"></span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Member Sejak</span>
+                        <span class="font-bold text-gray-900" x-text="selectedUser ? selectedUser.member_since : ''"></span>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-600">Peringkat (Liga)</span>
+                        <span class="font-bold text-emerald-600" x-text="selectedUser ? '#' + selectedUser.rank : ''"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-gray-100">
+                <button type="button" @click="userDetailOpen = false"
+                    class="w-full px-4 py-2 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition-colors cursor-pointer">
+                    Tutup
+                </button>
             </div>
         </div>
     </div>

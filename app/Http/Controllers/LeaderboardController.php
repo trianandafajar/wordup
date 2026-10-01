@@ -32,6 +32,8 @@ class LeaderboardController extends Controller
                     'name' => $user->name,
                     'xp' => $user->league_week_xp > 0 ? $user->league_week_xp : $user->xp_total,
                     'total_xp' => $user->xp_total,
+                    'completed_lessons' => $user->courseProgress()->sum('completed_lessons'),
+                    'member_since' => $user->created_at->format('M Y'),
                     'id' => $user->id,
                     'avatar' => $user->avatar,
                 ];
