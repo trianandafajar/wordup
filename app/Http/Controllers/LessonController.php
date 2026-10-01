@@ -97,7 +97,7 @@ class LessonController extends Controller
                 $given = strtolower(trim((string) $answerGiven));
                 $isCorrect = $given !== '' && $given === $correct;
             } else {
-                $isCorrect = $question->options->contains(fn ($option) => $option->id === (int) $answerGiven && $option->is_correct);
+                $isCorrect = $question->options->contains(fn($option) => $option->id === (int) $answerGiven && $option->is_correct);
             }
 
             if ($isCorrect) {
@@ -166,76 +166,85 @@ class LessonController extends Controller
             ]
         );
 
+        $previousBestScore = $progress?->best_score ?? 0;
         $xpEarned = 0;
-        if ($passed && ! $alreadyCompleted) {
-            if ($finalScore == 100) {
+        $bonusXp = 0;
+
+        if ($passed) {
+            if (! $alreadyCompleted) {
                 $xpEarned = $lesson->xp_reward;
-                $bonusXp = ($user->current_streak >= 2) ? 10 : 0;
-                $xpEarned += $bonusXp;
-            }
-
-            if ($lesson->order % 5 === 0) {
-                UserReward::updateOrCreate(
-                    [
-                        'user_id' => $user->id,
-                        'unit_id' => $lesson->unit_id,
-                        'level_milestone' => $lesson->order,
-                    ],
-                    ['is_opened' => false]
-                );
-            }
-
-            $today = now()->toDateString();
-            $lastActivity = $user->last_activity_date?->toDateString();
-
-            $user->xp_total += $xpEarned;
-            $user->league_week_xp += $xpEarned;
-
-            if ($lastActivity !== $today) {
-                $yesterday = now()->subDay()->toDateString();
-                if ($lastActivity === $yesterday) {
-                    $user->current_streak += 1;
-                } elseif (! $lastActivity) {
-                    $user->current_streak = 1;
-                } else {
-                    $user->current_streak = 1;
+                if ($finalScore == 100) {
+                    $bonusXp = ($user->current_streak >= 2) ? 10 : 0;
+                    $xpEarned += $bonusXp;
                 }
-            }
-            $user->longest_streak = max($user->longest_streak, $user->current_streak);
-            $user->last_activity_date = $today;
-
-            if (! $user->league) {
-                $user->league = (new LeagueService)->getLeagueForXp($user->xp_total)['key'];
+            } elseif ($previousBestScore < 100 && $finalScore == 100) {
+                $xpEarned = 20;
             }
 
-            $streakLog = $user->streakLogs()->where('activity_date', $today)->first();
-            if ($streakLog) {
-                $streakLog->xp_earned_that_day += $xpEarned;
-                $streakLog->save();
-            } else {
-                $user->streakLogs()->create([
-                    'activity_date' => $today,
-                    'xp_earned_that_day' => $xpEarned,
-                ]);
-            }
+            if ($xpEarned > 0) {
+                if ($lesson->order % 5 === 0) {
+                    UserReward::updateOrCreate(
+                        [
+                            'user_id' => $user->id,
+                            'unit_id' => $lesson->unit_id,
+                            'level_milestone' => $lesson->order,
+                        ],
+                        ['is_opened' => false]
+                    );
+                }
 
-            $user->save();
+                $today = now()->toDateString();
+                $lastActivity = $user->last_activity_date?->toDateString();
 
-            $courseCompleted = UserLessonProgress::where('user_id', $user->id)
-                ->whereIn('lesson_id', $lesson->unit->lessons->pluck('id'))
-                ->where('status', LessonProgressStatusEnum::Completed)
-                ->count();
+                $user->xp_total += $xpEarned;
+                $user->league_week_xp += $xpEarned;
 
-            $courseProgress = UserCourseProgress::where('user_id', $user->id)
-                ->where('course_id', $lesson->unit->course_id)
-                ->first();
+                if ($lastActivity !== $today) {
+                    $yesterday = now()->subDay()->toDateString();
+                    if ($lastActivity === $yesterday) {
+                        $user->current_streak += 1;
+                    } elseif (! $lastActivity) {
+                        $user->current_streak = 1;
+                    } else {
+                        $user->current_streak = 1;
+                    }
+                }
+                $user->longest_streak = max($user->longest_streak, $user->current_streak);
+                $user->last_activity_date = $today;
 
-            if ($courseProgress) {
-                $courseProgress->completed_lessons = $courseCompleted;
-                $courseProgress->progress_percent = $courseProgress->total_lessons > 0
-                    ? round(($courseCompleted / $courseProgress->total_lessons) * 100, 2)
-                    : 0;
-                $courseProgress->save();
+                if (! $user->league) {
+                    $user->league = (new LeagueService)->getLeagueForXp($user->xp_total)['key'];
+                }
+
+                $streakLog = $user->streakLogs()->where('activity_date', $today)->first();
+                if ($streakLog) {
+                    $streakLog->xp_earned_that_day += $xpEarned;
+                    $streakLog->save();
+                } else {
+                    $user->streakLogs()->create([
+                        'activity_date' => $today,
+                        'xp_earned_that_day' => $xpEarned,
+                    ]);
+                }
+
+                $user->save();
+
+                $courseCompleted = UserLessonProgress::where('user_id', $user->id)
+                    ->whereIn('lesson_id', $lesson->unit->lessons->pluck('id'))
+                    ->where('status', LessonProgressStatusEnum::Completed)
+                    ->count();
+
+                $courseProgress = UserCourseProgress::where('user_id', $user->id)
+                    ->where('course_id', $lesson->unit->course_id)
+                    ->first();
+
+                if ($courseProgress) {
+                    $courseProgress->completed_lessons = $courseCompleted;
+                    $courseProgress->progress_percent = $courseProgress->total_lessons > 0
+                        ? round(($courseCompleted / $courseProgress->total_lessons) * 100, 2)
+                        : 0;
+                    $courseProgress->save();
+                }
             }
         } elseif (! $passed && ! $alreadyCompleted) {
             app(LifeService::class)->loseLife($user);
