@@ -266,56 +266,57 @@ $slot = 0;
                 class="w-24 h-24 object-contain drop-shadow-lg" alt="Harta Karun">
         </button>
 
-        <div x-show="showAnim" style="display: none;" x-transition:enter="transition ease-out duration-300"
-            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0" @click="closeAnim()"
-            class="fixed inset-0 z-100 flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-pointer select-none">
-
-            <div class="relative flex flex-col items-center">
-                <div x-show="phase === 'open'" style="display: none;" class="chest-rays"></div>
-                <div x-show="phase === 'open'" style="display: none;" class="chest-burst"></div>
-                <template x-if="phase === 'open'">
-                    <div class="absolute inset-0 pointer-events-none">
-                        @foreach ($sparks as $i => $p)
-                        <span class="chest-spark"
-                            style="--x: {{ $p[0] }}px; --y: {{ $p[1] }}px; animation-delay: {{ $i * 40 }}ms;"></span>
-                        @endforeach
-                    </div>
-                </template>
-                <template x-if="phase === 'open' && justClaimed">
-                    <div class="pointer-events-none">
-                        <template x-for="(r, i) in rewards" :key="i">
-                            <span class="float-point" :class="r.cls"
-                                :style="`--dx: ${(i - (rewards.length - 1) / 2) * 110}px; animation-delay: ${i * 200}ms`"
-                                x-text="r.text"></span>
-                        </template>
-                    </div>
-                </template>
-                <img :src="phase === 'open' ? '{{ $chestOpenedImg }}' : '{{ $chestClosedImg }}'" :class="{
+        <template x-teleport="body">
+            <div x-show="showAnim" style="display: none;" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0" @click="closeAnim()"
+                class="fixed inset-0 z-[9999] flex items-center justify-center bg-black/80 backdrop-blur-sm cursor-pointer select-none">
+                <div class="relative flex flex-col items-center">
+                    <div x-show="phase === 'open'" style="display: none;" class="chest-rays"></div>
+                    <div x-show="phase === 'open'" style="display: none;" class="chest-burst"></div>
+                    <template x-if="phase === 'open'">
+                        <div class="absolute inset-0 pointer-events-none">
+                            @foreach ($sparks as $i => $p)
+                            <span class="chest-spark"
+                                style="--x: {{ $p[0] }}px; --y: {{ $p[1] }}px; animation-delay: {{ $i * 40 }}ms;"></span>
+                            @endforeach
+                        </div>
+                    </template>
+                    <template x-if="phase === 'open' && justClaimed">
+                        <div class="pointer-events-none">
+                            <template x-for="(r, i) in rewards" :key="i">
+                                <span class="float-point" :class="r.cls"
+                                    :style="`--dx: ${(i - (rewards.length - 1) / 2) * 110}px; animation-delay: ${i * 200}ms`"
+                                    x-text="r.text"></span>
+                            </template>
+                        </div>
+                    </template>
+                    <img :src="phase === 'open' ? '{{ $chestOpenedImg }}' : '{{ $chestClosedImg }}'" :class="{
                                 'chest-grow': phase === 'grow',
                                 'chest-shake': phase === 'shake',
                                 'chest-pop': phase === 'open'
                             }" class="relative z-10 w-48 h-48 sm:w-60 sm:h-60 object-contain drop-shadow-2xl"
-                    alt="Harta Karun">
+                        alt="Harta Karun">
 
-                <div x-show="phase === 'open' && justClaimed" style="display: none;"
-                    class="reward-up relative z-10 mt-6 text-center">
-                    <p class="text-amber-300 text-sm font-bold uppercase tracking-widest mb-3">Hadiah!</p>
-                    <div class="flex items-center justify-center gap-3">
-                        <span
-                            class="bg-white/10 border border-white/20 text-white font-extrabold text-lg px-4 py-2 rounded-2xl">+5
-                            Energi</span>
-                        <span
-                            class="bg-white/10 border border-white/20 text-amber-300 font-extrabold text-lg px-4 py-2 rounded-2xl">+50
-                            XP</span>
+                    <div x-show="phase === 'open' && justClaimed" style="display: none;"
+                        class="reward-up relative z-10 mt-6 text-center">
+                        <p class="text-amber-300 text-sm font-bold uppercase tracking-widest mb-3">Hadiah!</p>
+                        <div class="flex items-center justify-center gap-3">
+                            <span
+                                class="bg-white/10 border border-white/20 text-white font-extrabold text-lg px-4 py-2 rounded-2xl">+5
+                                Energi</span>
+                            <span
+                                class="bg-white/10 border border-white/20 text-amber-300 font-extrabold text-lg px-4 py-2 rounded-2xl">+50
+                                XP</span>
+                        </div>
                     </div>
-                </div>
 
-                <p x-show="phase === 'open'" style="display: none;"
-                    class="tap-hint relative z-10 mt-6 text-white/70 text-xs tracking-wide">Ketuk untuk lanjut</p>
+                    <p x-show="phase === 'open'" style="display: none;"
+                        class="tap-hint relative z-10 mt-6 text-white/70 text-xs tracking-wide">Ketuk untuk lanjut</p>
+                </div>
             </div>
-        </div>
+        </template>
     </div>
     @endif
     @endforeach
