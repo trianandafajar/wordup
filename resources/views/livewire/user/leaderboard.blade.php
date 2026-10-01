@@ -145,7 +145,7 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
     </div>
 
     <div x-show="open" x-transition.opacity style="display:none;"
-        class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/50">
+        class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-900/25 backdrop-blur-md backdrop-saturate-150">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-xl" @click.away="open = false">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-gray-900 text-lg">
@@ -199,7 +199,7 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
     </div>
 
     <div x-show="userDetailOpen" x-transition.opacity style="display:none;"
-        class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/50">
+        class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-900/25 backdrop-blur-md backdrop-saturate-150">
         <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-xl" @click.away="userDetailOpen = false">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-gray-900 text-lg">

@@ -326,7 +326,7 @@ $slot = 0;
 
 <div x-data="{ show: false, url: '' }" @open-lesson-modal.window="show = true; url = $event.detail.url" x-show="show"
     style="display: none;"
-    class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/25 backdrop-blur-md backdrop-saturate-150">
 
     <div class="bg-white text-center rounded-2xl p-6 max-w-sm w-full shadow-xl">
         <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-20 h-20 object-contain mx-auto mb-4">
