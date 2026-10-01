@@ -2,4 +2,4 @@
 
 use Illuminate\Support\Facades\Schedule;
 
-Schedule::command('league:reset')->weeklyOn(1, '00:00');
+Schedule::command('league:reset')->twiceMonthly(1, 15, '00:00');

@@ -57,6 +57,34 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
         Total XP: <span class="font-bold text-gray-900">{{ number_format($currentUser->xp_total) }}</span>
     </p>
 
+    {{-- Countdown reset XP mingguan --}}
+    @if($resetAt)
+    <div class="text-center mt-2" x-data="{
+        resetAt: {{ $resetAt * 1000 }},
+        d: 0, h: 0, m: 0, s: 0,
+        done: false,
+        timer: null,
+        update() {
+            const diff = this.resetAt - Date.now();
+            if (diff <= 0) { this.done = true; return; }
+            this.d = Math.floor(diff / 86400000);
+            this.h = Math.floor((diff % 86400000) / 3600000);
+            this.m = Math.floor((diff % 3600000) / 60000);
+            this.s = Math.floor((diff % 60000) / 1000);
+        }
+    }" x-init="update(); timer = setInterval(() => update(), 1000)">
+        <p class="text-xs text-gray-400">XP mingguan akan direset dalam</p>
+        <p class="text-sm font-bold text-gray-700 mt-0.5" x-show="!done">
+            <span x-text="d"></span> hari
+            <span x-text="String(h).padStart(2,'0')"></span>:<span x-text="String(m).padStart(2,'0')"></span>:<span
+                x-text="String(s).padStart(2,'0')"></span>
+        </p>
+        <p class="text-sm font-bold text-emerald-600" x-show="done" style="display:none;">
+            Segera direset...
+        </p>
+    </div>
+    @endif
+
     <div class="bg-white rounded-3xl border border-gray-200 divide-y divide-gray-100 overflow-hidden mt-4">
         <button type="button" @click="selectedUser = { 
                 id: {{ $currentUser->id }},
@@ -247,7 +275,8 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
 
     <div x-show="lessonsDetailOpen" x-transition.opacity style="display:none;"
         class="fixed inset-0 z-[1001] flex items-center justify-center p-4" @click.stop>
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl max-h-[80vh] flex flex-col border border-gray-200">
+        <div
+            class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl max-h-[80vh] flex flex-col border border-gray-200">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-gray-900 text-lg">
                     Pelajaran Selesai

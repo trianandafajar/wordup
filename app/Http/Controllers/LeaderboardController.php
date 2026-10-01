@@ -66,6 +66,10 @@ class LeaderboardController extends Controller
                 ];
             });
 
+        $now = now();
+        $nextReset = $now->day < 15 ? $now->copy()->day(15)->startOfDay() : $now->copy()->addMonth()->day(1)->startOfDay();
+        $resetAt = $nextReset->timestamp;
+
         return view('livewire.user.leaderboard', [
             'leagueUsers' => $leagueUsers,
             'currentUser' => $currentUser,
@@ -77,6 +81,7 @@ class LeaderboardController extends Controller
             'allRanks' => $allRanks,
             'currentRankIndex' => $currentRankIndex,
             'currentUserCompletedLessons' => $currentUserCompletedLessons,
+            'resetAt' => $resetAt,
         ]);
     }
 }
