@@ -326,11 +326,11 @@ $slot = 0;
 <div x-data="{ show: false, url: '' }" @open-lesson-modal.window="show = true; url = $event.detail.url" x-show="show"
     style="display: none;"
     class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-    <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
+    <div class="bg-white text-center rounded-2xl p-6 max-w-sm w-full shadow-xl">
         <h3 class="text-lg font-bold mb-2">
             Review Pelajaran
         </h3>
-        <p class="text-gray-600 mb-6">
+        <p class="text-sm text-gray-600 mb-6">
             Pelajaran ini sudah selesai. Kamu bisa mengulanginya, tapi tidak akan mendapat tambahan XP atau energi.
         </p>
         <div class="flex gap-3">
