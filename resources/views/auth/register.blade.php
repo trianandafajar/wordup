@@ -57,9 +57,9 @@
                     </div>
 
                     <div x-data="{ showPassword: false }">
-                        <div>
-                            <label for="password" class="mb-2 block text-sm font-semibold text-gray-dark">Kata
-                                sandi</label>
+                        <div class="mb-4">
+                            <label for="password" class="mb-2 block text-sm font-semibold text-gray-dark">
+                                Kata sandi</label>
                             <div class="relative">
                                 <input id="password" name="password" :type="showPassword ? 'text' : 'password'" required
                                     class="block h-12 w-full rounded-xl border {{ $errors->has('password') ? 'border-red-500' : 'border-[#dce7df]' }} bg-[#fbfefc] px-4 pr-12 text-gray-dark outline-none transition placeholder:text-gray-dark/30 focus:border-brand-500 sm:text-sm"
