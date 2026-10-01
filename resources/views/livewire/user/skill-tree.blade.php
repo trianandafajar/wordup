@@ -198,8 +198,8 @@ $slot = 0;
                 justClaimed: false,
                 loading: false,
                 rewards: [
-                    { text: '+50 XP', cls: 'text-amber-300' },
-                    { text: '+5 Energi', cls: 'text-emerald-300' }
+                    { text: '+50 XP', cls: 'text-emerald-300' },
+                    { text: '+5 Energi', cls: 'text-lime-300' }
                 ],
 
                 playAnim() {
@@ -301,14 +301,16 @@ $slot = 0;
 
                     <div x-show="phase === 'open' && justClaimed" style="display: none;"
                         class="reward-up relative z-10 mt-6 text-center">
-                        <p class="text-amber-300 text-sm font-bold uppercase tracking-widest mb-3">Hadiah!</p>
+                        <p class="text-emerald-300 text-sm font-bold uppercase tracking-widest mb-3">Hadiah!</p>
                         <div class="flex items-center justify-center gap-3">
                             <span
-                                class="bg-white/10 border border-white/20 text-white font-extrabold text-lg px-4 py-2 rounded-2xl">+5
-                                Energi</span>
+                                class="bg-emerald-400/10 border border-emerald-300/30 text-lime-300 font-extrabold text-lg px-4 py-2 rounded-2xl">
+                                +5 Energi
+                            </span>
                             <span
-                                class="bg-white/10 border border-white/20 text-amber-300 font-extrabold text-lg px-4 py-2 rounded-2xl">+50
-                                XP</span>
+                                class="bg-emerald-400/10 border border-emerald-300/30 text-emerald-300 font-extrabold text-lg px-4 py-2 rounded-2xl">
+                                +50 XP
+                            </span>
                         </div>
                     </div>
 
@@ -436,12 +438,13 @@ $slot = 0;
         width: 460px;
         height: 460px;
         transform: translate(-50%, -50%);
-        background: repeating-conic-gradient(from 0deg, rgba(251, 191, 36, .45) 0deg 10deg, transparent 10deg 30deg);
+        background: repeating-conic-gradient(from 0deg, rgba(52, 211, 153, .45) 0deg 10deg, transparent 10deg 30deg);
         -webkit-mask-image: radial-gradient(circle, #000 15%, transparent 68%);
         mask-image: radial-gradient(circle, #000 15%, transparent 68%);
         animation: raysSpin 10s linear infinite;
         pointer-events: none;
     }
+
 
     @keyframes burst {
         0% {
@@ -462,7 +465,7 @@ $slot = 0;
         width: 240px;
         height: 240px;
         border-radius: 9999px;
-        background: radial-gradient(circle, rgba(253, 224, 71, .9), rgba(251, 191, 36, 0) 70%);
+        background: radial-gradient(circle, rgba(110, 231, 183, .9), rgba(52, 211, 153, 0) 70%);
         animation: burst 0.7s ease-out forwards;
         pointer-events: none;
     }
@@ -485,9 +488,9 @@ $slot = 0;
         top: 96px;
         width: 10px;
         height: 10px;
-        background: #fde047;
+        background: #6ee7b7;
         border-radius: 9999px;
-        box-shadow: 0 0 10px 3px rgba(253, 224, 71, .8);
+        box-shadow: 0 0 10px 3px rgba(110, 231, 183, .8);
         animation: spark 0.9s ease-out forwards;
     }
 
@@ -553,7 +556,7 @@ $slot = 0;
         font-size: 1.9rem;
         font-weight: 800;
         white-space: nowrap;
-        text-shadow: 0 2px 0 rgba(0, 0, 0, .6), 0 0 14px rgba(0, 0, 0, .5);
+        text-shadow: 0 2px 0 rgba(0, 0, 0, .6), 0 0 14px rgba(16, 185, 129, .6);
         animation: floatPoint 1.8s ease-out both;
     }
 
