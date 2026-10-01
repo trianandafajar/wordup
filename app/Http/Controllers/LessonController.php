@@ -168,8 +168,7 @@ class LessonController extends Controller
 
         $xpEarned = 0;
         if ($passed && ! $alreadyCompleted) {
-            // Hanya beri XP jika skor sempurna 100%
-            if ($finalScore === 100) {
+            if ($finalScore == 100) {
                 $xpEarned = $lesson->xp_reward;
                 $bonusXp = ($user->current_streak >= 2) ? 10 : 0;
                 $xpEarned += $bonusXp;
