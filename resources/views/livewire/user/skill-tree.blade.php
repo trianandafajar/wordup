@@ -122,14 +122,12 @@ $slot = 0;
         $showMascot = $index % 4 === 1;
         $mascotSide = $offset > 0 ? -1 : 1;
         $mascotX = $mascotSide * 112 - $offset;
-        
+
         $randomMascot = asset('images/mascots/' . rand(1, 4) . '.png');
 
         $lockedText = $lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : 'Selesaikan lesson sebelumnya' ;
-
-            $showXpBadge=($isCompleted && $bestScore==100); @endphp <div
-            class="relative z-10 mb-3" style="left: {{ $offset }}px;" data-node="{{ $lesson['id'] }}"
-            data-done="{{ $isCompleted ? '1' : '0' }}">
+            $showXpBadge=($isCompleted && $bestScore==100); @endphp <div class="relative z-10 mb-3"
+            style="left: {{ $offset }}px;" data-node="{{ $lesson['id'] }}" data-done="{{ $isCompleted ? '1' : '0' }}">
             <button @if ($isCompleted)
                 onclick="window.dispatchEvent(new CustomEvent('open-lesson-modal', { detail: { url: '{{ route('user.lesson.practice', $lesson['id']) }}' } }))"
                 @elseif (!$isLocked) onclick="window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'"
@@ -329,13 +327,20 @@ $slot = 0;
     style="display: none;"
     class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
     <div class="bg-white rounded-2xl p-6 max-w-sm w-full shadow-xl">
-        <h3 class="text-lg font-bold mb-2">Review Pelajaran</h3>
-        <p class="text-gray-600 mb-6">Pelajaran ini sudah selesai. Kamu bisa mengulanginya, tapi tidak akan mendapat
-            tambahan XP atau energi.</p>
+        <h3 class="text-lg font-bold mb-2">
+            Review Pelajaran
+        </h3>
+        <p class="text-gray-600 mb-6">
+            Pelajaran ini sudah selesai. Kamu bisa mengulanginya, tapi tidak akan mendapat tambahan XP atau energi.
+        </p>
         <div class="flex gap-3">
-            <button @click="show = false" class="flex-1 px-4 py-2 bg-gray-200 rounded-xl font-bold">Batal</button>
+            <button @click="show = false" class="flex-1 px-4 py-2 bg-gray-200 rounded-xl font-bold cursor-pointer">
+                Batal
+            </button>
             <button @click="window.location.href = url"
-                class="flex-1 px-4 py-2 bg-brand-500 text-white rounded-xl font-bold">Mulai Ulang</button>
+                class="flex-1 px-4 py-2 bg-brand-500 text-white rounded-xl font-bold cursor-pointer">
+                Mulai Ulang
+            </button>
         </div>
     </div>
 </div>
