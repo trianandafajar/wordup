@@ -275,8 +275,7 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
 
     <div x-show="lessonsDetailOpen" x-transition.opacity style="display:none;"
         class="fixed inset-0 z-[1001] flex items-center justify-center p-4" @click.stop>
-        <div
-            class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl max-h-[80vh] flex flex-col border border-gray-200">
+        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl flex flex-col border border-gray-200">
             <div class="flex items-center justify-between mb-4">
                 <h3 class="font-bold text-gray-900 text-lg">
                     Pelajaran Selesai
@@ -291,21 +290,25 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
                 </button>
             </div>
 
-            <div class="overflow-y-auto flex-1 space-y-3">
+            <div class="relative overflow-y-auto space-y-3 snap-y snap-mandatory pr-1" x-ref="list" x-data="{
+                listHeight: null,
+                calc() {
+                    const items = Array.from(this.$refs.list.children).filter(el => el.tagName !== 'TEMPLATE' && el.dataset.lesson !== undefined);
+                    if (items.length === 0) { this.listHeight = null; return; }
+                    const last = items[Math.min(2, items.length - 1)];
+                    this.listHeight = last.offsetTop + last.offsetHeight - items[0].offsetTop;
+                }
+            }" x-init="
+                $watch('lessonsDetailOpen', open => { if (open) $nextTick(() => calc()) });
+                $watch('lessons', () => $nextTick(() => calc()));
+            " @resize.window.debounce.150ms="calc()" :style="listHeight ? `max-height: ${listHeight}px` : ''">
+
                 <template x-for="lesson in lessons" :key="lesson.lesson_title">
-                    <div class="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                    <div data-lesson class="bg-gray-50 rounded-2xl p-4 border border-gray-100 snap-start">
                         <div class="flex items-start gap-3">
-                            <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center shrink-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-brand-600"
-                                    viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd"
-                                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                        clip-rule="evenodd" />
-                                </svg>
-                            </div>
                             <div class="flex-1 min-w-0">
-                                <p class="font-bold text-gray-900 text-sm" x-text="lesson.lesson_title"></p>
-                                <p class="text-xs text-gray-500 mt-0.5" x-text="lesson.unit_title"></p>
+                                <p class="font-bold text-gray-900 text-sm truncate" x-text="lesson.lesson_title"></p>
+                                <p class="text-xs text-gray-500 mt-0.5 truncate" x-text="lesson.unit_title"></p>
                                 <div class="flex items-center gap-3 mt-2 text-xs text-gray-600">
                                     <span class="flex items-center gap-1">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20"
@@ -322,6 +325,7 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
                         </div>
                     </div>
                 </template>
+
                 <template x-if="lessons.length === 0">
                     <div class="text-center py-8">
                         <p class="text-gray-400">Belum ada pelajaran yang diselesaikan</p>
