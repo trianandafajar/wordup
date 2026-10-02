@@ -85,14 +85,11 @@ $mascot = asset('images/mascots/2.png');
 
             @if ($isFill)
             <div class="mb-8">
-                <div class="rounded-2xl border-2 border-gray-200 bg-white px-4"
-                    style="background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 55px, #e5e7eb 55px, #e5e7eb 57px); min-height: 172px;">
-                    <input type="text" name="answers[{{ $question->id }}]" placeholder="Ketik jawaban di sini..."
-                        autocomplete="off" autocapitalize="off" spellcheck="false"
-                        class="fill-input w-full h-14 bg-transparent text-lg font-semibold text-gray-800 placeholder-gray-300 focus:outline-none"
-                        data-correct="{{ $question->answer?->correct_text ?? '' }}" required>
-                </div>
-                <p class="text-xs text-gray-400 italic mt-2">Tidak peka huruf besar/kecil</p>
+                <input type="text" name="answers[{{ $question->id }}]" placeholder="Ketik jawaban di sini..."
+                    autocomplete="off" autocapitalize="off" spellcheck="false"
+                    class="fill-input w-full px-5 py-4 text-center text-xl font-dynapuff font-bold rounded-2xl border-2 border-b-4 border-gray-200 bg-white text-gray-800 placeholder-gray-300 placeholder:font-semibold placeholder:text-base transition-all focus:outline-none focus:border-emerald-400 focus:bg-emerald-50 focus:text-emerald-600 focus:-translate-y-0.5"
+                    data-correct="{{ $question->answer?->correct_text ?? '' }}" required>
+                <p class="text-xs text-gray-400 italic mt-3">Tidak peka huruf besar/kecil</p>
             </div>
             @else
             <div class="mb-8 grid gap-3 {{ $shortOptions ? 'grid-cols-2' : 'grid-cols-1' }}">
@@ -321,15 +318,15 @@ $mascot = asset('images/mascots/2.png');
                 if (!correct) paint(radio.closest('label').querySelector('.option-card'), 'wrong');
             } else if (input) {
                 const key = (input.dataset.correct || '').trim().toLowerCase();
-                if (key !== '') {
-                    correct = input.value.trim().toLowerCase() === key;
-                    detail = input.dataset.correct;
-                    input.parentElement.classList.toggle('border-emerald-500', correct);
-                    input.parentElement.classList.toggle('border-red-500', !correct);
-                }
+              if (key !== '') {
+    correct = input.value.trim().toLowerCase() === key;
+    detail = input.dataset.correct;
+    input.blur();
+    paint(input, correct ? 'correct' : 'wrong');
+}
             }
 
-            step.classList.add('pointer-events-none'); // kunci jawaban (tanpa disabled agar tetap terkirim)
+            step.classList.add('pointer-events-none');
             if (input) input.readOnly = true;
             results[current] = { correct: correct };
             if (correct !== null) showFeedback(correct, correct ? '' : detail);
