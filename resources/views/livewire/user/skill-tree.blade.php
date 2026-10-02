@@ -173,7 +173,6 @@ $slot = 0;
             @endif
     </div>
 
-    {{-- Chest (mengikuti kurva jalur sebagai satu titik) --}}
     @php
     $isChestLevel = ($lesson['order'] % 5 === 0);
     $reward = $isChestLevel ? \App\Models\UserReward::where('user_id', auth()->id())
@@ -297,23 +296,33 @@ $slot = 0;
                             }" class="relative z-10 w-48 h-48 sm:w-60 sm:h-60 object-contain drop-shadow-2xl"
                         alt="Harta Karun">
 
-                    <div x-show="phase === 'open' && justClaimed" style="display: none;"
+                    <div x-show="phase === 'open'" style="display: none;"
                         class="reward-up relative z-10 mt-6 text-center">
-                        <p class="text-emerald-300 text-sm font-bold uppercase tracking-widest mb-3">Hadiah!</p>
-                        <div class="flex items-center justify-center gap-3">
-                            <span
-                                class="bg-emerald-400/10 border border-emerald-300/30 text-lime-300 font-extrabold text-lg px-4 py-2 rounded-2xl">
-                                +5 Energi
-                            </span>
-                            <span
-                                class="bg-emerald-400/10 border border-emerald-300/30 text-emerald-300 font-extrabold text-lg px-4 py-2 rounded-2xl">
-                                +50 XP
-                            </span>
+                        <p class="font-dynapuff reward-title mb-4"
+                            :class="justClaimed ? 'text-emerald-300' : 'text-white/80'"
+                            x-text="justClaimed ? 'Hadiah!' : 'Sudah Diklaim'"></p>
+
+                        <div class="flex items-center justify-center gap-4">
+                            <template x-for="(r, i) in rewards" :key="i">
+                                <span class="reward-chip font-dynapuff relative"
+                                    :class="[r.cls, justClaimed ? '' : 'is-claimed']">
+                                    <span x-text="r.text"></span>
+
+                                    <span x-show="!justClaimed" style="display: none;" class="reward-check"
+                                        :style="`animation-delay: ${0.35 + i * 0.15}s`">
+                                        <svg viewBox="0 0 24 24" fill="none" class="w-4 h-4">
+                                            <path d="M5.5 12.5l4.2 4.2L18.5 7.8" stroke="#fff" stroke-width="3.5"
+                                                stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </span>
+                                </span>
+                            </template>
                         </div>
                     </div>
 
                     <p x-show="phase === 'open'" style="display: none;"
-                        class="tap-hint relative z-10 mt-6 text-white/70 text-xs tracking-wide">Ketuk untuk lanjut</p>
+                        class="font-dynapuff tap-hint relative z-10 mt-6 text-white/70 text-xs tracking-wide">Ketuk
+                        untuk lanjut</p>
                 </div>
             </div>
         </template>
@@ -515,6 +524,58 @@ $slot = 0;
     .reward-up {
         animation: rewardUp 0.5s 0.25s cubic-bezier(.22, 1, .36, 1) both;
     }
+    .reward-title {
+        font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+    }
+    .reward-chip {
+        display: inline-flex;
+        align-items: center;
+        padding: .55rem 1.1rem;
+        font-size: 1.15rem;
+        font-weight: 800;
+        border-radius: 1rem;
+        background: rgba(16, 185, 129, .15);
+        border: 2px solid rgba(110, 231, 183, .45);
+    }
+
+    .reward-chip.is-claimed {
+        background: rgba(255, 255, 255, .08);
+        border-color: rgba(255, 255, 255, .25);
+    }
+    @keyframes checkPop {
+        0% {
+            transform: scale(0) rotate(-30deg);
+            opacity: 0;
+        }
+
+        65% {
+            transform: scale(1.3) rotate(8deg);
+            opacity: 1;
+        }
+
+        100% {
+            transform: scale(1) rotate(0);
+            opacity: 1;
+        }
+    }
+
+    .reward-check {
+        position: absolute;
+        top: -.6rem;
+        right: -.6rem;
+        width: 1.6rem;
+        height: 1.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 9999px;
+        background: linear-gradient(180deg, #34d399, #059669);
+        border: 2px solid #fff;
+        animation: checkPop .45s cubic-bezier(.22, 1, .36, 1) both;
+    }
 
     @keyframes hintBlink {
 
@@ -574,7 +635,8 @@ $slot = 0;
     @media (prefers-reduced-motion: reduce) {
 
         .tap-hint,
-        .chest-rays {
+        .chest-rays,
+        .reward-check {
             animation: none;
         }
     }
