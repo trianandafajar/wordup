@@ -105,7 +105,6 @@
         </form>
     </div>
 
-    <!-- Avatar Upload (hidden form) -->
     <form id="avatarForm" method="POST" action="{{ route('user.profile.update') }}" enctype="multipart/form-data"
         class="hidden">
         @csrf
@@ -115,9 +114,7 @@
         <input type="file" id="avatarInput" name="avatar" accept="image/*" @change="onAvatarSelect($event)">
     </form>
 
-    <!-- Avatar Change Modal -->
-    <x-modal show="showAvatarModal">
-        <h3 class="text-lg font-bold text-gray-900 text-center mb-4">Ubah Foto Profil</h3>
+    <x-modal show="showAvatarModal" title="Ubah Foto Profil">
         <div class="flex flex-col items-center">
             <div class="relative mb-4">
                 <template x-if="avatarPreview">
@@ -148,7 +145,8 @@
                 @change="onAvatarSelect($event)">
             <p class="text-xs text-gray-400 mt-2">JPG, PNG, atau WebP. Maks 2MB.</p>
         </div>
-        <div class="mt-6 flex gap-3">
+
+        <x-slot name="footer">
             <button type="button" @click="showAvatarModal = false"
                 class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors cursor-pointer">
                 Batal
@@ -157,7 +155,7 @@
                 class="flex-1 py-2.5 rounded-xl bg-[#4caf50] text-white font-semibold text-sm hover:bg-[#43a047] transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed">
                 Simpan
             </button>
-        </div>
+        </x-slot>
     </x-modal>
 
     <div class="bg-white rounded-3xl border border-gray-200 p-6 mb-6">
@@ -220,7 +218,7 @@
         </div>
     </div>
 
-    <div x-data="{ showLogoutModal: false }">
+    <div x-data="{ showLogoutModal: false, isLoggingOut: false }">
         <button type="button" @click="showLogoutModal = true"
             class="w-full py-3 rounded-xl bg-red-500 border border-red-200 text-white font-semibold text-sm hover:bg-red-600 transition-colors flex items-center justify-center gap-2 cursor-pointer">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
@@ -230,26 +228,25 @@
             </svg>
             Logout
         </button>
+        @php
+        $logoutIcon = [
+        'bg' => 'bg-red-100',
+        'svg' => '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6 text-red-500">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+        </svg>',
+        ];
+        @endphp
+        <x-modal show="showLogoutModal" title="Yakin ingin logout?" :icon="$logoutIcon">
+            <p class="text-sm text-gray-500 text-center">Kamu harus login kembali untuk mengakses akunmu.</p>
 
-        <x-modal show="showLogoutModal">
-            <div class="text-center">
-                <div class="mx-auto mb-4 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-6 h-6 text-red-500">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
-                    </svg>
-                </div>
-                <h3 class="text-lg font-bold text-gray-900">Yakin ingin logout?</h3>
-                <p class="mt-2 text-sm text-gray-500">Kamu harus login kembali untuk mengakses akunmu.</p>
-            </div>
-            <div class="mt-6 flex gap-3">
+            <x-slot name="footer">
                 <button type="button" @click="showLogoutModal = false"
                     class="flex-1 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors cursor-pointer">
                     Batal
                 </button>
-                <form action="{{ route('logout') }}" method="POST" class="flex-1" x-data="{ isLoggingOut: false }"
-                    @submit="isLoggingOut = true">
+                <form action="{{ route('logout') }}" method="POST" class="flex-1" @submit="isLoggingOut = true">
                     @csrf
                     <button type="submit" data-no-loading :disabled="isLoggingOut"
                         class="flex w-full items-center justify-center gap-2 rounded-xl bg-red-500 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50">
@@ -263,9 +260,7 @@
                         <span x-text="isLoggingOut ? 'Logging out...' : 'Logout'"></span>
                     </button>
                 </form>
-            </div>
+            </x-slot>
         </x-modal>
     </div>
-
-</div>
-@endsection
+    @endsection

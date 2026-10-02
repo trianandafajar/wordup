@@ -333,29 +333,28 @@ $slot = 0;
 </section>
 @endforeach
 
-<div x-data="{ show: false, url: '' }" @open-lesson-modal.window="show = true; url = $event.detail.url" x-show="show"
-    style="display: none;"
-    class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/25 backdrop-blur-md backdrop-saturate-150">
-
-    <div class="bg-white text-center rounded-2xl p-6 max-w-sm w-full shadow-xl">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="w-20 h-20 object-contain mx-auto mb-4">
-
-        <h3 class="text-lg font-bold mb-2">
-            Review Pelajaran
-        </h3>
-        <p class="text-sm text-gray-600 mb-6">
+<div x-data="{ show: false, url: '' }" @open-lesson-modal.window="show = true; url = $event.detail.url">
+    @php
+    $reviewIcon = [
+    'bg' => 'bg-brand-50',
+    'svg' => '<img src="' . asset('images/logo.png') . '" alt="Logo" class="w-10 h-10 object-contain">',
+    ];
+    @endphp
+    <x-modal show="show" title="Review Pelajaran" :icon="$reviewIcon">
+        <p class="text-sm text-gray-600 text-center">
             Pelajaran ini sudah selesai. Kamu bisa mengulanginya, tapi tidak akan mendapat tambahan XP atau energi.
         </p>
-        <div class="flex gap-3">
-            <button @click="show = false" class="flex-1 px-4 py-2 bg-gray-200 rounded-xl font-bold cursor-pointer">
+
+        <x-slot:footer>
+            <button @click="show = false" class="flex-1 px-4 py-2 bg-gray-200 rounded-xl font-semibold cursor-pointer">
                 Batal
             </button>
             <button @click="window.location.href = url"
-                class="flex-1 px-4 py-2 bg-brand-500 text-white rounded-xl font-bold cursor-pointer">
+                class="flex-1 px-4 py-2 bg-brand-500 text-white rounded-xl font-semibold cursor-pointer">
                 Mulai Ulang
             </button>
-        </div>
-    </div>
+        </x-slot:footer>
+    </x-modal>
 </div>
 @endsection
 
@@ -524,12 +523,14 @@ $slot = 0;
     .reward-up {
         animation: rewardUp 0.5s 0.25s cubic-bezier(.22, 1, .36, 1) both;
     }
+
     .reward-title {
         font-size: 1.6rem;
         font-weight: 800;
         letter-spacing: .08em;
         text-transform: uppercase;
     }
+
     .reward-chip {
         display: inline-flex;
         align-items: center;
@@ -545,6 +546,7 @@ $slot = 0;
         background: rgba(255, 255, 255, .08);
         border-color: rgba(255, 255, 255, .25);
     }
+
     @keyframes checkPop {
         0% {
             transform: scale(0) rotate(-30deg);
