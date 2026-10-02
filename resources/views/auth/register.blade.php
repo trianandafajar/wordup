@@ -6,11 +6,10 @@
     <div class="hidden lg:flex lg:w-[60%] bg-brand-800 flex-col justify-center items-center p-12 text-white">
         <div class="space-y-3 text-center">
             <div class="flex justify-center">
-                <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image"
-                    class="w-100 h-100 object-contain" />
+                <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image" class="w-100 h-100 object-contain" />
             </div>
             <h1 class="font-dynapuff text-4xl leading-tight text-white">
-                Rutin 5 menit sehari <br/> Inggrismu makin lancar.
+                Rutin 5 menit sehari <br /> Inggrismu makin lancar.
             </h1>
         </div>
     </div>
@@ -20,14 +19,10 @@
         <div class="w-full max-w-sm animate-[fadeUp_0.4s_ease-out] lg:max-w-[25rem]">
 
             <div class="mb-9 text-center lg:hidden">
-                <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.5rem] bg-brand-50">
-                    <img src="{{ asset('images/logo.png') }}" alt="WordUp"
-                        class="h-[4.5rem] w-[4.5rem] object-contain" />
+                <div class="mx-auto flex h-24 w-24 items-center justify-center">
+                    <img src="{{ asset('images/auth-image.png') }}" alt="WordUp" class="h-20 w-20 object-contain" />
                 </div>
-                <p class="mt-4 text-xl font-bold tracking-tight text-gray-dark">WordUp</p>
-                <p class="mt-1 text-sm text-gray-dark/55">Mulai dari lima menit.</p>
             </div>
-
             <div class="lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
                 <div class="mb-6 space-y-1.5">
                     <h2 class="font-sans text-[1.7rem] font-bold tracking-tight text-gray-dark">Buat akun</h2>

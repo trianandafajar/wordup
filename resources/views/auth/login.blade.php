@@ -9,7 +9,7 @@
                 <img src="{{ asset('images/auth-image.png') }}" alt="Auth Image" class="w-100 h-100 object-contain" />
             </div>
             <h1 class="font-dynapuff text-4xl leading-tight text-white">
-                Lanjutkan streak-mu <br/> Jangan sampai putus.
+                Lanjutkan streak-mu <br /> Jangan sampai putus.
             </h1>
         </div>
     </div>
@@ -19,12 +19,10 @@
         <div class="w-full max-w-sm animate-[fadeUp_0.4s_ease-out] lg:max-w-[25rem]">
 
             <div class="mb-9 text-center lg:hidden">
-                <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-[1.5rem] bg-brand-50">
-                    <img src="{{ asset('images/logo.png') }}" alt="WordUp"
-                        class="h-[4.5rem] w-[4.5rem] object-contain" />
+                <div class="mx-auto flex h-24 w-24 items-center justify-center">
+                    <img src="{{ asset('images/auth-image.png') }}" alt="WordUp"
+                        class="h-20 w-20 object-contain" />
                 </div>
-                <p class="mt-4 text-xl font-bold tracking-tight text-gray-dark">WordUp</p>
-                <p class="mt-1 text-sm text-gray-dark/55">Belajar sedikit, tiap hari.</p>
             </div>
 
             <div class="lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
