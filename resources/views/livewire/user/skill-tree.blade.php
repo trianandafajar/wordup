@@ -108,7 +108,7 @@ $slot = 0;
         $icon = asset('images/learn/vocabulary-locked.png');
         } elseif ($isCompleted) {
         if ($bestScore == 100) {
-        $icon = asset('images/learn/vocabulary-xp.png');
+        $icon = asset('images/learn/vocabulary-xp.png?=v2');
         } elseif ($bestScore >= 80) {
         $icon = asset('images/learn/vocabulary-completed.png');
         }
