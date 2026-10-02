@@ -61,7 +61,7 @@ $slot = 0;
 
         <div
             class="relative shrink-0 w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-            <img src="{{ asset('images/mascots/' . (($loop->iteration % 4) + 1) . '.png') }}" alt="Mascot"
+            <img src="{{ asset('images/mascots/' . (($loop->iteration % 4) + 1) . '.png?=v1') }}" alt="Mascot"
                 class="w-12 h-12 object-contain">
         </div>
     </div>
@@ -121,7 +121,7 @@ $slot = 0;
         $mascotSide = $offset > 0 ? -1 : 1;
         $mascotX = $mascotSide * 112 - $offset;
 
-        $randomMascot = asset('images/mascots/' . rand(1, 4) . '.png');
+        $randomMascot = asset('images/mascots/' . rand(1, 4) . '.png?=v1');
 
         $lockedText = $lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : 'Selesaikan lesson sebelumnya' ;
             $showXpBadge=($isCompleted && $bestScore==100); @endphp <div class="relative z-10 mb-3"

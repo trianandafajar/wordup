@@ -8,7 +8,7 @@
 <div class="w-full max-w-lg my-6">
     <div class="rounded-2xl bg-brand-500 text-white p-4 shadow-md flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
-            <img src="{{ asset('images/mascots/1.png') }}" alt="Guru" class="w-12 h-12">
+            <img src="{{ asset('images/mascots/1.png?=v1') }}" alt="Guru" class="w-12 h-12">
             <div>
                 <span class="text-xs font-bold uppercase tracking-wider opacity-80">Unit {{ $number }}</span>
                 <h3 class="text-lg font-dynapuff font-bold leading-snug">{{ $title }}</h3>

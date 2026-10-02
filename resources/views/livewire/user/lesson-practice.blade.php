@@ -3,7 +3,7 @@
 @section('content')
 @php
 use Illuminate\Support\Facades\Storage;
-$mascot = asset('images/mascots/2.png');
+$mascot = asset('images/mascots/2.png?=v1');
 @endphp
 <div class="w-full max-w-lgF pb-48">
 
