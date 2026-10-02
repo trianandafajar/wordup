@@ -25,7 +25,7 @@ $correctCount = collect($questions)->where('is_correct', true)->count();
         <h1 class="mt-4 text-3xl font-dynapuff font-extrabold {{ $passed ? 'text-brand-600' : 'text-red-500' }}">
             {{ $passed ? 'Lesson Selesai!' : 'Belum Lulus' }}
         </h1>
-        <p class="text-gray-500 mt-1">
+        <p class="text-gray-500">
             {{ $passed ? 'Kamu berhasil menyelesaikan lesson ini.' : 'Kamu butuh minimal 80% untuk lulus.' }}
         </p>
     </div>
