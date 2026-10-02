@@ -19,7 +19,7 @@ $correctCount = collect($questions)->where('is_correct', true)->count();
             <span
                 class="absolute left-1/2 -bottom-2 -translate-x-1/2 rotate-45 w-3.5 h-3.5 bg-white border-r-2 border-b-2 {{ $passed ? 'border-brand-200' : 'border-red-200' }}"></span>
         </div>
-        <img src="{{ asset('images/mascots/' . ($passed ? '3' : '2') . '.png') }}" alt="Mascot"
+        <img src="{{ asset('images/lesson-result/' . ($passed ? ($result['score'] == 100 ? '2' : '1') : '3') . '.png') }}" alt="Mascot"
             class="w-36 h-36 object-contain">
 
         <h1 class="mt-4 text-3xl font-dynapuff font-extrabold {{ $passed ? 'text-brand-600' : 'text-red-500' }}">
@@ -60,7 +60,7 @@ $correctCount = collect($questions)->where('is_correct', true)->count();
     </div>
 
     @if (! empty($questions))
-    <div class="mb-8">
+    <div class="mb-8 font-dynapuff">
         <h2 class="font-dynapuff font-extrabold text-gray-900 text-lg mb-3">Detail Jawaban</h2>
         <div class="space-y-3">
             @foreach ($questions as $i => $q)
