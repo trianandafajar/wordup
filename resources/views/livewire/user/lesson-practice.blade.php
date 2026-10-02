@@ -112,20 +112,23 @@ $mascot = asset('images/mascots/2.png?=v1');
 </div>
 @endforeach
 
-<div class="lesson-nav fixed bottom-0 inset-x-0 z-40 border-t-2 border-gray-200 bg-white transition-colors">
-    <div class="max-w-md mx-auto px-4 py-4">
-        <div class="lesson-feedback hidden items-start gap-3 mb-4">
-            <span
-                class="feedback-icon shrink-0 w-11 h-11 rounded-full bg-white flex items-center justify-center"></span>
-            <div class="min-w-0">
-                <p class="feedback-title font-dynapuff font-extrabold text-xl leading-tight"></p>
-                <p class="feedback-detail text-sm font-semibold mt-0.5"></p>
+<div class="fixed bottom-0 inset-x-0 z-40 pointer-events-none">
+    <div class="mx-auto w-full max-w-md px-0">
+        <div class="lesson-nav pointer-events-auto" style="padding-bottom: env(safe-area-inset-bottom)">
+            <div class="px-4 pt-4 pb-4">
+                <div class="lesson-feedback hidden items-center gap-3 mb-4">
+                    <span class="feedback-icon shrink-0 w-11 h-11 rounded-full flex items-center justify-center"></span>
+                    <div class="min-w-0">
+                        <p class="feedback-title font-dynapuff font-extrabold text-xl leading-tight"></p>
+                        <p class="feedback-detail empty:hidden text-sm font-semibold mt-0.5"></p>
+                    </div>
+                </div>
+                <button type="button"
+                    class="lesson-action w-full py-4 font-dynapuff font-bold text-lg rounded-2xl border-b-4 transition-all">
+                    Periksa
+                </button>
             </div>
         </div>
-        <button type="button"
-            class="lesson-action w-full py-4 font-dynapuff font-bold text-lg rounded-2xl border-b-4 transition-all">
-            Periksa
-        </button>
     </div>
 </div>
 </form>
@@ -201,7 +204,7 @@ $mascot = asset('images/mascots/2.png?=v1');
         const nav = document.querySelector('.lesson-nav');
         const total = steps.length;
         let current = 0;
-        const results = {}; // stepIndex -> { correct: true|false|null }
+        const results = {};
 
         const progressBar = document.querySelector('.lesson-progress');
         const counter = document.querySelector('.lesson-counter');
@@ -216,8 +219,8 @@ $mascot = asset('images/mascots/2.png?=v1');
             return;
         }
 
-        const ICON_OK = '<svg width="26" height="26" viewBox="0 0 24 24" fill="#16a34a"><path d="M9 16.2L4.8 12L3.4 13.4L9 19L21 7L19.6 5.6L9 16.2Z"/></svg>';
-        const ICON_NO = '<svg width="24" height="24" viewBox="0 0 24 24" fill="#ef4444"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"/></svg>';
+      const ICON_OK = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5L10 17.5L19 7"/></svg>';
+const ICON_NO = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6L18 18M18 6L6 18"/></svg>';
 
         const CARD_STATES = {
             default: ['border-gray-200', 'bg-white', 'text-gray-800'],
@@ -240,10 +243,8 @@ $mascot = asset('images/mascots/2.png?=v1');
         };
 
         function setNavTheme(state) {
-            nav.classList.remove('bg-white', 'border-gray-200', 'bg-emerald-100', 'border-emerald-200', 'bg-red-100', 'border-red-200');
-            if (state === 'correct') nav.classList.add('bg-emerald-100', 'border-emerald-200');
-            else if (state === 'wrong') nav.classList.add('bg-red-100', 'border-red-200');
-            else nav.classList.add('bg-white', 'border-gray-200');
+            nav.classList.remove('bg-emerald-100', 'bg-red-100', 'border-emerald-200', 'border-red-200');
+            nav.classList.add('bg-white');
         }
 
         function getAnswer(step) {
@@ -291,13 +292,15 @@ $mascot = asset('images/mascots/2.png?=v1');
             }
         }
 
-        function showFeedback(correct, detail) {
-            fbIcon.innerHTML = correct ? ICON_OK : ICON_NO;
-            fbTitle.textContent = correct ? 'Benar!' : 'Jawaban benar:';
-            fbTitle.className = 'feedback-title font-dynapuff font-extrabold text-xl leading-tight ' + (correct ? 'text-emerald-700' : 'text-red-600');
-            fbDetail.textContent = detail || '';
-            fbDetail.className = 'feedback-detail text-sm font-semibold mt-0.5 ' + (correct ? 'text-emerald-600' : 'text-red-500');
-        }
+       function showFeedback(correct, detail) {
+        fbIcon.innerHTML = correct ? ICON_OK : ICON_NO;
+        fbIcon.className = 'feedback-icon shrink-0 w-11 h-11 rounded-full flex items-center justify-center ' +
+            (correct ? 'bg-emerald-100' : 'bg-red-100');
+        fbTitle.textContent = correct ? 'Benar!' : 'Jawaban benar:';
+        fbTitle.className = 'feedback-title font-dynapuff font-extrabold text-xl leading-tight ' + (correct ? 'text-emerald-700' : 'text-red-600');
+        fbDetail.textContent = detail || '';
+        fbDetail.className = 'feedback-detail empty:hidden text-sm font-semibold mt-0.5 ' + (correct ? 'text-emerald-600' : 'text-red-500');
+    }
 
         function checkAnswer() {
             const step = steps[current];
