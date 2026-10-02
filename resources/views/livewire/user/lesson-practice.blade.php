@@ -43,10 +43,10 @@ $mascot = asset('images/mascots/2.png?=v1');
                         class="absolute -left-2 top-8 rotate-45 w-3.5 h-3.5 bg-white border-l-2 border-b-2 border-brand-200"></span>
                     <span
                         class="inline-block px-3 py-1 mb-3 bg-brand-100 text-brand-700 text-xs font-dynapuff font-bold rounded-full">Pelajaran</span>
-                    <div
-                        class="prose prose-sm prose-li:my-0 prose-ul:space-y-0 prose-headings:font-dynapuff leading-tight max-w-none text-gray-800 space-y-3">
+                    <div class="lesson-prose max-w-none text-gray-800">
                         {!! $lesson->explanation !!}
                     </div>
+
                 </div>
             </div>
         </div>
@@ -72,14 +72,15 @@ $mascot = asset('images/mascots/2.png?=v1');
                     <button type="button"
                         onclick="playAudio('{{ $question->audio_url ? Storage::url($question->audio_url) : '' }}', '{{ addslashes($question->question_text) }}')"
                         aria-label="Dengarkan audio"
-                        class="shrink-0 w-12 h-12 bg-sky-400 text-white rounded-xl border-b-4 border-sky-600 flex items-center justify-center hover:bg-sky-500 active:border-b-0 active:translate-y-1 transition-all cursor-pointer">
+                        class="shrink-0 w-12 h-12 bg-emerald-400 text-white rounded-xl border-b-4 border-emerald-600 flex items-center justify-center hover:bg-emerald-500 active:border-b-0 active:translate-y-1 transition-all cursor-pointer">
                         <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
                             <path
                                 d="M3 9V15H7L12 20V4L7 9H3ZM16.5 12C16.5 10.23 15.48 8.71 14 7.97V16.02C15.48 15.29 16.5 13.77 16.5 12ZM14 3.23V5.29C16.89 6.15 19 8.83 19 12C19 15.17 16.89 17.85 14 18.71V20.77C18.01 19.86 21 16.28 21 12C21 7.72 18.01 4.14 14 3.23Z" />
                         </svg>
                     </button>
                     @endif
-                    <p class="text-gray-800 font-semibold text-base leading-snug">{{ $question->question_text }}</p>
+                    <p class="font-dynapuff text-gray-800 font-semibold text-base leading-snug">{{
+                        $question->question_text }}</p>
                 </div>
             </div>
 
@@ -220,7 +221,7 @@ $mascot = asset('images/mascots/2.png?=v1');
 
         const CARD_STATES = {
             default: ['border-gray-200', 'bg-white', 'text-gray-800'],
-            selected: ['border-sky-400', 'bg-sky-50', 'text-sky-600'],
+            selected: ['border-emerald-400', 'bg-emerald-50', 'text-emerald-600'],
             correct: ['border-emerald-500', 'bg-emerald-50', 'text-emerald-700'],
             wrong: ['border-red-500', 'bg-red-50', 'text-red-600'],
         };
