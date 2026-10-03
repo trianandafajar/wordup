@@ -8,7 +8,7 @@ $questions = $result['questions'] ?? [];
 $correctCount = collect($questions)->where('is_correct', true)->count();
 @endphp
 
-<div class="w-full max-w-lg pb-28">
+<div class="w-full max-w-lg pb-16">
     <div class="flex flex-col items-center text-center pt-6 mb-6">
         <div
             class="relative bg-white border-2 {{ $passed ? 'border-brand-200' : 'border-red-200' }} rounded-2xl px-4 py-2 mb-3 shadow-sm">
@@ -19,8 +19,8 @@ $correctCount = collect($questions)->where('is_correct', true)->count();
             <span
                 class="absolute left-1/2 -bottom-2 -translate-x-1/2 rotate-45 w-3.5 h-3.5 bg-white border-r-2 border-b-2 {{ $passed ? 'border-brand-200' : 'border-red-200' }}"></span>
         </div>
-        <img src="{{ asset('images/lesson-result/' . ($passed ? ($result['score'] == 100 ? '2' : '1') : '3') . '.png') }}" alt="Mascot"
-            class="w-36 h-36 object-contain">
+        <img src="{{ asset('images/lesson-result/' . ($passed ? ($result['score'] == 100 ? '2' : '1') : '3') . '.png') }}"
+            alt="Mascot" class="w-36 h-36 object-contain">
 
         <h1 class="mt-4 text-3xl font-dynapuff font-extrabold {{ $passed ? 'text-brand-600' : 'text-red-500' }}">
             {{ $passed ? 'Lesson Selesai!' : 'Belum Lulus' }}
@@ -93,8 +93,9 @@ $correctCount = collect($questions)->where('is_correct', true)->count();
     </div>
     @endif
 
-    <div class="fixed bottom-0 inset-x-0 z-40 px-4 py-4 bg-white/90 backdrop-blur border-t border-gray-100">
-        <div class="max-w-md px-4 mx-auto">
+    <div
+        class="fixed bottom-0 inset-x-0 z-40 px-4 pt-10 pb-4 bg-gradient-to-t from-white via-white to-transparent pointer-events-none">
+        <div class="max-w-md lg:px-4 mx-auto pointer-events-auto">
             <a href="{{ route('user.learn') }}"
                 class="block w-full py-4 text-center bg-brand-500 text-white font-dynapuff font-extrabold text-lg rounded-2xl border-b-4 border-brand-700 hover:bg-brand-600 active:border-b-0 active:translate-y-1 transition-all">
                 Lanjut
