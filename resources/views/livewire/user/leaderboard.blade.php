@@ -17,8 +17,13 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
             .then(res => res.json())
             .then(data => {
                 this.lessons = data.lessons;
+                this.userDetailOpen = false;
                 this.lessonsDetailOpen = true;
             });
+    },
+    closeLessons() {
+        this.lessonsDetailOpen = false;
+        this.userDetailOpen = true;
     }
 }">
 
@@ -57,7 +62,6 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
         Total XP: <span class="font-bold text-gray-900">{{ number_format($currentUser->xp_total) }}</span>
     </p>
 
-    {{-- Countdown reset XP mingguan --}}
     @if($resetAt)
     <div class="text-center mt-2" x-data="{
         resetAt: {{ $resetAt * 1000 }},
@@ -198,13 +202,15 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
         </div>
     </div>
 
-    <div x-show="userDetailOpen" x-transition.opacity style="display:none;"
+    {{-- Overlay bersama: Detail Profil + Pelajaran Selesai --}}
+    <div x-show="userDetailOpen || lessonsDetailOpen" x-transition.opacity style="display:none;"
         class="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-slate-900/25 backdrop-blur-md backdrop-saturate-150">
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-xl" @click.away="userDetailOpen = false">
+
+        {{-- Card Detail Profil --}}
+        <div x-show="userDetailOpen" style="display:none;" class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-xl"
+            @click.away="userDetailOpen = false">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-gray-900 text-lg">
-                    Detail Profil
-                </h3>
+                <h3 class="font-bold text-gray-900 text-lg">Detail Profil</h3>
                 <button type="button" @click="userDetailOpen = false"
                     class="text-gray-400 hover:text-gray-600 cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -271,17 +277,12 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
                 </button>
             </div>
         </div>
-    </div>
 
-    <div x-show="lessonsDetailOpen" x-transition.opacity style="display:none;"
-        class="fixed inset-0 z-[1001] flex items-center justify-center p-4" @click.stop>
-        <div class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-2xl flex flex-col border border-gray-200">
+        <div x-show="lessonsDetailOpen" style="display:none;"
+            class="bg-white rounded-3xl p-6 w-full max-w-sm shadow-xl flex flex-col" @click.away="closeLessons()">
             <div class="flex items-center justify-between mb-4">
-                <h3 class="font-bold text-gray-900 text-lg">
-                    Pelajaran Selesai
-                </h3>
-                <button type="button" @click="lessonsDetailOpen = false"
-                    class="text-gray-400 hover:text-gray-600 cursor-pointer">
+                <h3 class="font-bold text-gray-900 text-lg">Pelajaran Selesai</h3>
+                <button type="button" @click="closeLessons()" class="text-gray-400 hover:text-gray-600 cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -289,20 +290,7 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
                     </svg>
                 </button>
             </div>
-
-            <div class="relative overflow-y-auto space-y-3 snap-y snap-mandatory pr-1" x-ref="list" x-data="{
-                listHeight: null,
-                calc() {
-                    const items = Array.from(this.$refs.list.children).filter(el => el.tagName !== 'TEMPLATE' && el.dataset.lesson !== undefined);
-                    if (items.length === 0) { this.listHeight = null; return; }
-                    const last = items[Math.min(2, items.length - 1)];
-                    this.listHeight = last.offsetTop + last.offsetHeight - items[0].offsetTop;
-                }
-            }" x-init="
-                $watch('lessonsDetailOpen', open => { if (open) $nextTick(() => calc()) });
-                $watch('lessons', () => $nextTick(() => calc()));
-            " @resize.window.debounce.150ms="calc()" :style="listHeight ? `max-height: ${listHeight}px` : ''">
-
+            <div class="relative overflow-y-auto space-y-3 snap-y snap-mandatory pr-1 max-h-[23.5rem]">
                 <template x-for="lesson in lessons" :key="lesson.lesson_title">
                     <div data-lesson class="bg-gray-50 rounded-2xl p-4 border border-gray-100 snap-start">
                         <div class="flex items-start gap-3">
@@ -334,13 +322,12 @@ $currentIdx = $currentRankIndex ?? (new \App\Services\RankService)->getRankIndex
             </div>
 
             <div class="mt-4 pt-4 border-t border-gray-100">
-                <button type="button" @click="lessonsDetailOpen = false"
+                <button type="button" @click="closeLessons()"
                     class="w-full px-4 py-2 bg-gray-100 text-gray-900 font-semibold rounded-xl hover:bg-gray-200 transition-colors cursor-pointer">
                     Tutup
                 </button>
             </div>
         </div>
     </div>
-
 </div>
 @endsection
