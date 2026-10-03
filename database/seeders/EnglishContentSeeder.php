@@ -11,11 +11,14 @@ use App\Models\QuestionOption;
 use App\Models\Unit;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 class EnglishContentSeeder extends Seeder
 {
     public function run(): void
     {
+        Course::query()->delete();
         DB::transaction(function () {
             $course = Course::query()->updateOrCreate(
                 ['title' => 'Complete English Mastery'],
@@ -41,6 +44,7 @@ class EnglishContentSeeder extends Seeder
                             'type' => $lessonData['type'] ?? 'reading',
                             'xp_reward' => $lessonData['xp'] ?? 20,
                             'explanation' => $lessonData['explanation'],
+                            'image_url' => $lessonData['image_url'] ?? null,
                         ]
                     );
 
@@ -51,6 +55,7 @@ class EnglishContentSeeder extends Seeder
                                 'type' => $q['type'],
                                 'difficulty_level' => $q['difficulty'],
                                 'question_text' => $q['text'],
+                                'image_url' => $q['image_url'] ?? null,
                             ]
                         );
 
@@ -89,36 +94,55 @@ class EnglishContentSeeder extends Seeder
         }
     }
 
-    private function mc(string $text, array $options, string $correct, string $difficulty = 'beginner'): array
+    private function copyUnitImage(int $lesson, int $index): ?string
+    {
+        $source = public_path("images/units/lesson-{$lesson}/{$index}.png");
+        $dest = "units/lesson-{$lesson}/{$index}.png";
+
+        if (!File::exists($source)) {
+            return null;
+        }
+
+        Storage::makeDirectory(dirname($dest));
+        $content = File::get($source);
+        Storage::put($dest, $content);
+
+        return $dest;
+    }
+
+    private function mc(string $text, array $options, string $correct, string $difficulty = 'beginner', ?string $imageUrl = null): array
     {
         return [
             'type' => 'multiple_choice',
             'difficulty' => $difficulty,
             'text' => $text,
+            'image_url' => $imageUrl,
             'options' => array_map(
-                fn ($o) => ['text' => $o, 'correct' => $o === $correct],
+                fn($o) => ['text' => $o, 'correct' => $o === $correct],
                 $options
             ),
         ];
     }
 
-    private function fib(string $text, string $answer, string $difficulty = 'beginner'): array
+    private function fib(string $text, string $answer, string $difficulty = 'beginner', ?string $imageUrl = null): array
     {
         return [
             'type' => QuestionTypeEnum::FillInTheBlank->value,
             'difficulty' => $difficulty,
             'text' => $text,
             'answer' => $answer,
+            'image_url' => $imageUrl,
         ];
     }
 
-    private function lesson(string $title, string $explanation, array $questions, int $xp = 20): array
+    private function lesson(string $title, string $explanation, array $questions, int $xp = 20, ?string $imageUrl = null): array
     {
         return [
             'title' => $title,
             'type' => 'reading',
             'xp' => $xp,
             'explanation' => $explanation,
+            'image_url' => $imageUrl,
             'questions' => $questions,
         ];
     }
@@ -130,12 +154,12 @@ class EnglishContentSeeder extends Seeder
                 'title' => 'Unit 1: Introduction to English',
                 'lessons' => [
                     $this->lesson('Greetings', '<h3>Greetings</h3><p><b>Hello / Hi</b> adalah sapaan umum.</p><ul><li>Good morning (pagi)</li><li>Good afternoon (siang/sore)</li><li>Good evening (malam)</li><li>Good night (selamat tidur)</li><li>Goodbye / See you (perpisahan)</li></ul>', [
-                        $this->mc('Which greeting is used in the morning?', ['Good night', 'Good morning', 'Good evening', 'Goodbye'], 'Good morning'),
-                        $this->mc('What do you say when leaving?', ['Hello', 'Good morning', 'Goodbye', 'Nice to meet you'], 'Goodbye'),
-                        $this->mc('Which greeting is used before going to bed?', ['Good afternoon', 'Good night', 'Good morning', 'Hello'], 'Good night'),
-                        $this->fib('Good ___, Ms. Rina! (sapaan sore hari)', 'afternoon'),
-                        $this->fib('Good ___, everyone! (sapaan malam hari saat bertemu)', 'evening'),
-                    ]),
+                        $this->mc('Which greeting is used in the morning?', ['Good night', 'Good morning', 'Good evening', 'Goodbye'], 'Good morning', 'beginner', $this->copyUnitImage(1, 2)),
+                        $this->mc('What do you say when leaving?', ['Hello', 'Good morning', 'Goodbye', 'Nice to meet you'], 'Goodbye', 'beginner', $this->copyUnitImage(1, 6)),
+                        $this->mc('Which greeting is used before going to bed?', ['Good afternoon', 'Good night', 'Good morning', 'Hello'], 'Good night', 'beginner', $this->copyUnitImage(1, 5)),
+                        $this->fib('Good ___, Ms. Rina! (sapaan sore hari)', 'afternoon', 'beginner', $this->copyUnitImage(1, 3)),
+                        $this->fib('Good ___, everyone! (sapaan malam hari saat bertemu)', 'evening', 'beginner', $this->copyUnitImage(1, 4)),
+                    ], 20, $this->copyUnitImage(1, 1)),
 
                     $this->lesson('The Alphabet', '<h3>The Alphabet</h3><p>Ada 26 huruf: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z.</p><p>Vokal: <b>A, E, I, O, U</b>. Sisanya adalah konsonan.</p>', [
                         $this->mc('How many letters are in the English alphabet?', ['24', '25', '26', '28'], '26'),
