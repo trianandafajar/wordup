@@ -19,8 +19,8 @@
         <div class="w-full max-w-sm animate-[fadeUp_0.4s_ease-out] lg:max-w-[25rem]">
 
             <div class="mb-9 text-center lg:hidden">
-                <div class="mx-auto flex h-24 w-24 items-center justify-center">
-                    <img src="{{ asset('images/auth-image.png') }}" alt="WordUp" class="h-20 w-20 object-contain" />
+                <div class="mx-auto flex h-56 w-56 items-center justify-center">
+                    <img src="{{ asset('images/auth-image.png') }}" alt="WordUp" class="h-full w-full object-contain" />
                 </div>
             </div>
 
