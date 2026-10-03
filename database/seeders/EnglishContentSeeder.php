@@ -37,25 +37,37 @@ class EnglishContentSeeder extends Seeder
                 );
 
                 foreach ($unitData['lessons'] as $lessonIndex => $lessonData) {
+                    $lessonOrder = $lessonIndex + 1;
+                    
+                    // Hitung index gambar global
+                    $globalLessonIndex = $lessonOrder; // 1, 2, ...
+                    $lessonImageIndex = $globalLessonIndex * 6;
+                    $lessonImage = $this->copyUnitImage($lessonOrder, $lessonImageIndex);
+                    
                     $lesson = Lesson::query()->updateOrCreate(
-                        ['unit_id' => $unit->id, 'order' => $lessonIndex + 1],
+                        ['unit_id' => $unit->id, 'order' => $lessonOrder],
                         [
                             'title' => $lessonData['title'],
                             'type' => $lessonData['type'] ?? 'reading',
                             'xp_reward' => $lessonData['xp'] ?? 20,
                             'explanation' => $lessonData['explanation'],
-                            'image_url' => $lessonData['image_url'] ?? null,
+                            'image_url' => $lessonImage,
                         ]
                     );
 
                     foreach ($lessonData['questions'] as $questionIndex => $q) {
+                        $questionOrder = $questionIndex + 1;
+                        // Gambar soal 1-5
+                        $questionImageIndex = (($globalLessonIndex - 1) * 6) + $questionOrder;
+                        $questionImage = $this->copyUnitImage($lessonOrder, $questionImageIndex);
+
                         $question = Question::query()->updateOrCreate(
-                            ['lesson_id' => $lesson->id, 'order' => $questionIndex + 1],
+                            ['lesson_id' => $lesson->id, 'order' => $questionOrder],
                             [
                                 'type' => $q['type'],
                                 'difficulty_level' => $q['difficulty'],
                                 'question_text' => $q['text'],
-                                'image_url' => $q['image_url'] ?? null,
+                                'image_url' => $questionImage,
                             ]
                         );
 
@@ -96,16 +108,25 @@ class EnglishContentSeeder extends Seeder
 
     private function copyUnitImage(int $lesson, int $index): ?string
     {
-        $source = public_path("images/units/lesson-{$lesson}/{$index}.png");
-        $dest = "units/lesson-{$lesson}/{$index}.png";
-
-        if (!File::exists($source)) {
+        $dir = public_path("images/units/lesson-{$lesson}");
+        
+        if (!File::exists($dir)) {
             return null;
         }
 
-        Storage::makeDirectory(dirname($dest));
-        $content = File::get($source);
-        Storage::put($dest, $content);
+        $files = File::files($dir);
+        if (empty($files)) {
+            return null;
+        }
+
+        $sourceFile = $files[($index - 1) % count($files)];
+        $fileName = $sourceFile->getFilename();
+        
+        $dest = "units/lesson-{$lesson}/{$fileName}";
+        $targetPath = storage_path("app/public/{$dest}");
+
+        File::ensureDirectoryExists(dirname($targetPath));
+        File::copy($sourceFile->getPathname(), $targetPath);
 
         return $dest;
     }
@@ -154,12 +175,12 @@ class EnglishContentSeeder extends Seeder
                 'title' => 'Unit 1: Introduction to English',
                 'lessons' => [
                     $this->lesson('Greetings', '<h3>Greetings</h3><p><b>Hello / Hi</b> adalah sapaan umum.</p><ul><li>Good morning (pagi)</li><li>Good afternoon (siang/sore)</li><li>Good evening (malam)</li><li>Good night (selamat tidur)</li><li>Goodbye / See you (perpisahan)</li></ul>', [
-                        $this->mc('Which greeting is used in the morning?', ['Good night', 'Good morning', 'Good evening', 'Goodbye'], 'Good morning', 'beginner', $this->copyUnitImage(1, 2)),
-                        $this->mc('What do you say when leaving?', ['Hello', 'Good morning', 'Goodbye', 'Nice to meet you'], 'Goodbye', 'beginner', $this->copyUnitImage(1, 6)),
-                        $this->mc('Which greeting is used before going to bed?', ['Good afternoon', 'Good night', 'Good morning', 'Hello'], 'Good night', 'beginner', $this->copyUnitImage(1, 5)),
-                        $this->fib('Good ___, Ms. Rina! (sapaan sore hari)', 'afternoon', 'beginner', $this->copyUnitImage(1, 3)),
-                        $this->fib('Good ___, everyone! (sapaan malam hari saat bertemu)', 'evening', 'beginner', $this->copyUnitImage(1, 4)),
-                    ], 20, $this->copyUnitImage(1, 1)),
+                        $this->mc('Which greeting is used in the morning?', ['Good night', 'Good morning', 'Good evening', 'Goodbye'], 'Good morning'),
+                        $this->mc('What do you say when leaving?', ['Hello', 'Good morning', 'Goodbye', 'Nice to meet you'], 'Goodbye'),
+                        $this->mc('Which greeting is used before going to bed?', ['Good afternoon', 'Good night', 'Good morning', 'Hello'], 'Good night'),
+                        $this->fib('Good ___, Ms. Rina! (sapaan sore hari)', 'afternoon'),
+                        $this->fib('Good ___, everyone! (sapaan malam hari saat bertemu)', 'evening'),
+                    ]),
 
                     $this->lesson('The Alphabet', '<h3>The Alphabet</h3><p>Ada 26 huruf: A B C D E F G H I J K L M N O P Q R S T U V W X Y Z.</p><p>Vokal: <b>A, E, I, O, U</b>. Sisanya adalah konsonan.</p>', [
                         $this->mc('How many letters are in the English alphabet?', ['24', '25', '26', '28'], '26'),
