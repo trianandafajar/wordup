@@ -72,6 +72,15 @@ class EnglishUnit5Seeder extends Seeder
         });
     }
 
+    /**
+     * Pola soal:
+     * - Lesson 1-4   : 5 soal (materi sendiri)
+     * - Lesson 5     : 10 soal (5 materi sendiri + 5 review Lesson 1-4)
+     * - Lesson 6-9   : 5 soal (materi sendiri)
+     * - Lesson 10    : 10 soal (5 materi sendiri + 5 review Lesson 6-9)
+     * - Lesson 11-14 : 5 soal (materi sendiri)
+     * - Lesson 15    : 10 soal (Unit Review, seluruh unit)
+     */
     private function getUnitData(): array
     {
         return [
@@ -109,28 +118,22 @@ class EnglishUnit5Seeder extends Seeder
                     $this->fib('The first month of the year is ___.', 'January'),
                     $this->fib('The month after August is ___.', 'September'),
                 ]),
-                // 5 - REVIEW (10 Q)
-                $this->lesson('Review: Numbers, Time, Days & Months', '<h3>Review 1</h3><p>Reviewing Numbers, Telling the Time, Days of the Week, and Months.</p>', [
-                    $this->mc('What is 50?', ['Forty', 'Fifty', 'Sixty', 'Thirty'], 'Fifty'),
-                    $this->mc('What is 3:30?', ['Half past three', 'Quarter past three', 'Three o\'clock', 'Quarter to three'], 'Half past three'),
-                    $this->mc('Which day is after Wednesday?', ['Tuesday', 'Thursday', 'Friday', 'Saturday'], 'Thursday'),
-                    $this->mc('How many days in a week?', ['5', '6', '7', '8'], '7'),
-                    $this->mc('How many months in a year?', ['10', '11', '12', '13'], '12'),
-                    $this->mc('What is "seperempat sebelum 8"?', ['Quarter past eight', 'Quarter to eight', 'Half past eight', 'Eight o\'clock'], 'Quarter to eight'),
-                    $this->fib('The day before Monday is ___.', 'Sunday'),
-                    $this->fib('The month after December is ___.', 'January'),
-                    $this->fib('It is half past ___. (lima)', 'five'),
-                    $this->fib('Ninety plus ten is ___. (100)', 'one hundred'),
+                // 5 - Dates: 5 materi + 5 review (Lesson 1-4)
+                $this->lesson('Dates', '<h3>Dates</h3><p>How to say dates: <b>May 5th</b> (5 Mei), <b>January 1st</b> (1 Januari), <b>20th of March</b> (20 Maret). <b>Date</b> = tanggal.</p>', [
+                    // Materi (5 Q)
+                    $this->mc('What is "tanggal" in English?', ['Date', 'Day', 'Month', 'Year'], 'Date'),
+                    $this->mc('What is the short form of "second"?', ['2nd', '2th', '2rd', '2st'], '2nd'),
+                    $this->mc('How do you say "20 Maret"?', ['20th of March', 'March 20', 'March 20th', 'All correct'], 'All correct'),
+                    $this->fib('Today is the ___ of June. (tanggal 15)', '15th'),
+                    $this->fib('New Year is on January ___. (tanggal 1)', '1st'),
+                    // Review Lesson 1-4 (5 Q)
+                    $this->mc('What is 60?', ['Fifty', 'Sixty', 'Seventy', 'Forty'], 'Sixty'),                                        // L1 Numbers & Counting
+                    $this->mc('What is 9:30?', ['Half past nine', 'Quarter past nine', 'Nine o\'clock', 'Quarter to nine'], 'Half past nine'), // L2 Telling the Time
+                    $this->mc('How many days in a week?', ['5', '6', '7', '8'], '7'),                                                 // L3 Days of the Week
+                    $this->fib('Ninety plus ten is ___.', 'one hundred'),                                                             // L1 Numbers & Counting
+                    $this->fib('The month before March is ___.', 'February'),                                                         // L4 Months
                 ], 30),
                 // 6
-                $this->lesson('Dates', '<h3>Dates</h3><p>How to say dates: <b>May 5th</b> (5 Mei), <b>January 1st</b> (1 Januari), <b>20th of March</b> (20 Maret).</p>', [
-                    $this->mc('How do you say "5 Mei"?', ['May 5th', '5 May', 'May 5', '5th May'], 'May 5th'),
-                    $this->mc('How do you say "20 Maret"?', ['20th of March', 'March 20', 'March 20th', 'All correct'], 'All correct'),
-                    $this->mc('What comes after dates?', ['Month', 'Day', 'Year', 'Time'], 'Day'),
-                    $this->fib('Today is the ___ of June. (tanggal 15)', '15th'),
-                    $this->fib('My birthday is in ___.', 'May'),
-                ]),
-                // 7
                 $this->lesson('Morning, Afternoon & Night', '<h3>Morning, Afternoon & Night</h3><p><b>Morning</b> (pagi), <b>Afternoon</b> (siang), <b>Evening</b> (sore), <b>Night</b> (malam).</p>', [
                     $this->mc('What time is morning?', ['6 AM - 12 PM', '12 PM - 6 PM', '6 PM - 12 AM', '12 AM - 6 AM'], '6 AM - 12 PM'),
                     $this->mc('Good evening is used when...', ['Waking up', 'Evening greeting', 'Going to bed', 'Having lunch'], 'Evening greeting'),
@@ -138,7 +141,7 @@ class EnglishUnit5Seeder extends Seeder
                     $this->fib('Good ___, everyone!', 'morning'),
                     $this->fib('I go to bed at ___.', 'night'),
                 ]),
-                // 8
+                // 7
                 $this->lesson('Daily Schedule', '<h3>Daily Schedule</h3><p><b>Wake up</b> (bangun), <b>Go to work</b> (pergi kerja), <b>Have lunch</b> (makan siang), <b>Go to bed</b> (tidur).</p>', [
                     $this->mc('What do you do at 7 AM?', ['Wake up', 'Go to bed', 'Have dinner', 'Watch TV'], 'Wake up'),
                     $this->mc('When do you eat lunch?', ['12 PM', '7 AM', '10 PM', '3 AM'], '12 PM'),
@@ -146,7 +149,7 @@ class EnglishUnit5Seeder extends Seeder
                     $this->fib('I ___ up at 6 AM.', 'wake'),
                     $this->fib('I have ___ at noon.', 'lunch'),
                 ]),
-                // 9
+                // 8
                 $this->lesson('Frequency', '<h3>Frequency</h3><p><b>Always</b> (selalu), <b>Often</b> (sering), <b>Sometimes</b> (kadang), <b>Never</b> (tidak pernah).</p>', [
                     $this->mc('Which means "selalu"?', ['Often', 'Always', 'Sometimes', 'Never'], 'Always'),
                     $this->mc('Which means "tidak pernah"?', ['Never', 'Always', 'Often', 'Sometimes'], 'Never'),
@@ -154,20 +157,7 @@ class EnglishUnit5Seeder extends Seeder
                     $this->fib('I ___ eat breakfast.', 'always'),
                     $this->fib('I ___ go to the gym.', 'sometimes'),
                 ]),
-                // 10 - REVIEW (10 Q)
-                $this->lesson('Review: Dates, Routine & Frequency', '<h3>Review 2</h3><p>Reviewing Dates, Daily Schedule, and Frequency.</p>', [
-                    $this->mc('How do you say "10 Mei"?', ['May 10th', '10 May', 'May 10', 'All correct'], 'All correct'),
-                    $this->mc('What do you do at 7 AM?', ['Wake up', 'Go to bed', 'Eat dinner', 'Sleep'], 'Wake up'),
-                    $this->mc('Which means "kadang"?', ['Always', 'Often', 'Sometimes', 'Never'], 'Sometimes'),
-                    $this->mc('I ___ go to the gym.', ['sometimes', 'always', 'never', 'often'], 'sometimes'),
-                    $this->mc('What time is lunch?', ['12 PM', '7 AM', '10 PM', '3 AM'], '12 PM'),
-                    $this->mc('The month after December is...', ['January', 'November', 'October', 'September'], 'January'),
-                    $this->mc('Half past 3 is...', ['3:30', '3:00', '3:15', '2:30'], '3:30'),
-                    $this->fib('I ___ up at 5 o\'clock.', 'wake'),
-                    $this->fib('Today is the 20th of ___.', 'May'),
-                    $this->fib('She ___ watches TV.', 'always'),
-                ], 30),
-                // 11
+                // 9
                 $this->lesson('How Often?', '<h3>How Often?</h3><p>Asking frequency: <b>How often do you...?</b> (Seberapa sering Anda...?), <b>Every day</b> (setiap hari), <b>Twice a week</b> (dua kali seminggu).</p>', [
                     $this->mc('How do you ask about frequency?', ['How often?', 'What time?', 'Where?', 'Who?'], 'How often?'),
                     $this->mc('Twice means...', ['Two times', 'One time', 'Three times', 'Never'], 'Two times'),
@@ -175,15 +165,22 @@ class EnglishUnit5Seeder extends Seeder
                     $this->fib('___ do you exercise? (seberapa sering)', 'How often'),
                     $this->fib('I go to the gym ___ a week.', 'twice'),
                 ]),
-                // 12
+                // 10 - Making Plans: 5 materi + 5 review (Lesson 6-9)
                 $this->lesson('Making Plans', '<h3>Making Plans</h3><p><b>Tomorrow</b> (besok), <b>Next week</b> (minggu depan), <b>Later</b> (nanti), <b>Let\'s</b> (ayo).</p>', [
+                    // Materi (5 Q)
                     $this->mc('What does "tomorrow" mean?', ['Yesterday', 'Tomorrow', 'Today', 'Next week'], 'Tomorrow'),
                     $this->mc('How do you suggest something?', ['Let\'s...', 'I am...', 'I was...', 'I have...'], 'Let\'s...'),
                     $this->mc('What is "nanti" in English?', ['Later', 'Yesterday', 'Tomorrow', 'Today'], 'Later'),
                     $this->fib('Let\'s ___ tomorrow!', 'meet'),
                     $this->fib('I will see you ___. (nanti)', 'later'),
-                ]),
-                // 13
+                    // Review Lesson 6-9 (5 Q)
+                    $this->mc('What time is the afternoon?', ['12 PM - 6 PM', '6 AM - 12 PM', '6 PM - 12 AM', '12 AM - 6 AM'], '12 PM - 6 PM'), // L6 Morning, Afternoon & Night
+                    $this->mc('What do you do before sleeping?', ['Go to bed', 'Wake up', 'Have breakfast', 'Go to work'], 'Go to bed'), // L7 Daily Schedule
+                    $this->mc('Which means "kadang"?', ['Always', 'Often', 'Sometimes', 'Never'], 'Sometimes'),                       // L8 Frequency
+                    $this->fib('___ do you exercise? (seberapa sering)', 'How often'),                                                // L9 How Often?
+                    $this->fib('I ___ eat breakfast. I never skip it. (selalu)', 'always'),                                           // L8 Frequency
+                ], 30),
+                // 11
                 $this->lesson('Appointments', '<h3>Appointments</h3><p><b>Appointment</b> (janji), <b>Schedule</b> (jadwal), <b>Meeting</b> (rapat), <b>Available</b> (tersedia).</p>', [
                     $this->mc('What is "janji" in English?', ['Appointment', 'Promise', 'Plan', 'Wish'], 'Appointment'),
                     $this->mc('Are you free on Monday?', ['Are you available?', 'Are you busy?', 'Are you tired?', 'Are you hungry?'], 'Are you available?'),
@@ -191,7 +188,7 @@ class EnglishUnit5Seeder extends Seeder
                     $this->fib('I have an ___ at 3 PM.', 'appointment'),
                     $this->fib('Are you ___ on Friday? (tersedia)', 'available'),
                 ]),
-                // 14
+                // 12
                 $this->lesson('Schedules', '<h3>Schedules</h3><p><b>Schedule</b> (jadwal), <b>Calendar</b> (kalender), <b>Agenda</b> (agenda), <b>Timetable</b> (jadwal waktu).</p>', [
                     $this->mc('What is a list of planned events?', ['Schedule', 'Menu', 'Map', 'List'], 'Schedule'),
                     $this->mc('Where do you check dates?', ['Calendar', 'Clock', 'Watch', 'Timer'], 'Calendar'),
@@ -199,18 +196,34 @@ class EnglishUnit5Seeder extends Seeder
                     $this->fib('Check your ___.', 'calendar'),
                     $this->fib('The bus ___ says it arrives at 8.', 'timetable'),
                 ]),
-                // 15 - FINAL REVIEW (10 Q)
-                $this->lesson('Unit Review', '<h3>Unit 5 Final Review</h3><p>Reviewing all topics from Unit 5: Time & Routine.</p>', [
-                    $this->mc('What is 40?', ['Thirty', 'Forty', 'Fifty', 'Sixty'], 'Forty'),
-                    $this->mc('What is 3:00?', ['Three o\'clock', 'Half past three', 'Quarter past three', 'Quarter to three'], 'Three o\'clock'),
-                    $this->mc('Which day is after Friday?', ['Thursday', 'Saturday', 'Sunday', 'Monday'], 'Saturday'),
-                    $this->mc('How many months in a year?', ['10', '11', '12', '13'], '12'),
-                    $this->mc('How do you say "15 April"?', ['April 15th', '15 April', 'April 15', 'All correct'], 'All correct'),
-                    $this->mc('Which means "selalu"?', ['Often', 'Always', 'Sometimes', 'Never'], 'Always'),
-                    $this->mc('How do you ask "seberapa sering"?', ['How often?', 'What time?', 'Where?', 'Who?'], 'How often?'),
-                    $this->fib('I go to the gym ___ a week.', 'twice'),
-                    $this->fib('Let\'s meet ___. (besok)', 'tomorrow'),
-                    $this->fib('My birthday is in ___.', 'May'),
+                // 13
+                $this->lesson('Talking About Yesterday', '<h3>Talking About Yesterday</h3><p><b>Yesterday</b> (kemarin), <b>Last night</b> (tadi malam), <b>Last week</b> (minggu lalu), <b>Ago</b> (yang lalu). Past verbs: <b>went</b> (pergi), <b>ate</b> (makan), <b>watched</b> (menonton).</p>', [
+                    $this->mc('What is "kemarin" in English?', ['Yesterday', 'Tomorrow', 'Today', 'Later'], 'Yesterday'),
+                    $this->mc('I ___ to school yesterday.', ['went', 'go', 'goes', 'going'], 'went'),
+                    $this->mc('"Three days ___" means 3 days in the past.', ['ago', 'later', 'next', 'soon'], 'ago'),
+                    $this->fib('I ___ TV last night. (menonton)', 'watched'),
+                    $this->fib('We ___ pizza yesterday. (makan)', 'ate'),
+                ]),
+                // 14
+                $this->lesson('Talking About Tomorrow', '<h3>Talking About Tomorrow</h3><p>Future plans: <b>I will...</b> (Saya akan...), <b>I am going to...</b> (Saya akan / berencana...), <b>Next week</b> (minggu depan), <b>Tomorrow</b> (besok).</p>', [
+                    $this->mc('I ___ visit my grandmother tomorrow.', ['will', 'went', 'was', 'did'], 'will'),
+                    $this->mc('I am ___ to study next week.', ['going', 'went', 'go', 'goes'], 'going'),
+                    $this->mc('Which sentence is about the future?', ['I will go to Bali.', 'I went to Bali.', 'I go to Bali every year.', 'I was in Bali.'], 'I will go to Bali.'),
+                    $this->fib('I ___ meet my friend tomorrow. (akan)', 'will'),
+                    $this->fib('She is ___ to cook dinner tonight. (akan)', 'going'),
+                ]),
+                // 15 - UNIT REVIEW: 10 soal (seluruh unit, fokus Lesson 11-14)
+                $this->lesson('Unit Review', '<h3>Unit 5 Review</h3><p>Reviewing all topics from Unit 5: Time & Routine.</p>', [
+                    $this->mc('Which day is after Friday?', ['Thursday', 'Saturday', 'Sunday', 'Monday'], 'Saturday'),                 // L3
+                    $this->mc('How do you say "15 April"?', ['April 15th', '15 April', 'April 15', 'All correct'], 'All correct'),     // L5
+                    $this->mc('Which means "selalu"?', ['Often', 'Always', 'Sometimes', 'Never'], 'Always'),                          // L8
+                    $this->mc('How do you ask "seberapa sering"?', ['How often?', 'What time?', 'Where?', 'Who?'], 'How often?'),     // L9
+                    $this->mc('What is "janji" in English?', ['Appointment', 'Promise', 'Plan', 'Wish'], 'Appointment'),              // L11
+                    $this->mc('Where do you check dates?', ['Calendar', 'Clock', 'Watch', 'Timer'], 'Calendar'),                      // L12
+                    $this->mc('I ___ to the market yesterday.', ['went', 'go', 'goes', 'going'], 'went'),                             // L13
+                    $this->mc('Which sentence is about the future?', ['I will go to Bali.', 'I went to Bali.', 'I go to Bali every year.', 'I was in Bali.'], 'I will go to Bali.'), // L14
+                    $this->fib('I go to the gym ___ a week.', 'twice'),                                                               // L9
+                    $this->fib('Let\'s meet ___. (besok)', 'tomorrow'),                                                               // L10
                 ], 30),
             ]
         ];
