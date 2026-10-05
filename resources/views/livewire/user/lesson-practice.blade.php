@@ -355,7 +355,8 @@ const ICON_NO = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" str
             } else if (!results[current]) {
                 checkAnswer();
             } else if (current === total - 1) {
-                form.requestSubmit();
+                console.log('Submitting form...');
+                form.submit();
             } else {
                 goTo(current + 1);
             }

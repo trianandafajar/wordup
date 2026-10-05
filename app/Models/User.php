@@ -20,6 +20,13 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            $user->energy = 20;
+        });
+    }
+
     protected function casts(): array
     {
         return [

@@ -10,6 +10,8 @@ class LifeService
 
     public const REFILL_INTERVAL_HOURS = 4;
 
+    public const MAX_ENERGY = 20;
+
     public function refillIfNeeded(User $user): User
     {
         if ($user->lives >= self::MAX_LIVES) {
@@ -47,6 +49,17 @@ class LifeService
         $user->lives = max(0, $user->lives - 1);
         $user->last_life_refill_at = now();
         $user->save();
+    }
+
+    public function refillEnergyIfNeeded(User $user): User
+    {
+        if ($user->energy >= self::MAX_ENERGY) {
+            return $user;
+        }
+
+        $user->update(['energy' => self::MAX_ENERGY]);
+
+        return $user->refresh();
     }
 
     public function secondsUntilNextRefill(User $user): int

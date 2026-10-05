@@ -22,6 +22,17 @@ class LessonController extends Controller
     {
         $user = Auth::user();
 
+        // Cek jika sudah memiliki sesi lesson yang sedang berjalan
+        if (session()->has('lesson_in_progress') && session('lesson_in_progress') == $lessonId) {
+            // Lanjut ke view
+        } else {
+            // Jika baru masuk, cek energi
+            if ($user->energy <= 0) {
+                return redirect()->route('user.learn')
+                    ->with('error', 'Energi habis. Tunggu refill atau kumpulkan energi.');
+            }
+        }
+
         $lesson = Lesson::with('questions.options', 'questions.answer', 'unit.course.units.lessons')
             ->findOrFail($lessonId);
 
@@ -48,6 +59,12 @@ class LessonController extends Controller
         );
 
         if (! $isReview) {
+            // Kurangi energi dan set sesi hanya jika belum berjalan
+            if (!session()->has('lesson_in_progress') || session('lesson_in_progress') != $lessonId) {
+                $user->decrement('energy');
+                session(['lesson_in_progress' => $lessonId]);
+            }
+
             $previousLesson = Lesson::where('unit_id', $lesson->unit_id)
                 ->where('order', $lesson->order - 1)
                 ->first();
@@ -76,6 +93,12 @@ class LessonController extends Controller
     public function submit(Request $request, $lessonId): RedirectResponse
     {
         $user = Auth::user();
+
+        if ($user->energy <= 0) {
+            return redirect()->route('user.learn')
+                ->with('error', 'Energi habis. Tunggu refill atau kumpulkan energi.');
+        }
+
         $lesson = Lesson::with('questions.options', 'questions.answer', 'unit.lessons')->findOrFail($lessonId);
 
         $request->validate([
@@ -97,7 +120,7 @@ class LessonController extends Controller
                 $given = strtolower(trim((string) $answerGiven));
                 $isCorrect = $given !== '' && $given === $correct;
             } else {
-                $isCorrect = $question->options->contains(fn($option) => $option->id === (int) $answerGiven && $option->is_correct);
+                $isCorrect = $question->options->contains(fn ($option) => $option->id === (int) $answerGiven && $option->is_correct);
             }
 
             if ($isCorrect) {
@@ -250,6 +273,9 @@ class LessonController extends Controller
             app(LifeService::class)->loseLife($user);
         }
 
+        $user->decrement('energy');
+
+        session()->forget('lesson_in_progress');
         session(['lesson_result' => [
             'score' => $finalScore,
             'xp_earned' => $xpEarned,

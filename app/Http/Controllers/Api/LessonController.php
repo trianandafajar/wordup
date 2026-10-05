@@ -38,6 +38,14 @@ class LessonController extends Controller
     public function submit(Request $request, $lessonId)
     {
         $user = Auth::user();
+
+        if ($user->energy <= 0) {
+            return response()->json([
+                'message' => 'Energi habis. Tunggu refill atau kumpulkan energi.',
+                'energy' => $user->energy,
+            ], 429);
+        }
+
         $lesson = Lesson::with('questions.options', 'questions.answer', 'unit.lessons')->findOrFail($lessonId);
 
         $request->validate([
@@ -122,11 +130,14 @@ class LessonController extends Controller
             app(LifeService::class)->loseLife($user);
         }
 
+        $user->decrement('energy');
+
         return response()->json([
             'score' => $finalScore,
             'xp_earned' => $xpEarned,
             'passed' => $passed,
             'attempt_id' => $attempt->id,
+            'energy' => $user->fresh()->energy,
         ]);
     }
 
