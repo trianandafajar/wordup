@@ -111,18 +111,20 @@ class EnglishUnit2Seeder extends Seeder
                     $this->fib('Please ___ English in class. (berbicara)', 'speak'),
                     $this->fib('I ___ my homework in the afternoon. (menulis)', 'write'),
                 ]),
-                // 5 - REVIEW (10 Q)
-                $this->lesson('Review: Family & Home', '<h3>Review 1</h3><p>Reviewing Family, Home, Rooms, and Activities.</p>', [
+                // 5 - Morning Routine + Review (10 Q)
+                $this->lesson('Morning Routine', '<h3>Morning Routine</h3><p><b>Wake up</b> (bangun), <b>Brush teeth</b> (sikat gigi), <b>Take a shower</b> (mandi), <b>Have breakfast</b> (sarapan).</p>', [
+                    // Material (5 Q)
+                    $this->mc('What do you do first in the morning?', ['Wake up', 'Go to bed', 'Have dinner', 'Watch TV'], 'Wake up'),
+                    $this->mc('You use a toothbrush to...', ['Brush teeth', 'Wash face', 'Eat breakfast', 'Comb hair'], 'Brush teeth'),
+                    $this->mc('Eating in the morning is called...', ['Breakfast', 'Lunch', 'Dinner', 'Snack'], 'Breakfast'),
+                    $this->fib('I ___ a shower at 6 AM.', 'take'),
+                    $this->fib('I ___ my teeth after breakfast.', 'brush'),
+                    // Review (5 Q)
                     $this->mc('My father\'s sister is my...', ['Aunt', 'Uncle', 'Cousin', 'Grandmother'], 'Aunt'),
                     $this->mc('The floor is at the...', ['Bottom', 'Top', 'Outside', 'Middle'], 'Bottom'),
                     $this->mc('We keep food cold in the...', ['Fridge', 'Stove', 'Bed', 'Sofa'], 'Fridge'),
-                    $this->mc('I ___ to school every day.', ['go', 'read', 'eat', 'sleep'], 'go'),
-                    $this->mc('My cousin is my aunt\'s...', ['Child', 'Parent', 'Friend', 'Teacher'], 'Child'),
-                    $this->mc('Where is the sofa?', ['Living room', 'Kitchen', 'Bathroom', 'Garden'], 'Living room'),
-                    $this->mc('I ___ English every day.', ['study', 'eat', 'sleep', 'cook'], 'study'),
                     $this->fib('A ___ is used for sleeping. (tempat tidur)', 'bed'),
                     $this->fib('My mother\'s brother is my ___.', 'uncle'),
-                    $this->fib('I ___ my name on the paper. (menulis)', 'write'),
                 ], 30),
                 // 6
                 $this->lesson('Morning Routine', '<h3>Morning Routine</h3><p><b>Wake up</b> (bangun), <b>Brush teeth</b> (sikat gigi), <b>Take a shower</b> (mandi), <b>Have breakfast</b> (sarapan).</p>', [
@@ -156,36 +158,22 @@ class EnglishUnit2Seeder extends Seeder
                     $this->fib('I ___ like spicy food. (tidak)', 'don\'t'),
                     $this->fib('I ___ my family very much. (sangat suka)', 'love'),
                 ]),
-                // 10 - REVIEW (10 Q)
-                $this->lesson('Review: Routines & Likes', '<h3>Review 2</h3><p>Reviewing Routines and Preferences.</p>', [
-                    $this->mc('I eat breakfast in the...', ['Morning', 'Afternoon', 'Evening', 'Night'], 'Morning'),
-                    $this->mc('I go to bed at...', ['Night', 'Noon', 'Morning', 'Afternoon'], 'Night'),
-                    $this->mc('I ___ ice cream. It is great!', ['love', 'hate', 'don\'t like', 'am'], 'love'),
-                    $this->mc('What do you do at noon?', ['Have lunch', 'Sleep', 'Wake up', 'Brush teeth'], 'Have lunch'),
-                    $this->mc('Do you ___ music?', ['like', 'eat', 'sleep', 'run'], 'like'),
-                    $this->mc('I finish school in the...', ['Afternoon', 'Morning', 'Night', 'Midnight'], 'Afternoon'),
-                    $this->mc('I ___ my teeth twice a day.', ['brush', 'wash', 'eat', 'read'], 'brush'),
-                    $this->fib('I ___ like rain. (tidak suka)', 'don\'t'),
-                    $this->fib('I ___ up at 5 o\'clock.', 'wake'),
-                    $this->fib('I ___ TV in the living room. (menonton)', 'watch'),
-                ], 30),
-                // 11
-                $this->lesson('Hobbies', '<h3>Hobbies</h3><p><b>Swimming</b> (berenang), <b>Reading</b> (membaca), <b>Cooking</b> (memasak), <b>Playing football</b> (main bola).</p>', [
-                    $this->mc('I go to the pool for...', ['swimming', 'cooking', 'reading', 'sleeping'], 'swimming'),
-                    $this->mc('My hobby is ___ books.', ['reading', 'eating', 'running', 'drinking'], 'reading'),
-                    $this->mc('He loves playing ___ with his friends.', ['football', 'cooking', 'reading', 'swimming'], 'football'),
-                    $this->fib('My mother loves ___ in the kitchen. (memasak)', 'cooking'),
-                    $this->fib('I like ___ music. (mendengarkan)', 'listening to'),
-                ]),
-                // 12
+                // 10 - Free Time + Review (10 Q)
                 $this->lesson('Free Time', '<h3>Free Time</h3><p><b>Go out</b> (pergi keluar), <b>Listen to music</b> (dengar musik), <b>Relax</b> (santai).</p>', [
+                    // Material (5 Q)
                     $this->mc('In my free time, I like to...', ['relax', 'work', 'study', 'stress'], 'relax'),
                     $this->mc('Let\'s ___ with friends this weekend.', ['go out', 'sleep', 'work', 'study'], 'go out'),
                     $this->mc('I listen to the ___ on my phone.', ['music', 'food', 'bed', 'chair'], 'music'),
                     $this->fib('I ___ to music to relax.', 'listen'),
                     $this->fib('I like to ___ with my friends. (pergi keluar)', 'go out'),
-                ]),
-                // 13
+                    // Review (5 Q)
+                    $this->mc('I eat breakfast in the...', ['Morning', 'Afternoon', 'Evening', 'Night'], 'Morning'),
+                    $this->mc('I go to bed at...', ['Night', 'Noon', 'Morning', 'Afternoon'], 'Night'),
+                    $this->mc('I ___ ice cream. It is great!', ['love', 'hate', 'don\'t like', 'am'], 'love'),
+                    $this->fib('I ___ like rain. (tidak suka)', 'don\'t'),
+                    $this->fib('I ___ up at 5 o\'clock.', 'wake'),
+                ], 30),
+                // 11
                 $this->lesson('Describing People', '<h3>Describing People</h3><p><b>Tall</b> (tinggi), <b>Short</b> (pendek), <b>Young</b> (muda), <b>Old</b> (tua), <b>Friendly</b> (ramah).</p>', [
                     $this->mc('A person who is not tall is...', ['short', 'tall', 'old', 'young'], 'short'),
                     $this->mc('My grandfather is...', ['old', 'young', 'baby', 'short'], 'old'),
@@ -193,13 +181,29 @@ class EnglishUnit2Seeder extends Seeder
                     $this->fib('He is 2 meters tall. He is very ___.', 'tall'),
                     $this->fib('The child is very ___. (muda)', 'young'),
                 ]),
-                // 14
+                // 12
                 $this->lesson('Describing Things', '<h3>Describing Things</h3><p><b>Big</b> (besar), <b>Small</b> (kecil), <b>Expensive</b> (mahal), <b>Cheap</b> (murah), <b>New</b> (baru).</p>', [
                     $this->mc('An elephant is...', ['big', 'small', 'cheap', 'expensive'], 'big'),
                     $this->mc('A mouse is...', ['small', 'big', 'expensive', 'new'], 'small'),
                     $this->mc('A Ferrari is...', ['expensive', 'cheap', 'small', 'old'], 'expensive'),
                     $this->fib('This phone is only $10. It is ___.', 'cheap'),
                     $this->fib('I bought a ___ car yesterday. (baru)', 'new'),
+                ]),
+                // 13
+                $this->lesson('Present Simple', '<h3>Present Simple</h3><p>Present simple tense: <b>I work</b>, <b>She works</b>, <b>They work</b>.</p>', [
+                    $this->mc('I work at a bank.', ['work', 'works', 'working', 'worked'], 'work'),
+                    $this->mc('She works in a hospital.', ['work', 'works', 'working', 'worked'], 'works'),
+                    $this->mc('They work every day.', ['work', 'works', 'working', 'worked'], 'work'),
+                    $this->fib('He ___ in a school.', 'works'),
+                    $this->fib('I ___ English every day.', 'study'),
+                ]),
+                // 14
+                $this->lesson('My Daily Life', '<h3>My Daily Life</h3><p>My day: <b>Wake up</b> at 6 AM, <b>Go to work</b> at 8 AM, <b>Have lunch</b> at 12 PM, <b>Go home</b> at 5 PM, <b>Sleep</b> at 10 PM.</p>', [
+                    $this->mc('I wake up at 6 AM.', ['Wake up', 'Go to bed', 'Eat lunch', 'Go home'], 'Wake up'),
+                    $this->mc('I go to work at...', ['8 AM', '12 PM', '5 PM', '10 PM'], '8 AM'),
+                    $this->mc('I have lunch at...', ['8 AM', '12 PM', '5 PM', '10 PM'], '12 PM'),
+                    $this->fib('I ___ home at 5 PM.', 'go'),
+                    $this->fib('I sleep at ___.', '10 PM'),
                 ]),
                 // 15 - FINAL REVIEW (10 Q)
                 $this->lesson('Unit 2 Review', '<h3>Unit 2 Final Review</h3><p>Reviewing all topics from Unit 2: Everyday Life.</p>', [
