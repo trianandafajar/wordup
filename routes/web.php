@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\UserLessonController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\OnboardingController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\LessonController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SkillTreeController;
 use App\Models\UserReward;
+use App\Services\LifeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,10 +43,12 @@ Route::middleware(['auth', 'onboarding'])->group(function () {
             ['is_opened' => false]
         );
 
-        if (!$reward->is_opened) {
+        if (! $reward->is_opened) {
             $reward->update(['is_opened' => true]);
-            auth()->user()->increment('energy', 5);
-            auth()->user()->increment('xp_total', 50);
+            $user = auth()->user();
+            $user->energy = min(LifeService::MAX_ENERGY, $user->energy + 5);
+            $user->xp_total += 50;
+            $user->save();
         }
 
         return response()->json(['success' => true]);
@@ -61,7 +65,7 @@ Route::get('/learn', [SkillTreeController::class, 'index'])->name('user.learn')-
 Route::get('/lesson/{lesson}', [LessonController::class, 'show'])->name('user.lesson.practice')->middleware(['auth', 'onboarding']);
 Route::post('/lesson/{lesson}/submit', [LessonController::class, 'submit'])->name('user.lesson.submit')->middleware(['auth', 'onboarding']);
 Route::get('/lesson/{lesson}/result', [LessonController::class, 'result'])->name('user.lesson.result')->middleware(['auth', 'onboarding']);
-Route::get('/api/user/{id}/lessons', [\App\Http\Controllers\Api\UserLessonController::class, 'show'])->middleware(['auth', 'onboarding']);
+Route::get('/api/user/{id}/lessons', [UserLessonController::class, 'show'])->middleware(['auth', 'onboarding']);
 Route::get('/leaderboard', [LeaderboardController::class, 'index'])->name('user.leaderboard')->middleware(['auth', 'onboarding']);
 Route::get('/profile', [ProfileController::class, 'index'])->name('user.profile')->middleware(['auth', 'onboarding']);
 Route::put('/profile', [ProfileController::class, 'update'])->name('user.profile.update')->middleware(['auth', 'onboarding']);
