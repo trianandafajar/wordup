@@ -127,14 +127,6 @@ class EnglishUnit2Seeder extends Seeder
                     $this->fib('My mother\'s brother is my ___.', 'uncle'),
                 ], 30),
                 // 6
-                $this->lesson('Morning Routine', '<h3>Morning Routine</h3><p><b>Wake up</b> (bangun), <b>Brush teeth</b> (sikat gigi), <b>Take a shower</b> (mandi), <b>Have breakfast</b> (sarapan).</p>', [
-                    $this->mc('What do you do first in the morning?', ['Wake up', 'Go to bed', 'Have dinner', 'Watch TV'], 'Wake up'),
-                    $this->mc('You use a toothbrush to...', ['Brush teeth', 'Wash face', 'Eat breakfast', 'Comb hair'], 'Brush teeth'),
-                    $this->mc('Eating in the morning is called...', ['Breakfast', 'Lunch', 'Dinner', 'Snack'], 'Breakfast'),
-                    $this->fib('I ___ a shower at 6 AM.', 'take'),
-                    $this->fib('I ___ my teeth after breakfast.', 'brush'),
-                ]),
-                // 7
                 $this->lesson('Afternoon Routine', '<h3>Afternoon Routine</h3><p><b>Have lunch</b> (makan siang), <b>Go home</b> (pulang), <b>Finish work</b> (selesai bekerja).</p>', [
                     $this->mc('We have ___ at 1 PM.', ['lunch', 'breakfast', 'dinner', 'supper'], 'lunch'),
                     $this->mc('What do you do after school?', ['Go home', 'Wake up', 'Take a shower', 'Eat breakfast'], 'Go home'),
@@ -142,7 +134,7 @@ class EnglishUnit2Seeder extends Seeder
                     $this->fib('I have ___ with my friends at noon.', 'lunch'),
                     $this->fib('It is 4 PM, I am ___ home now.', 'going'),
                 ]),
-                // 8
+                // 7
                 $this->lesson('Evening Routine', '<h3>Evening Routine</h3><p><b>Have dinner</b> (makan malam), <b>Watch TV</b> (nonton TV), <b>Go to bed</b> (pergi tidur).</p>', [
                     $this->mc('We eat ___ at 7 PM.', ['dinner', 'lunch', 'breakfast', 'snack'], 'dinner'),
                     $this->mc('I ___ to bed at 10 PM.', ['go', 'run', 'eat', 'sit'], 'go'),
@@ -150,13 +142,21 @@ class EnglishUnit2Seeder extends Seeder
                     $this->fib('I ___ my pajamas before bed.', 'wear'),
                     $this->fib('Good ___, time to sleep!', 'night'),
                 ]),
-                // 9
+                // 8
                 $this->lesson('Likes & Dislikes', '<h3>Likes & Dislikes</h3><p><b>Like</b> (suka), <b>Love</b> (sangat suka), <b>Hate</b> (benci), <b>Don\'t like</b> (tidak suka).</p>', [
                     $this->mc('I ___ apples. They are delicious!', ['like', 'hate', 'don\'t like', 'am'], 'like'),
                     $this->mc('She ___ snakes. She is afraid of them.', ['hates', 'loves', 'likes', 'is'], 'hates'),
                     $this->mc('We ___ watching movies.', ['enjoy', 'eat', 'sleep', 'run'], 'enjoy'),
                     $this->fib('I ___ like spicy food. (tidak)', 'don\'t'),
                     $this->fib('I ___ my family very much. (sangat suka)', 'love'),
+                ]),
+                // 9
+                $this->lesson('Hobbies', '<h3>Hobbies</h3><p><b>Swimming</b> (berenang), <b>Reading</b> (membaca), <b>Cooking</b> (memasak), <b>Playing football</b> (main bola).</p>', [
+                    $this->mc('I go to the pool for...', ['swimming', 'cooking', 'reading', 'sleeping'], 'swimming'),
+                    $this->mc('My hobby is ___ books.', ['reading', 'eating', 'running', 'drinking'], 'reading'),
+                    $this->mc('He loves playing ___ with his friends.', ['football', 'cooking', 'reading', 'swimming'], 'football'),
+                    $this->fib('My mother loves ___ in the kitchen. (memasak)', 'cooking'),
+                    $this->fib('I like ___ music. (mendengarkan)', 'listening to'),
                 ]),
                 // 10 - Free Time + Review (10 Q)
                 $this->lesson('Free Time', '<h3>Free Time</h3><p><b>Go out</b> (pergi keluar), <b>Listen to music</b> (dengar musik), <b>Relax</b> (santai).</p>', [
