@@ -17,14 +17,14 @@ class EnglishUnit3Seeder extends Seeder
     {
         DB::transaction(function () {
             $course = Course::where('title', 'Complete English Mastery')->first();
-            
-            if (!$course) {
+
+            if (! $course) {
                 return;
             }
 
             $unitOrder = 3;
             $unitData = $this->getUnitData();
-            
+
             $unit = Unit::query()->updateOrCreate(
                 ['course_id' => $course->id, 'order' => $unitOrder],
                 ['title' => $unitData['title']]
@@ -32,7 +32,7 @@ class EnglishUnit3Seeder extends Seeder
 
             foreach ($unitData['lessons'] as $lessonIndex => $lessonData) {
                 $lessonOrder = $lessonIndex + 1;
-                
+
                 $lessonImagePath = "units/unit-{$unitOrder}/lesson-{$lessonOrder}/main.png";
                 $this->smartCopyImage($unitOrder, $lessonOrder, 'main.png', $lessonImagePath);
 
@@ -216,7 +216,7 @@ class EnglishUnit3Seeder extends Seeder
                     $this->fib('I ___ pizza for dinner last night.', 'had'),
                     $this->fib('My ___ food is fried chicken.', 'favorite'),
                 ], 30),
-            ]
+            ],
         ];
     }
 }

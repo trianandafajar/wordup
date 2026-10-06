@@ -18,7 +18,7 @@ class EnglishUnit2Seeder extends Seeder
         DB::transaction(function () {
             $course = Course::where('title', 'Complete English Mastery')->first();
 
-            if (!$course) {
+            if (! $course) {
                 return;
             }
 
@@ -227,7 +227,7 @@ class EnglishUnit2Seeder extends Seeder
                     $this->fib('My brother ___ football every Sunday. (bermain)', 'plays'),                                                   // L13
                     $this->fib('The car is $1,000,000. It is very ___.', 'expensive'),                                                        // L12
                 ], 30),
-            ]
+            ],
         ];
     }
 }

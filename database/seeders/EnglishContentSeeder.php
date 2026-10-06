@@ -24,7 +24,7 @@ class EnglishContentSeeder extends Seeder
                 EnglishUnit10Seeder::class,
             ];
             Course::query()->delete();
-            
+
             Course::query()->updateOrCreate(
                 ['title' => 'Complete English Mastery'],
                 [
@@ -36,7 +36,7 @@ class EnglishContentSeeder extends Seeder
             );
 
             foreach ($seeders as $seederClass) {
-                (new $seederClass())->run();
+                (new $seederClass)->run();
             }
         });
     }

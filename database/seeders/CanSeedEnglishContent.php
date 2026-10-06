@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Enums\QuestionTypeEnum;
-use App\Models\Lesson;
 use App\Models\Question;
 use App\Models\QuestionAnswer;
 use App\Models\QuestionOption;
@@ -40,9 +39,9 @@ trait CanSeedEnglishContent
         $sourcePath = "images/units/unit-{$unit}/lesson-{$lesson}/{$fileName}";
         $fullSourcePath = public_path($sourcePath);
 
-        if (!File::exists($fullSourcePath)) {
+        if (! File::exists($fullSourcePath)) {
             $fullSourcePath = public_path($fallbackSource);
-            if (!File::exists($fullSourcePath)) {
+            if (! File::exists($fullSourcePath)) {
                 return null;
             }
         }
@@ -62,7 +61,7 @@ trait CanSeedEnglishContent
             'text' => $text,
             'image_url' => $imageUrl,
             'options' => array_map(
-                fn($o) => ['text' => $o, 'correct' => $o === $correct],
+                fn ($o) => ['text' => $o, 'correct' => $o === $correct],
                 $options
             ),
         ];
