@@ -72,6 +72,15 @@ class EnglishUnit3Seeder extends Seeder
         });
     }
 
+    /**
+     * Pola soal:
+     * - Lesson 1-4   : 5 soal (materi sendiri)
+     * - Lesson 5     : 10 soal (5 materi sendiri + 5 review Lesson 1-4)
+     * - Lesson 6-9   : 5 soal (materi sendiri)
+     * - Lesson 10    : 10 soal (5 materi sendiri + 5 review Lesson 6-9)
+     * - Lesson 11-14 : 5 soal (materi sendiri)
+     * - Lesson 15    : 10 soal (Unit Review, seluruh unit)
+     */
     private function getUnitData(): array
     {
         return [
@@ -109,30 +118,22 @@ class EnglishUnit3Seeder extends Seeder
                     $this->fib('I drink ___ every morning. (air)', 'water'),
                     $this->fib('Orange ___ is sweet. (jus)', 'juice'),
                 ]),
-                // 5 - Breakfast + Review (10 Q)
+                // 5 - Breakfast: 5 materi + 5 review (Lesson 1-4)
                 $this->lesson('Breakfast', '<h3>Breakfast</h3><p>Common breakfast foods: <b>Cereal</b> (sereal), <b>Toast</b> (roti panggang), <b>Pancakes</b> (panekuk), <b>Bacon</b> (daging asap).</p>', [
-                    // Material (5 Q)
+                    // Materi (5 Q)
                     $this->mc('What do people eat for breakfast?', ['Cereal', 'Steak', 'Soup', 'Salad'], 'Cereal'),
                     $this->mc('Toast is made from...', ['Bread', 'Rice', 'Noodles', 'Potatoes'], 'Bread'),
                     $this->mc('Which one is sweet?', ['Bacon', 'Eggs', 'Pancakes', 'Toast'], 'Pancakes'),
                     $this->fib('I have ___ and milk for breakfast. (sereal)', 'cereal'),
                     $this->fib('___ is crispy and salty. (daging asap)', 'Bacon'),
-                    // Review (5 Q)
-                    $this->mc('Which one is a vegetable?', ['Apple', 'Banana', 'Carrot', 'Orange'], 'Carrot'),
-                    $this->mc('What is "nasi" in English?', ['Bread', 'Rice', 'Noodles', 'Pasta'], 'Rice'),
-                    $this->mc('Which one is seafood?', ['Chicken', 'Beef', 'Fish', 'Pork'], 'Fish'),
-                    $this->fib('An ___ a day keeps the doctor away.', 'apple'),
-                    $this->fib('___ is white and comes from cows. (susu)', 'Milk'),
+                    // Review Lesson 1-4 (5 Q)
+                    $this->mc('Which one is a vegetable?', ['Apple', 'Banana', 'Carrot', 'Orange'], 'Carrot'),                                // L2 Fruits & Vegetables
+                    $this->mc('What is "nasi" in English?', ['Bread', 'Rice', 'Noodles', 'Pasta'], 'Rice'),                                   // L1 Food Basics
+                    $this->mc('Which one is seafood?', ['Chicken', 'Beef', 'Fish', 'Pork'], 'Fish'),                                          // L3 Meat & Seafood
+                    $this->fib('An ___ a day keeps the doctor away.', 'apple'),                                                               // L2 Fruits & Vegetables
+                    $this->fib('___ is white and comes from cows. (susu)', 'Milk'),                                                           // L4 Drinks
                 ], 30),
                 // 6
-                $this->lesson('Breakfast', '<h3>Breakfast</h3><p>Common breakfast foods: <b>Cereal</b> (sereal), <b>Toast</b> (roti panggang), <b>Pancakes</b> (panekuk), <b>Bacon</b> (daging asap).</p>', [
-                    $this->mc('What do people eat for breakfast?', ['Cereal', 'Steak', 'Soup', 'Salad'], 'Cereal'),
-                    $this->mc('Toast is made from...', ['Bread', 'Rice', 'Noodles', 'Potatoes'], 'Bread'),
-                    $this->mc('Which one is sweet?', ['Bacon', 'Eggs', 'Pancakes', 'Toast'], 'Pancakes'),
-                    $this->fib('I have ___ and milk for breakfast. (sereal)', 'cereal'),
-                    $this->fib('___ is crispy and salty. (daging asap)', 'Bacon'),
-                ]),
-                // 7
                 $this->lesson('Lunch & Dinner', '<h3>Lunch & Dinner</h3><p><b>Soup</b> (sup), <b>Salad</b> (salad), <b>Steak</b> (steak), <b>Pasta</b> (pasta), <b>Pizza</b> (pizza).</p>', [
                     $this->mc('Which one is Italian?', ['Steak', 'Soup', 'Pizza', 'Salad'], 'Pizza'),
                     $this->mc('A ___ is healthy and green.', ['Pizza', 'Steak', 'Salad', 'Soup'], 'Salad'),
@@ -140,7 +141,7 @@ class EnglishUnit3Seeder extends Seeder
                     $this->fib('I like spaghetti, a type of ___.', 'pasta'),
                     $this->fib('___ is meat cooked on a grill.', 'Steak'),
                 ]),
-                // 8
+                // 7
                 $this->lesson('At a Restaurant', '<h3>At a Restaurant</h3><p>Restaurant vocabulary: <b>Waiter</b> (pelayan), <b>Menu</b> (menu), <b>Table</b> (meja), <b>Bill</b> (tagihan), <b>Tip</b> (tip).</p>', [
                     $this->mc('Who serves food at a restaurant?', ['Waiter', 'Chef', 'Customer', 'Manager'], 'Waiter'),
                     $this->mc('What do you read to choose food?', ['Bill', 'Menu', 'Table', 'Tip'], 'Menu'),
@@ -148,7 +149,7 @@ class EnglishUnit3Seeder extends Seeder
                     $this->fib('Can I see the ___, please?', 'menu'),
                     $this->fib('We sit at a ___ to eat.', 'table'),
                 ]),
-                // 9
+                // 8
                 $this->lesson('Ordering Food', '<h3>Ordering Food</h3><p>Useful phrases: <b>I would like...</b> (Saya ingin...), <b>Can I have...?</b> (Bolehkah saya...), <b>What do you recommend?</b> (Apa yang Anda rekomendasikan?).</p>', [
                     $this->mc('How do you order politely?', ['Give me food!', 'I want this!', 'Can I have...?', 'Food now!'], 'Can I have...?'),
                     $this->mc('What means "Saya ingin..."?', ['I want', 'I would like', 'Give me', 'I need'], 'I would like'),
@@ -156,20 +157,28 @@ class EnglishUnit3Seeder extends Seeder
                     $this->fib('___ I have the menu? (polite)', 'Can'),
                     $this->fib('I ___ like a pizza, please.', 'would'),
                 ]),
-                // 10 - At a Restaurant + Review (10 Q)
-                $this->lesson('At a Restaurant', '<h3>At a Restaurant</h3><p>Restaurant vocabulary: <b>Waiter</b> (pelayan), <b>Menu</b> (menu), <b>Table</b> (meja), <b>Bill</b> (tagihan), <b>Tip</b> (tip).</p>', [
-                    // Material (5 Q)
-                    $this->mc('Who serves food at a restaurant?', ['Waiter', 'Chef', 'Customer', 'Manager'], 'Waiter'),
-                    $this->mc('What do you read to choose food?', ['Bill', 'Menu', 'Table', 'Tip'], 'Menu'),
-                    $this->mc('What do you pay at the end?', ['Menu', 'Table', 'Bill', 'Waiter'], 'Bill'),
-                    $this->fib('Can I see the ___, please?', 'menu'),
-                    $this->fib('We sit at a ___ to eat.', 'table'),
-                    // Review (5 Q)
-                    $this->mc('What do you eat in the morning?', ['Breakfast', 'Lunch', 'Dinner', 'Snack'], 'Breakfast'),
-                    $this->mc('Who serves you at a restaurant?', ['Chef', 'Waiter', 'Customer', 'Manager'], 'Waiter'),
-                    $this->mc('Which one is Italian food?', ['Steak', 'Pizza', 'Soup', 'Salad'], 'Pizza'),
-                    $this->fib('I have ___ and milk for breakfast. (sereal)', 'cereal'),
-                    $this->fib('Can I see the ___, please?', 'menu'),
+                // 9
+                $this->lesson('Asking for the Menu', '<h3>Asking for the Menu</h3><p>Useful phrases: <b>Can I see the menu, please?</b> (Boleh saya lihat menunya?), <b>What is on the menu?</b> (Apa saja menunya?), <b>How much is this?</b> (Berapa harga ini?).</p>', [
+                    $this->mc('How do you ask to see the menu politely?', ['Menu now!', 'Give me menu!', 'Can I see the menu, please?', 'I want menu!'], 'Can I see the menu, please?'),
+                    $this->mc('What means "Apa saja menunya?"', ['What is on the menu?', 'Where is the menu?', 'Who is the waiter?', 'How much is the bill?'], 'What is on the menu?'),
+                    $this->mc('You want to know the price. You ask...', ['How much is this?', 'What is this?', 'Where is this?', 'Who is this?'], 'How much is this?'),
+                    $this->fib('___ much is this pizza? (berapa)', 'How'),
+                    $this->fib('What is on the ___ today? (menu)', 'menu'),
+                ]),
+                // 10 - Likes & Dislikes: 5 materi + 5 review (Lesson 6-9)
+                $this->lesson('Likes & Dislikes', '<h3>Likes & Dislikes</h3><p>Talking about food: <b>Like</b> (suka), <b>Love</b> (sangat suka), <b>Hate</b> (benci), <b>Don\'t like</b> (tidak suka).</p>', [
+                    // Materi (5 Q)
+                    $this->mc('I ___ chocolate. It is my favorite!', ['love', 'hate', 'don\'t like', 'am'], 'love'),
+                    $this->mc('She ___ spicy food. It is too hot for her.', ['hates', 'loves', 'likes', 'is'], 'hates'),
+                    $this->mc('I ___ broccoli. It tastes bad.', ['don\'t like', 'like', 'love', 'enjoy'], 'don\'t like'),
+                    $this->fib('I ___ ice cream. It is so sweet! (suka)', 'like'),
+                    $this->fib('I ___ bitter coffee. (benci)', 'hate'),
+                    // Review Lesson 6-9 (5 Q)
+                    $this->mc('A ___ is healthy and green.', ['Pizza', 'Steak', 'Salad', 'Soup'], 'Salad'),                                   // L6 Lunch & Dinner
+                    $this->mc('What means "Saya ingin..."?', ['I want', 'I would like', 'Give me', 'I need'], 'I would like'),                 // L8 Ordering Food
+                    $this->mc('You want to know the price. You ask...', ['How much is this?', 'What is this?', 'Where is this?', 'Who is this?'], 'How much is this?'), // L9 Asking for the Menu
+                    $this->fib('We sit at a ___ to eat.', 'table'),                                                                           // L7 At a Restaurant
+                    $this->fib('I ___ like a pizza, please.', 'would'),                                                                       // L8 Ordering Food
                 ], 30),
                 // 11
                 $this->lesson('Quantities & Portions', '<h3>Quantities & Portions</h3><p><b>A piece of</b> (sepotong), <b>A cup of</b> (secangkir), <b>A glass of</b> (segelas), <b>A bowl of</b> (semangkuk), <b>A plate of</b> (sepiring).</p>', [
@@ -203,18 +212,18 @@ class EnglishUnit3Seeder extends Seeder
                     $this->fib('I ___ lunch at noon yesterday.', 'had'),
                     $this->fib('I ___ dinner right now. (sedang)', 'am having'),
                 ]),
-                // 15 - FINAL REVIEW (10 Q)
-                $this->lesson('Unit 3 Review', '<h3>Unit 3 Final Review</h3><p>Reviewing all topics from Unit 3: Food & Drinks.</p>', [
-                    $this->mc('What is "nasi" in English?', ['Bread', 'Rice', 'Noodles', 'Pasta'], 'Rice'),
-                    $this->mc('Which one is a fruit?', ['Carrot', 'Potato', 'Apple', 'Onion'], 'Apple'),
-                    $this->mc('Fish is a type of...', ['Meat', 'Seafood', 'Vegetable', 'Fruit'], 'Seafood'),
-                    $this->mc('Who serves food at a restaurant?', ['Chef', 'Waiter', 'Manager', 'Customer'], 'Waiter'),
-                    $this->mc('I want ___ water.', ['a piece of', 'a glass of', 'a bowl of', 'a cup of'], 'a glass of'),
-                    $this->mc('You ___ eggs in a pan.', ['boil', 'fry', 'bake', 'grill'], 'fry'),
-                    $this->mc('This food is very ___! I love it.', ['bland', 'bad', 'delicious', 'boring'], 'delicious'),
-                    $this->fib('Can I have a ___ of coffee?', 'cup'),
-                    $this->fib('I ___ pizza for dinner last night.', 'had'),
-                    $this->fib('My ___ food is fried chicken.', 'favorite'),
+                // 15 - UNIT REVIEW: 10 soal (seluruh unit)
+                $this->lesson('Unit Review', '<h3>Unit 3 Review</h3><p>Reviewing all topics from Unit 3: Food & Drinks.</p>', [
+                    $this->mc('What is "nasi" in English?', ['Bread', 'Rice', 'Noodles', 'Pasta'], 'Rice'),                                   // L1
+                    $this->mc('Which one is a fruit?', ['Carrot', 'Potato', 'Apple', 'Onion'], 'Apple'),                                      // L2
+                    $this->mc('Fish is a type of...', ['Meat', 'Seafood', 'Vegetable', 'Fruit'], 'Seafood'),                                  // L3
+                    $this->mc('Who serves food at a restaurant?', ['Chef', 'Waiter', 'Manager', 'Customer'], 'Waiter'),                       // L7
+                    $this->mc('I want ___ water.', ['a piece of', 'a glass of', 'a bowl of', 'a cup of'], 'a glass of'),                      // L11
+                    $this->mc('You ___ eggs in a pan.', ['boil', 'fry', 'bake', 'grill'], 'fry'),                                             // L12
+                    $this->mc('This food is very ___! I love it.', ['bland', 'bad', 'delicious', 'boring'], 'delicious'),                     // L13
+                    $this->fib('Can I have a ___ of coffee?', 'cup'),                                                                         // L11
+                    $this->fib('I ___ pizza for dinner last night.', 'had'),                                                                  // L14
+                    $this->fib('My ___ food is fried chicken.', 'favorite'),                                                                  // L13
                 ], 30),
             ],
         ];
