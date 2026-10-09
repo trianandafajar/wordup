@@ -165,16 +165,17 @@ $activeUnitIndex = max($units->count() - 1, 0);
 
                 $randomMascot = asset('images/mascots/' . rand(1, 4) . '.png?=v1');
 
-                $shouldDisable = $isLocked || ($energy <= 0 && !$isCompleted) || ($lives <= 0 && !$isCompleted);
-                $disabledReason = $isLocked ? 'Selesaikan lesson sebelumnya' : ($energy <= 0 ? 'Energi habis, tunggu refill' : ($lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : ''));
+                $shouldDisable = $isLocked || $energy <= 0 || $lives <= 0;
+                $disabledReason = $lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : ($energy <= 0 ? 'Energi habis, tunggu refill' : ($isLocked ? 'Selesaikan lesson sebelumnya' : ''));
                 $showXpBadge = ($isCompleted && $bestScore == 100); @endphp <div class="relative z-10 mb-3"
                     style="left: {{ $offset }}px;" data-node="{{ $lesson['id'] }}"
                     data-done="{{ $isCompleted ? '1' : '0' }}">
-                    <button @if ($isCompleted)
+                    <button @if ($isCompleted && $energy > 0 && $lives > 0)
                         onclick="window.dispatchEvent(new CustomEvent('open-lesson-modal', { detail: { url: '{{ route('user.lesson.practice', $lesson['id']) }}' } }))"
                         @elseif ($shouldDisable)
-                        disabled @else
-                        onclick="if(!this.disabled) { this.disabled=true; window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'; }" @endif
+                        disabled @elseif (!$isLocked)
+                        onclick="if(!this.disabled) { this.disabled=true; window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'; }" @else
+                        disabled @endif
                         class="relative group focus:outline-none w-20 h-20 lg:w-24 lg:h-24 flex items-center justify-center shrink-0 transition-transform duration-300 {{ $shouldDisable ? 'cursor-not-allowed opacity-90' : 'cursor-pointer hover:scale-105 active:scale-95' }}">
 
                         @if ($isAvailable && $energy > 0 && $lives > 0)
@@ -196,12 +197,14 @@ $activeUnitIndex = max($units->count() - 1, 0);
                             <div
                                 class="bg-gray-900 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg shadow-lg whitespace-nowrap">
                                 <span class="font-bold">{{ $lesson['title'] }}</span>
-                                @if ($isCompleted)
+                                @if ($isCompleted && $energy > 0 && $lives > 0)
                                 <span class="opacity-75">| Best: {{ $bestScore }}%</span>
                                 @elseif ($isAvailable && $energy > 0 && $lives > 0)
                                 <span class="opacity-75">| +{{ $lesson['xp_reward'] }} XP</span>
-                                @else
+                                @elseif ($energy <= 0 || $lives <= 0)
                                 <span class="opacity-75">| {{ $disabledReason }}</span>
+                                @elseif ($isLocked)
+                                <span class="opacity-75">| Selesaikan lesson sebelumnya</span>
                                 @endif
                                 <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
                                     <div class="w-2 h-2 bg-gray-900 rotate-45 transform"></div>

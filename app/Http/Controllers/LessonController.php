@@ -22,14 +22,10 @@ class LessonController extends Controller
     {
         $user = Auth::user();
 
-        // Cek jika sudah memiliki sesi lesson yang sedang berjalan
-        if (session()->has('lesson_in_progress') && session('lesson_in_progress') == $lessonId) {
-            // Lanjut ke view
-        } else {
-            // Jika baru masuk, cek energi
+        if (! session()->has('lesson_in_progress') || session('lesson_in_progress') != $lessonId) {
             if ($user->energy <= 0 || $user->lives <= 0) {
                 return redirect()->route('user.learn')
-                    ->with('error', 'Energi atau nyawa habis.');
+                    ->with('error', 'Energi atau nyawa habis. Tunggu pemulihan.');
             }
         }
 
@@ -43,9 +39,9 @@ class LessonController extends Controller
         $status = $progress?->status ?? LessonProgressStatusEnum::NotStarted;
         $isReview = $status === LessonProgressStatusEnum::Completed;
 
-        if (! $isReview && $user->lives <= 0) {
-            return redirect()->route('user.home')
-                ->with('error', 'Nyawa habis! Tunggu sampai nyawa terisi kembali.');
+        if ($user->energy <= 0 || $user->lives <= 0) {
+            return redirect()->route('user.learn')
+                ->with('error', 'Energi atau nyawa habis. Tunggu pemulihan.');
         }
 
         UserCourseProgress::firstOrCreate(
