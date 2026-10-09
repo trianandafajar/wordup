@@ -37,7 +37,7 @@
                 </div>
 
                 <!-- Energi -->
-                <div x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" class="flex items-center gap-1.5 text-sky-500">
+                <div x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100" class="flex items-center gap-1.5 {{ auth()->user()->energy >= \App\Services\LifeService::MAX_ENERGY ? 'text-green-600' : 'text-sky-500' }}">
                     <img src="{{ asset('images/icon-stats/energy.png') }}" alt="Energi" class="h-6 w-6 object-contain" />
                     <span>{{ auth()->user()->energy }}</span>
                 </div>
