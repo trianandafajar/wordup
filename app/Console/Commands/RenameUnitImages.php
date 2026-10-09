@@ -12,7 +12,7 @@ class RenameUnitImages extends Command
      *
      * @var string
      */
-    protected $signature = 'wordup:rename-unit-images {unit}';
+    protected $signature = 'wordup:rename-unit-images {unit} {--all-five : Force 5 questions per lesson for all 15 lessons}';
 
     /**
      * The console command description.
@@ -27,12 +27,13 @@ class RenameUnitImages extends Command
     public function handle()
     {
         $unit = $this->argument('unit');
+        $allFive = $this->option('all-five');
         $globalIndex = 1;
 
         $this->info("Starting rename for Unit {$unit}...");
 
         for ($lesson = 1; $lesson <= 15; $lesson++) {
-            $qCount = in_array($lesson, [5, 10, 15]) ? 10 : 5;
+            $qCount = ($allFive) ? 5 : (in_array($lesson, [5, 10, 15]) ? 10 : 5);
             $path = public_path("images/units/unit-{$unit}/lesson-{$lesson}");
 
             if (! File::isDirectory($path)) {
