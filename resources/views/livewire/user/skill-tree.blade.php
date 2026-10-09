@@ -165,8 +165,8 @@ $activeUnitIndex = max($units->count() - 1, 0);
 
                 $randomMascot = asset('images/mascots/' . rand(1, 4) . '.png?=v1');
 
-                $lockedText = $lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : 'Selesaikan lesson sebelumnya' ;
-                    $showXpBadge=($isCompleted && $bestScore==100); @endphp <div class="relative z-10 mb-3"
+                $lockedText = $lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : ($energy <= 0 ? 'Energi habis, tunggu refill' : 'Selesaikan lesson sebelumnya') ;
+        $showXpBadge=($isCompleted && $bestScore==100); @endphp <div class="relative z-10 mb-3"
                     style="left: {{ $offset }}px;" data-node="{{ $lesson['id'] }}"
                     data-done="{{ $isCompleted ? '1' : '0' }}">
                     <button @if ($isCompleted)

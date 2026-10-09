@@ -93,6 +93,7 @@ class SkillTreeController extends Controller
             'course' => $course,
             'units' => $unitsWithStatus,
             'lives' => $user->lives,
+            'energy' => $user->energy,
         ]);
     }
 }
