@@ -172,7 +172,7 @@ $activeUnitIndex = max($units->count() - 1, 0);
                     <button @if ($isCompleted)
                         onclick="window.dispatchEvent(new CustomEvent('open-lesson-modal', { detail: { url: '{{ route('user.lesson.practice', $lesson['id']) }}' } }))"
                         @elseif (!$isLocked)
-                        onclick="window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'" @else
+                        onclick="if(!this.disabled) { this.disabled=true; window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'; }" @else
                         disabled @endif
                         class="relative group focus:outline-none w-20 h-20 lg:w-24 lg:h-24 flex items-center justify-center shrink-0 transition-transform duration-300 {{ $isLocked ? 'cursor-not-allowed' : 'cursor-pointer hover:scale-105 active:scale-95' }}">
 

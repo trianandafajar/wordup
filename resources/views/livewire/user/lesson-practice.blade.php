@@ -37,7 +37,8 @@ $mascot = asset('images/mascots/2.png?=v1');
         <div class="lesson-step" data-step="0" data-type="explanation">
             <h1 class="text-2xl font-dynapuff font-extrabold text-gray-900 mb-5">Ayo belajar!</h1>
             <div class="flex items-start gap-3 mb-8">
-                <img src="{{ $lesson->image_url ? Storage::url($lesson->image_url) : $mascot }}" alt="Guru" class="w-24 h-24 shrink-0 object-contain">
+                <img src="{{ $lesson->image_url ? Storage::url($lesson->image_url) : $mascot }}" alt="Guru"
+                    class="w-24 h-24 shrink-0 object-contain">
                 <div class="relative flex-1 bg-white rounded-2xl border-2 border-brand-200 p-4 shadow-sm">
                     <span
                         class="absolute -left-2 top-8 rotate-45 w-3.5 h-3.5 bg-white border-l-2 border-b-2 border-brand-200"></span>
@@ -64,7 +65,8 @@ $mascot = asset('images/mascots/2.png?=v1');
 
             <h1 class="text-2xl font-dynapuff font-extrabold text-gray-900 mb-5">{{ $heading }}</h1>
             <div class="flex items-center gap-3 mb-8">
-                <img src="{{ $question->image_url ? Storage::url($question->image_url) : $mascot }}" alt="Guru" class="w-24 h-24 shrink-0 object-contain">
+                <img src="{{ $question->image_url ? Storage::url($question->image_url) : $mascot }}" alt="Guru"
+                    class="w-24 h-24 shrink-0 object-contain">
                 <div class="relative flex-1 bg-white rounded-2xl border-2 border-gray-200 p-4 flex items-center gap-3">
                     <span
                         class="absolute -left-2 top-1/2 -translate-y-1/2 rotate-45 w-3.5 h-3.5 bg-white border-l-2 border-b-2 border-gray-200"></span>
@@ -144,7 +146,8 @@ $mascot = asset('images/mascots/2.png?=v1');
                     d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" />
             </svg>
         </button>
-        <img src="{{ $lesson->image_url ? Storage::url($lesson->image_url) : $mascot }}" alt="Guru" class="w-24 h-24 mx-auto mb-3 object-contain animate-pulse-slow">
+        <img src="{{ $lesson->image_url ? Storage::url($lesson->image_url) : $mascot }}" alt="Guru"
+            class="w-24 h-24 mx-auto mb-3 object-contain animate-pulse-slow">
         <p class="audio-modal-label font-dynapuff font-bold text-gray-700 mb-4">Dengarkan dengan saksama</p>
         <audio id="lessonAudio" controls class="w-full rounded-lg"></audio>
     </div>
@@ -354,10 +357,13 @@ const ICON_NO = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" str
                 goTo(current + 1);
             } else if (!results[current]) {
                 checkAnswer();
-            } else if (current === total - 1) {
-                console.log('Submitting form...');
+          } else if (current === total - 1) {
+                actionBtn.disabled = true;
+                actionBtn.classList.remove('cursor-pointer', 'active:translate-y-1', 'active:border-b-0');
+                actionBtn.classList.add('opacity-70', 'cursor-not-allowed');
+                actionBtn.innerHTML = '<span class="inline-block animate-spin mr-2">↻</span> Memproses...';
                 form.submit();
-            } else {
+            }else {
                 goTo(current + 1);
             }
         });

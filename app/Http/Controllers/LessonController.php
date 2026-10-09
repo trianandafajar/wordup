@@ -60,9 +60,14 @@ class LessonController extends Controller
 
         if (! $isReview) {
             // Kurangi energi dan set sesi hanya jika belum berjalan
-            if (!session()->has('lesson_in_progress') || session('lesson_in_progress') != $lessonId) {
-                $user->decrement('energy');
-                session(['lesson_in_progress' => $lessonId]);
+            if (! session()->has('lesson_in_progress') || session('lesson_in_progress') != $lessonId) {
+                if ($user->energy > 0) {
+                    $user->decrement('energy');
+                    session(['lesson_in_progress' => $lessonId]);
+                } else {
+                    return redirect()->route('user.learn')
+                        ->with('error', 'Energi habis. Tunggu refill atau kumpulkan energi.');
+                }
             }
 
             $previousLesson = Lesson::where('unit_id', $lesson->unit_id)
@@ -93,11 +98,6 @@ class LessonController extends Controller
     public function submit(Request $request, $lessonId): RedirectResponse
     {
         $user = Auth::user();
-
-        if ($user->energy <= 0) {
-            return redirect()->route('user.learn')
-                ->with('error', 'Energi habis. Tunggu refill atau kumpulkan energi.');
-        }
 
         $lesson = Lesson::with('questions.options', 'questions.answer', 'unit.lessons')->findOrFail($lessonId);
 
@@ -272,8 +272,6 @@ class LessonController extends Controller
         } elseif (! $passed && ! $alreadyCompleted) {
             app(LifeService::class)->loseLife($user);
         }
-
-        $user->decrement('energy');
 
         session()->forget('lesson_in_progress');
         session(['lesson_result' => [
