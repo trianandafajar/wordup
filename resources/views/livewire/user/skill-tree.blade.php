@@ -165,23 +165,24 @@ $activeUnitIndex = max($units->count() - 1, 0);
 
                 $randomMascot = asset('images/mascots/' . rand(1, 4) . '.png?=v1');
 
-                $lockedText = $lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : ($energy <= 0 ? 'Energi habis, tunggu refill' : 'Selesaikan lesson sebelumnya') ;
-        $showXpBadge=($isCompleted && $bestScore==100); @endphp <div class="relative z-10 mb-3"
+                $shouldDisable = $isLocked || ($energy <= 0 && !$isCompleted) || ($lives <= 0 && !$isCompleted);
+                $disabledReason = $isLocked ? 'Selesaikan lesson sebelumnya' : ($energy <= 0 ? 'Energi habis, tunggu refill' : ($lives <= 0 ? 'Nyawa habis, tunggu pemulihan' : ''));
+                $showXpBadge = ($isCompleted && $bestScore == 100); @endphp <div class="relative z-10 mb-3"
                     style="left: {{ $offset }}px;" data-node="{{ $lesson['id'] }}"
                     data-done="{{ $isCompleted ? '1' : '0' }}">
                     <button @if ($isCompleted)
                         onclick="window.dispatchEvent(new CustomEvent('open-lesson-modal', { detail: { url: '{{ route('user.lesson.practice', $lesson['id']) }}' } }))"
-                        @elseif (!$isLocked)
-                        onclick="if(!this.disabled) { this.disabled=true; window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'; }" @else
-                        disabled @endif
-                        class="relative group focus:outline-none w-20 h-20 lg:w-24 lg:h-24 flex items-center justify-center shrink-0 transition-transform duration-300 {{ $isLocked ? 'cursor-not-allowed' : 'cursor-pointer hover:scale-105 active:scale-95' }}">
+                        @elseif ($shouldDisable)
+                        disabled @else
+                        onclick="if(!this.disabled) { this.disabled=true; window.location.href='{{ route('user.lesson.practice', $lesson['id']) }}'; }" @endif
+                        class="relative group focus:outline-none w-20 h-20 lg:w-24 lg:h-24 flex items-center justify-center shrink-0 transition-transform duration-300 {{ $shouldDisable ? 'cursor-not-allowed opacity-90' : 'cursor-pointer hover:scale-105 active:scale-95' }}">
 
-                        @if ($isAvailable)
+                        @if ($isAvailable && $energy > 0 && $lives > 0)
                         <span class="absolute inset-3 rounded-full bg-brand-400/30 animate-ping"></span>
                         @endif
 
                         <img src="{{ $icon }}" alt="Lesson Icon"
-                            class="relative w-full h-full object-contain drop-shadow-lg {{ $isLocked ? 'opacity-90' : '' }}">
+                            class="relative w-full h-full object-contain drop-shadow-lg {{ $shouldDisable ? 'grayscale-[0.5]' : '' }}">
 
                         @if ($showXpBadge)
                         <span
@@ -197,10 +198,10 @@ $activeUnitIndex = max($units->count() - 1, 0);
                                 <span class="font-bold">{{ $lesson['title'] }}</span>
                                 @if ($isCompleted)
                                 <span class="opacity-75">| Best: {{ $bestScore }}%</span>
-                                @elseif ($isAvailable)
+                                @elseif ($isAvailable && $energy > 0 && $lives > 0)
                                 <span class="opacity-75">| +{{ $lesson['xp_reward'] }} XP</span>
-                                @elseif ($isLocked)
-                                <span class="opacity-75">| {{ $lockedText }}</span>
+                                @else
+                                <span class="opacity-75">| {{ $disabledReason }}</span>
                                 @endif
                                 <div class="absolute top-full left-1/2 -translate-x-1/2 -mt-px">
                                     <div class="w-2 h-2 bg-gray-900 rotate-45 transform"></div>

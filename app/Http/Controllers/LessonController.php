@@ -27,9 +27,9 @@ class LessonController extends Controller
             // Lanjut ke view
         } else {
             // Jika baru masuk, cek energi
-            if ($user->energy <= 0) {
+            if ($user->energy <= 0 || $user->lives <= 0) {
                 return redirect()->route('user.learn')
-                    ->with('error', 'Energi habis. Tunggu refill atau kumpulkan energi.');
+                    ->with('error', 'Energi atau nyawa habis.');
             }
         }
 
